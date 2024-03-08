@@ -127,7 +127,14 @@ export function Orders() {
                                                 <Td>{order.id.slice(0, 8)}</Td>
                                                 <Td>{order.itens.length}</Td>
                                                 <Td>{`${convertDate} - ${convertTime}`}</Td>
-                                                <Td>{order.total}</Td>
+                                                <Td>
+                                                    {Number(
+                                                        order.total
+                                                    ).toLocaleString('pt-br', {
+                                                        style: 'currency',
+                                                        currency: 'BRL',
+                                                    })}
+                                                </Td>
                                                 <Td>
                                                     <Button
                                                         colorScheme='yellow'
