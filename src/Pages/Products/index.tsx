@@ -26,7 +26,7 @@ import {
 } from '@chakra-ui/react';
 
 export function Products() {
-    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
     const navigate = useNavigate();
     const [dataProducts, setDataProducts] = useState<{
         products: ProductEntity[];
@@ -90,9 +90,11 @@ export function Products() {
 
     if (isLoading)
         return (
-            <div className='flex justify-center'>
-                <Spinner size='xl' color='yellow.500' />
-            </div>
+            <PageContainer>
+                <div className='flex justify-center'>
+                    <Spinner size='xl' color='yellow.500' />
+                </div>
+            </PageContainer>
         );
 
     return (
@@ -193,7 +195,7 @@ export function Products() {
                                                         </PopoverTrigger>
                                                         <Portal>
                                                             <PopoverContent width='fit-content'>
-                                                            <PopoverArrow />
+                                                                <PopoverArrow />
                                                                 <PopoverBody>
                                                                     <Box className='flex gap-2'>
                                                                         <Button
