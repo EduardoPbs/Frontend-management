@@ -91,7 +91,7 @@ export function Orders() {
 
                 <Box className='overflow-y-scroll scrollbar-hide border-2 rounded-md'>
                     <TableContainer>
-                        <Table size='lg'>
+                        <Table size='md'>
                             <Thead className='text-white text-xl select-none'>
                                 <Tr>
                                     <Th>Cód. Pedido</Th>
@@ -122,7 +122,7 @@ export function Orders() {
                                         return (
                                             <Tr
                                                 key={order.id}
-                                                className='font-semibold'
+                                                className='font-semibold hover:bg-zinc-100/30 duration-150'
                                             >
                                                 <Td>{order.id.slice(0, 8)}</Td>
                                                 <Td>{order.itens.length}</Td>

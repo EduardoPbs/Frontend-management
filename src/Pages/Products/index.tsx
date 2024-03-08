@@ -130,7 +130,7 @@ export function Products() {
 
                 <Box className='overflow-y-scroll scrollbar-hide border-2 rounded-md'>
                     <TableContainer>
-                        <Table size='lg'>
+                        <Table size='md'>
                             <Thead className='text-white text-xl select-none'>
                                 <Tr>
                                     <Th>Cód. Produto</Th>

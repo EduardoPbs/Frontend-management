@@ -109,7 +109,7 @@ function OrderTable() {
                         <Tr>
                             <Th>Cód. Pedido</Th>
                             <Th>Qtde. itens</Th>
-                            <Th isNumeric>Total (R$)</Th>
+                            <Th>Total (R$)</Th>
                         </Tr>
                     </Thead>
 
