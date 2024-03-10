@@ -225,7 +225,7 @@ export function Products() {
                                                                                 ) : (
                                                                                     <Button
                                                                                         type='button'
-                                                                                        background='green.200'
+                                                                                        background='cyan.200'
                                                                                         onClick={() =>
                                                                                             enableProduct(
                                                                                                 product.id
