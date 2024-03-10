@@ -5,6 +5,7 @@ import { Routes, Route, BrowserRouter } from 'react-router-dom';
 import { ProductForm } from './Pages/Products/ProductForm';
 import { Login } from './Pages/Login';
 import { Orders } from './Pages/Order';
+import { OrderDetail } from './Pages/Order/OrderDetail';
 
 function AppRoutes() {
     return (
@@ -19,7 +20,7 @@ function AppRoutes() {
                     <Route path='/products/edit/:id' element={<ProductForm />} />
                     
                     <Route path='/orders' element={<Orders />} />
-                    {/* <Route path='/orders/:id' element={<OrderDetails />} /> */}
+                    <Route path='/orders/:id' element={<OrderDetail />} />
                 </Routes>
             </BrowserRouter>
         </ChakraProvider>
