@@ -91,7 +91,7 @@ export function Orders() {
 
                 <Box className='overflow-y-scroll scrollbar-hide border-2 rounded-md'>
                     <TableContainer>
-                        <Table size='md'>
+                        <Table size='sm'>
                             <Thead className='text-white text-xl select-none'>
                                 <Tr>
                                     <Th>Cód. Pedido</Th>
@@ -137,6 +137,8 @@ export function Orders() {
                                                 </Td>
                                                 <Td>
                                                     <Button
+                                                        className='w-full'
+                                                        height={8}
                                                         colorScheme='yellow'
                                                         onClick={() =>
                                                             navigate(

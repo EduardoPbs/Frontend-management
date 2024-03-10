@@ -130,7 +130,7 @@ export function Products() {
 
                 <Box className='overflow-y-scroll scrollbar-hide border-2 rounded-md'>
                     <TableContainer>
-                        <Table size='md'>
+                        <Table size='sm'>
                             <Thead className='text-white text-xl select-none'>
                                 <Tr>
                                     <Th>Cód. Produto</Th>
@@ -149,7 +149,7 @@ export function Products() {
                                         (product: any) => (
                                             <Tr
                                                 key={product.id}
-                                                className='font-semibold'
+                                                className='font-semibold hover:bg-zinc-100/30 duration-150'
                                             >
                                                 <Td>{product.code}</Td>
                                                 <Td>{product.name}</Td>
