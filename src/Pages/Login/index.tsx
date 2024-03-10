@@ -62,6 +62,7 @@ export function Login() {
             toast({
                 title: 'Falha ao realizar login.',
                 description: 'Email ou senha incorreto!',
+                position: 'top-right',
                 status: 'error',
                 isClosable: true,
             });

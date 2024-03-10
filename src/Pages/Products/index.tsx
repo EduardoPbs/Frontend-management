@@ -173,8 +173,8 @@ export function Products() {
                                                 </Td>
                                                 <Td>
                                                     {product.active ? (
-                                                        <span className='flex items-center gap-1 text-green-300'>
-                                                            <div className='size-2 bg-green-300 rounded-full' />
+                                                        <span className='flex items-center gap-1 text-cyan-300'>
+                                                            <div className='size-2 bg-cyan-300 rounded-full' />
                                                             Online
                                                         </span>
                                                     ) : (

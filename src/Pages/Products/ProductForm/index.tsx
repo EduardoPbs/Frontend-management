@@ -114,9 +114,11 @@ export function ProductForm() {
                 .then((res) => console.log(res.data))
                 .then(() =>
                     toast({
-                        title: 'Sucesso!',
-                        description: `O produto foi atualizado!`,
+                        title: 'Sucesso',
+                        colorScheme: 'cyan',
+                        description: `O produto foi atualizado.`,
                         status: 'success',
+                        position: 'top-right',
                         isClosable: true,
                         duration: 2000,
                     })
@@ -134,9 +136,11 @@ export function ProductForm() {
                 .then((res) => console.log(res.data))
                 .then(() =>
                     toast({
-                        title: 'Sucesso!',
-                        description: `O produto foi cadastrado!`,
+                        title: 'Sucesso',
+                        colorScheme: 'cyan',
+                        description: `O produto foi cadastrado.`,
                         status: 'success',
+                        position: 'top-right',
                         isClosable: true,
                         duration: 2000,
                     })
@@ -160,9 +164,10 @@ export function ProductForm() {
             id ? updateProduct(id, product) : createProduct(product);
         } catch (error: any) {
             toast({
-                title: 'Erro!',
+                title: 'Erro',
                 description: `Falha ao cadastrar o produto: ${error.response?.data?.message}`,
                 status: 'error',
+                position: 'top-right',
                 isClosable: true,
                 duration: 3000,
             });
