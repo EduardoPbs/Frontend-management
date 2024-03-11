@@ -5,6 +5,7 @@ import { DrawerModal } from '../../components/DrawerModal';
 import { useNavigate } from 'react-router';
 import { OrderEntity } from '../../constants/order';
 import { PageContainer } from '../../components/PageContainer';
+import { toFullLocaleDate } from '../../utils/toFullLocaleDate';
 import { useEffect, useState } from 'react';
 import {
     Td,
@@ -105,20 +106,6 @@ export function Orders() {
                             <Tbody>
                                 {dataOrders.orders &&
                                     dataOrders.orders.map((order: any) => {
-                                        const convertDate = new Date(
-                                            order.data
-                                        ).toLocaleDateString('pt-br');
-                                        const convertTime = `
-                                        ${new Date(
-                                            order.data
-                                        ).getHours()}:${new Date(
-                                            order.data
-                                        ).getMinutes()} ${
-                                            new Date(order.data).getHours() > 12
-                                                ? 'PM'
-                                                : 'AM'
-                                        }
-                                        `;
                                         return (
                                             <Tr
                                                 key={order.id}
@@ -126,7 +113,11 @@ export function Orders() {
                                             >
                                                 <Td>{order.id.slice(0, 8)}</Td>
                                                 <Td>{order.itens.length}</Td>
-                                                <Td>{`${convertDate} - ${convertTime}`}</Td>
+                                                <Td>
+                                                    {toFullLocaleDate(
+                                                        order.data
+                                                    )}
+                                                </Td>
                                                 <Td>
                                                     {Number(
                                                         order.total

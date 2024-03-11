@@ -1,18 +1,19 @@
-import { useNavigate, useParams } from 'react-router';
-import { DrawerModal } from '../../components/DrawerModal';
-import { PageContainer } from '../../components/PageContainer';
+import { http } from '../../service';
 import { Title } from '../../components/Title';
 import { ArrowLeft } from 'lucide-react';
+import { DrawerModal } from '../../components/DrawerModal';
+import { PageContainer } from '../../components/PageContainer';
+import { toFullLocaleDate } from '../../utils/toFullLocaleDate';
+import { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router';
 import {
     Box,
-    Button,
     Card,
+    Button,
+    Spinner,
     CardBody,
     CardHeader,
-    Spinner,
 } from '@chakra-ui/react';
-import { useEffect, useState } from 'react';
-import { http } from '../../service';
 
 export function OrderDetail() {
     const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -41,6 +42,42 @@ export function OrderDetail() {
             getOrderById(id);
         }
     }, []);
+
+    function RowProductsOrder({
+        name,
+        value,
+        quantity,
+    }: {
+        name: string;
+        value: string;
+        quantity: string;
+    }) {
+        return (
+            <div className='flex justify-between gap-4 border-2 h-[80px] border-amber-400 px-2 py-4 hover:bg-zinc-100/30 duration-150'>
+                <p className='flex flex-col font-semibold text-lg'>
+                    Produto:{' '}
+                    <span className='font-bold text-cyan-200 text-xl'>
+                        {name}
+                    </span>
+                </p>
+                <p className='flex flex-col font-semibold text-lg'>
+                    Valor/unidade:{' '}
+                    <span className='font-bold text-cyan-200 text-xl'>
+                        {Number(value).toLocaleString('pt-BR', {
+                            style: 'currency',
+                            currency: 'BRL',
+                        })}
+                    </span>
+                </p>
+                <p className='flex flex-col font-semibold text-lg'>
+                    Quantidade:{' '}
+                    <span className='font-bold text-cyan-200 text-xl'>
+                        {quantity}
+                    </span>
+                </p>
+            </div>
+        );
+    }
 
     if (isLoading)
         return (
@@ -77,15 +114,7 @@ export function OrderDetail() {
                             <p className='capitalize text-lg font-semibold'>
                                 Data:{' '}
                                 <span className='font-bold text-2xl'>
-                                    {new Date(
-                                        orderData?.date
-                                    ).toLocaleDateString('pt-Br')}
-                                    {' - '}
-                                    {new Date(orderData?.date).getHours()}:
-                                    {new Date(orderData?.date).getMinutes()}{' '}
-                                    {new Date(orderData?.date).getHours() > 12
-                                        ? 'PM'
-                                        : 'AM'}
+                                    {toFullLocaleDate(orderData?.date)}
                                 </span>
                             </p>
                             <p className='capitalize text-lg font-semibold'>
@@ -110,37 +139,12 @@ export function OrderDetail() {
                                 {orderData?.items.map(
                                     (item: any, index: number) => {
                                         return (
-                                            <div
+                                            <RowProductsOrder
                                                 key={index}
-                                                className='flex justify-between gap-4 border-2 h-[80px] border-amber-400 px-2 py-4 hover:bg-zinc-100/30 duration-150'
-                                            >
-                                                <p className='flex flex-col font-semibold text-lg'>
-                                                    Produto:{' '}
-                                                    <span className='font-bold text-cyan-200 text-xl'>
-                                                        {item.product.name}
-                                                    </span>
-                                                </p>
-                                                <p className='flex flex-col font-semibold text-lg'>
-                                                    Valor/unidade:{' '}
-                                                    <span className='font-bold text-cyan-200 text-xl'>
-                                                        {Number(
-                                                            item.product.value
-                                                        ).toLocaleString(
-                                                            'pt-BR',
-                                                            {
-                                                                style: 'currency',
-                                                                currency: 'BRL',
-                                                            }
-                                                        )}
-                                                    </span>
-                                                </p>
-                                                <p className='flex flex-col font-semibold text-lg'>
-                                                    Quantidade:{' '}
-                                                    <span className='font-bold text-cyan-200 text-xl'>
-                                                        {item.quantity}
-                                                    </span>
-                                                </p>
-                                            </div>
+                                                name={item.product.name}
+                                                value={item.product.value}
+                                                quantity={item.quantity}
+                                            />
                                         );
                                     }
                                 )}
