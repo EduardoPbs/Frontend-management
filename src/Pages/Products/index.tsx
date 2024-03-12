@@ -173,12 +173,12 @@ export function Products() {
                                                 </Td>
                                                 <Td>
                                                     {product.active ? (
-                                                        <span className='flex items-center gap-1 text-cyan-300'>
-                                                            <div className='size-2 bg-cyan-300 rounded-full' />
+                                                        <span className='flex items-center gap-1 text-yellow-400'>
+                                                            <div className='size-2 bg-yellow-400 rounded-full' />
                                                             Online
                                                         </span>
                                                     ) : (
-                                                        <span className='flex items-center gap-1 text-red-400'>
+                                                        <span className='flex items-center gap-1 text-red-400/75'>
                                                             <div className='size-2 bg-red-400 rounded-full' />
                                                             Offline
                                                         </span>
@@ -190,7 +190,7 @@ export function Products() {
                                                     >
                                                         <PopoverTrigger>
                                                             <Button colorScheme='amber'>
-                                                                <Settings className='text-amber-400 hover:text-amber-600 hover:cursor-pointer duration-150' />
+                                                                <Settings className='text-yellow-400/85 hover:text-amber-500 hover:cursor-pointer duration-150' />
                                                             </Button>
                                                         </PopoverTrigger>
                                                         <Portal>
@@ -225,7 +225,7 @@ export function Products() {
                                                                                 ) : (
                                                                                     <Button
                                                                                         type='button'
-                                                                                        background='cyan.200'
+                                                                                        colorScheme='blue'
                                                                                         onClick={() =>
                                                                                             enableProduct(
                                                                                                 product.id

@@ -4,11 +4,11 @@ import { Title } from '../../components/Title';
 import { LgInput } from '../../components/LgInput';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { DrawerModal } from '../../components/DrawerModal';
-import { useNavigate, useParams } from 'react-router';
 import { PageContainer } from '../../components/PageContainer';
 import { ArrowLeftCircle } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
+import { useNavigate, useParams } from 'react-router';
 import { Button, Select, useToast } from '@chakra-ui/react';
 
 export interface ProductEntity {
@@ -188,11 +188,12 @@ export function ProductForm() {
                 <DrawerModal />
 
                 <Button
-                    className='capitalize'
+                    className='capitalize flex items-center gap-2'
                     colorScheme='yellow'
                     onClick={() => navigate(-1)}
                 >
                     <ArrowLeftCircle />
+                    Voltar
                 </Button>
 
                 <Title>Cadastro</Title>
@@ -249,6 +250,7 @@ export function ProductForm() {
                                 <label htmlFor='category'>Categoria</label>
                                 <Select
                                     {...field}
+                                    id='category'
                                     focusBorderColor='yellow.500'
                                     placeholder='Selecione uma categoria'
                                 >

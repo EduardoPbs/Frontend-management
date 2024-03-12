@@ -2,7 +2,6 @@ import { http } from '../../service';
 import { Title } from '../../components/Title';
 import { Content } from '../../components/Content';
 import { OrderEntity } from '../../constants/order';
-import { DrawerModal } from '../../components/DrawerModal';
 import { PageContainer } from '../../components/PageContainer';
 import { ProductEntity } from '../../constants/product';
 import { useEffect, useState } from 'react';
@@ -17,47 +16,7 @@ import {
     Spinner,
     TableContainer,
 } from '@chakra-ui/react';
-
-export function Home() {
-    return (
-        <PageContainer>
-            <div className='flex items-center justify-start gap-4'>
-                <DrawerModal />
-
-                <Title>Home</Title>
-            </div>
-
-            <div className='flex flex-col gap-4 w-full overflow-y-auto'>
-                <div className='flex items-center gap-2'>
-                    <Content className='w-full'>
-                        <Title variant='h2'>Notificações</Title>
-
-                        <div></div>
-                    </Content>
-                </div>
-
-                <Content className='w-full'>
-                    <Title variant='h2'>
-                        Estatísticas Recentes {''}
-                        <span className='text-lg opacity-50 capitalize'>
-                            | Últimos pedidos feitos / Estoque de produtos
-                        </span>
-                    </Title>
-
-                    <div className='flex items-start justify-between gap-2 max-h-fit'>
-                        <Content className='w-1/2'>
-                            <OrderTable />
-                        </Content>
-
-                        <Content className='w-1/2'>
-                            <ProductTable />
-                        </Content>
-                    </div>
-                </Content>
-            </div>
-        </PageContainer>
-    );
-}
+import { DrawerModal } from '../../components/DrawerModal';
 
 function OrderTable() {
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -73,7 +32,6 @@ function OrderTable() {
         setIsLoading(true);
         try {
             const response = await http.get('/orders');
-            console.log(response.data);
             if (response.data) {
                 setDataOrders({
                     orders: response.data,
@@ -118,13 +76,13 @@ function OrderTable() {
                             ? /**@todo Remove slice() method and implement on Backend */
                               dataOrders.orders
                                   .slice(0, 8)
-                                  .map((order: any) => {
+                                  .map((order: OrderEntity) => {
                                       return (
                                           <Tr key={order.id}>
                                               <Td>
                                                   {String(order.id).slice(0, 8)}
                                               </Td>
-                                              <Td>{order.itens.length}</Td>
+                                              <Td>{order.items.length}</Td>
                                               <Td>
                                                   {Number(
                                                       order.total
@@ -242,5 +200,46 @@ function ProductTable() {
                 </Table>
             </TableContainer>
         </Box>
+    );
+}
+
+export function Home() {
+    return (
+        <PageContainer>
+            <div className='flex items-center justify-start gap-4'>
+                <DrawerModal />
+
+                <Title>Home</Title>
+            </div>
+            
+            <div className='flex flex-col gap-4 w-full overflow-y-auto'>
+                <div className='flex items-center gap-2'>
+                    <Content className='w-full'>
+                        <Title variant='h2'>Notificações</Title>
+
+                        <div></div>
+                    </Content>
+                </div>
+
+                <Content className='w-full'>
+                    <Title variant='h2'>
+                        Estatísticas Recentes {''}
+                        <span className='text-lg opacity-50 capitalize'>
+                            | Últimos pedidos feitos / Estoque de produtos
+                        </span>
+                    </Title>
+
+                    <div className='flex items-start justify-between gap-2 max-h-fit'>
+                        <Content className='w-1/2'>
+                            <OrderTable />
+                        </Content>
+
+                        <Content className='w-1/2'>
+                            <ProductTable />
+                        </Content>
+                    </div>
+                </Content>
+            </div>
+        </PageContainer>
     );
 }
