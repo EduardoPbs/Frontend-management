@@ -72,7 +72,7 @@ export function Login() {
     }
 
     return (
-        <PageContainer>
+        <section className='flex flex-col justify-start gap-4 px-4 py-6 bg-black h-screen text-white selection:bg-amber-700 selection:text-white'>
             <Box className='flex items-center w-full h-full justify-center'>
                 <Box className='w-[500px]'>
                     <Card>
@@ -115,6 +115,6 @@ export function Login() {
                     </Card>
                 </Box>
             </Box>
-        </PageContainer>
+        </section>
     );
 }
