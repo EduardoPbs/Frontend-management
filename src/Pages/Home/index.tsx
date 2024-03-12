@@ -58,9 +58,11 @@ function OrderTable() {
     return (
         <Box className='max-h-80 max-w-full overflow-y-scroll scrollbar-hide'>
             <TableContainer>
-                <Title variant='h3'>Resumo - Pedidos</Title>
+                <div className='flex items-center justify-between'>
+                    <Title variant='h3'>Resumo - Pedidos</Title>
 
-                <Title variant='h3'>Total: {dataOrders.total}</Title>
+                    <Title variant='h3'>Total: {dataOrders.total}</Title>
+                </div>
                 <Table size='sm'>
                     <Thead>
                         <Tr>
@@ -81,7 +83,6 @@ function OrderTable() {
                                               <Td>
                                                   {String(order.id).slice(0, 8)}
                                               </Td>
-                                              <Td>{order.items.length}</Td>
                                               <Td>{order.items.length}</Td>
                                               <Td>
                                                   {Number(
