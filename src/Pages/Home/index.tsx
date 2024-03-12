@@ -76,11 +76,13 @@ function OrderTable() {
                               dataOrders.orders
                                   .slice(0, 8)
                                   .map((order: OrderEntity) => {
+                                  .map((order: OrderEntity) => {
                                       return (
                                           <Tr key={order.id}>
                                               <Td>
                                                   {String(order.id).slice(0, 8)}
                                               </Td>
+                                              <Td>{order.items.length}</Td>
                                               <Td>{order.items.length}</Td>
                                               <Td>
                                                   {Number(

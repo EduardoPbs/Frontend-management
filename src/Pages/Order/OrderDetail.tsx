@@ -1,9 +1,11 @@
 import { http } from '../../service';
 import { ItemEntity } from '../../constants/order';
+import { ItemEntity } from '../../constants/order';
 import { PageContainer } from '../../components/PageContainer';
 import { toFullLocaleDate } from '../../utils/toFullLocaleDate';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
+import { ArrowLeft, ArrowRightCircle } from 'lucide-react';
 import { ArrowLeft, ArrowRightCircle } from 'lucide-react';
 import {
     Box,
@@ -14,6 +16,8 @@ import {
     CardHeader,
     Tooltip,
 } from '@chakra-ui/react';
+import { DrawerModal } from '../../components/DrawerModal';
+import { Title } from '../../components/Title';
 
 export function OrderDetail() {
     const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -48,8 +52,12 @@ export function OrderDetail() {
         value,
         quantity,
         productId,
+        productId,
     }: {
         name: string;
+        value: number;
+        quantity: number;
+        productId?: string;
         value: number;
         quantity: number;
         productId?: string;
