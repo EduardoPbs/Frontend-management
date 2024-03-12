@@ -4,6 +4,10 @@ export type OrderEntity = {
     id: string;
     total: number;
     items: ItemEntity[];
+    employee: {
+        id: string; 
+        name: string;
+    }
 	date: string;
 };
 

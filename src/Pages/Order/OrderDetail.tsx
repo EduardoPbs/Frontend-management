@@ -1,9 +1,9 @@
 import { http } from '../../service';
-import { ItemEntity } from '../../constants/order';
 import { PageContainer } from '../../components/PageContainer';
 import { toFullLocaleDate } from '../../utils/toFullLocaleDate';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
+import { ItemEntity, OrderEntity } from '../../constants/order';
 import { ArrowLeft, ArrowRightCircle } from 'lucide-react';
 import {
     Box,
@@ -17,12 +17,7 @@ import {
 
 export function OrderDetail() {
     const [isLoading, setIsLoading] = useState<boolean>(true);
-    const [orderData, setOrderData] = useState<{
-        id: string;
-        items: any[];
-        date: any;
-        total: number;
-    }>();
+    const [orderData, setOrderData] = useState<OrderEntity>();
     const { id } = useParams();
     const navigate = useNavigate();
 
@@ -112,28 +107,49 @@ export function OrderDetail() {
 
             <Box className='flex border-4 border-amber-500 rounded-md'>
                 <Card className='w-full h-[500px] ' background='black'>
-                    <CardHeader className='flex items-center justify-between text-2xl font-semibold text-white'>
-                        <p className='capitalize text-lg font-semibold'>
-                            Data:{' '}
-                            <span className='font-bold text-2xl'>
-                                {toFullLocaleDate(orderData?.date)}
-                            </span>
-                        </p>
-                        <p className='capitalize text-lg font-semibold'>
-                            Qtde. itens:{' '}
-                            <span className='font-bold text-2xl'>
-                                {orderData?.items?.length}
-                            </span>
-                        </p>
-                        <p className='capitalize text-lg font-semibold'>
-                            Total:{' '}
-                            <span className='font-bold text-3xl text-yellow-400'>
-                                {Number(orderData?.total).toLocaleString(
-                                    'pt-br',
-                                    { style: 'currency', currency: 'BRL' }
-                                )}
-                            </span>
-                        </p>
+                    <CardHeader className='flex flex-col justify-center text-2xl font-semibold text-white'>
+                        <Box className='flex items-center justify-between w-full bg-zinc-100/15 rounded-t-md px-1'>
+                            <p className='capitalize text-lg font-semibold'>
+                                Data:{' '}
+                                <span className='font-bold text-2xl'>
+                                    {orderData?.date
+                                        ? toFullLocaleDate(orderData.date)
+                                        : '--'}
+                                </span>
+                            </p>
+                            <p className='capitalize text-lg font-semibold'>
+                                Qtde. itens:{' '}
+                                <span className='font-bold text-2xl'>
+                                    {orderData?.items?.length}
+                                </span>
+                            </p>
+                            <p className='capitalize text-lg font-semibold'>
+                                Total:{' '}
+                                <span className='font-bold text-3xl text-yellow-400'>
+                                    {Number(orderData?.total).toLocaleString(
+                                        'pt-br',
+                                        { style: 'currency', currency: 'BRL' }
+                                    )}
+                                </span>
+                            </p>
+                        </Box>
+
+                        <Box className='flex items-center justify-between w-full bg-zinc-100/15 rounded-b-md px-1'>
+                            <p className='capitalize text-lg font-semibold'>
+                                Vendido por:{' '}
+                                <span className='font-bold text-2xl text-yellow-400'>
+                                    {orderData?.employee.name}
+                                </span>
+                            </p>
+                            <p className='capitalize text-lg font-semibold'>
+                                Cód. Vendedor:{' '}
+                                <span className='font-bold text-2xl text-yellow-400'>
+                                    {orderData?.employee.id
+                                        .slice(0, 8)
+                                        .toUpperCase()}
+                                </span>
+                            </p>
+                        </Box>
                     </CardHeader>
 
                     <CardBody className='flex flex-col gap-2 m-2 text-white rounded-md border-2 border-amber-500/50 overflow-hidden overflow-y-scroll'>
