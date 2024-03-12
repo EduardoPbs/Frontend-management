@@ -1,7 +1,6 @@
 import { http } from '../../service';
 import { Title } from '../../components/Title';
 import { PlusCircle } from 'lucide-react';
-import { DrawerModal } from '../../components/DrawerModal';
 import { useNavigate } from 'react-router';
 import { OrderEntity } from '../../constants/order';
 import { PageContainer } from '../../components/PageContainer';
@@ -19,6 +18,7 @@ import {
     Spinner,
     TableContainer,
 } from '@chakra-ui/react';
+import { DrawerModal } from '../../components/DrawerModal';
 
 export function Orders() {
     const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -64,7 +64,7 @@ export function Orders() {
             <div className='flex items-center justify-start gap-4'>
                 <DrawerModal />
 
-                <Title>Pedidos</Title>
+                <Title>Pedidos</Title>   
             </div>
 
             <div className='flex flex-col gap-4 w-full h-fit overflow-hidden'>
@@ -105,44 +105,53 @@ export function Orders() {
 
                             <Tbody>
                                 {dataOrders.orders &&
-                                    dataOrders.orders.map((order: any) => {
-                                        return (
-                                            <Tr
-                                                key={order.id}
-                                                className='font-semibold hover:bg-zinc-100/30 duration-150'
-                                            >
-                                                <Td>{order.id.slice(0, 8)}</Td>
-                                                <Td>{order.itens.length}</Td>
-                                                <Td>
-                                                    {toFullLocaleDate(
-                                                        order.data
-                                                    )}
-                                                </Td>
-                                                <Td>
-                                                    {Number(
-                                                        order.total
-                                                    ).toLocaleString('pt-br', {
-                                                        style: 'currency',
-                                                        currency: 'BRL',
-                                                    })}
-                                                </Td>
-                                                <Td>
-                                                    <Button
-                                                        className='w-full'
-                                                        height={8}
-                                                        colorScheme='yellow'
-                                                        onClick={() =>
-                                                            navigate(
-                                                                `${order.id}`
-                                                            )
-                                                        }
-                                                    >
-                                                        Ver detalhes
-                                                    </Button>
-                                                </Td>
-                                            </Tr>
-                                        );
-                                    })}
+                                    dataOrders.orders.map(
+                                        (order: OrderEntity) => {
+                                            return (
+                                                <Tr
+                                                    key={order.id}
+                                                    className='font-semibold hover:bg-zinc-100/30 duration-150'
+                                                >
+                                                    <Td>
+                                                        {order.id.slice(0, 8)}
+                                                    </Td>
+                                                    <Td>
+                                                        {order.items.length}
+                                                    </Td>
+                                                    <Td>
+                                                        {toFullLocaleDate(
+                                                            order.date
+                                                        )}
+                                                    </Td>
+                                                    <Td>
+                                                        {Number(
+                                                            order.total
+                                                        ).toLocaleString(
+                                                            'pt-br',
+                                                            {
+                                                                style: 'currency',
+                                                                currency: 'BRL',
+                                                            }
+                                                        )}
+                                                    </Td>
+                                                    <Td>
+                                                        <Button
+                                                            className='w-full'
+                                                            height={8}
+                                                            colorScheme='yellow'
+                                                            onClick={() =>
+                                                                navigate(
+                                                                    `${order.id}`
+                                                                )
+                                                            }
+                                                        >
+                                                            Ver detalhes
+                                                        </Button>
+                                                    </Td>
+                                                </Tr>
+                                            );
+                                        }
+                                    )}
                             </Tbody>
                         </Table>
                     </TableContainer>

@@ -1,11 +1,10 @@
 import { http } from '../../service';
-import { Title } from '../../components/Title';
-import { ArrowLeft } from 'lucide-react';
-import { DrawerModal } from '../../components/DrawerModal';
+import { ItemEntity } from '../../constants/order';
 import { PageContainer } from '../../components/PageContainer';
 import { toFullLocaleDate } from '../../utils/toFullLocaleDate';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
+import { ArrowLeft, ArrowRightCircle } from 'lucide-react';
 import {
     Box,
     Card,
@@ -13,7 +12,10 @@ import {
     Spinner,
     CardBody,
     CardHeader,
+    Tooltip,
 } from '@chakra-ui/react';
+import { DrawerModal } from '../../components/DrawerModal';
+import { Title } from '../../components/Title';
 
 export function OrderDetail() {
     const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -47,34 +49,43 @@ export function OrderDetail() {
         name,
         value,
         quantity,
+        productId,
     }: {
         name: string;
-        value: string;
-        quantity: string;
+        value: number;
+        quantity: number;
+        productId?: string;
     }) {
         return (
-            <div className='flex justify-between gap-4 border-2 h-[80px] border-amber-400 px-2 py-4 hover:bg-zinc-100/30 duration-150'>
-                <p className='flex flex-col font-semibold text-lg'>
+            <div className='flex items-center justify-between text-white gap-4 border-2 h-[80px] border-white/50 hover:border-amber-400 p-4 hover:bg-zinc-100/30 select-none duration-150'>
+                <p className='flex flex-col font-semibold text-lg min-w-[150px] w-[300px] max-w-full px-2 bg-white/5 rounded-md'>
                     Produto:{' '}
-                    <span className='font-bold text-cyan-200 text-xl'>
+                    <span className='font-bold text-yellow-400 text-xl'>
                         {name}
                     </span>
                 </p>
-                <p className='flex flex-col font-semibold text-lg'>
+                <p className='flex flex-col font-semibold text-lg min-w-[150px] w-[300px] max-w-full px-2 bg-white/5 rounded-md'>
                     Valor/unidade:{' '}
-                    <span className='font-bold text-cyan-200 text-xl'>
+                    <span className='font-bold text-yellow-400 text-xl'>
                         {Number(value).toLocaleString('pt-BR', {
                             style: 'currency',
                             currency: 'BRL',
                         })}
                     </span>
                 </p>
-                <p className='flex flex-col font-semibold text-lg'>
+                <p className='flex flex-col font-semibold text-lg min-w-[150px] w-[300px] max-w-full px-2 bg-white/5 rounded-md'>
                     Quantidade:{' '}
-                    <span className='font-bold text-cyan-200 text-xl'>
+                    <span className='font-bold text-yellow-400 text-xl'>
                         {quantity}
                     </span>
                 </p>
+
+                <Tooltip label='Detalhes do produto'>
+                    <ArrowRightCircle 
+                        className='size-8 hover:cursor-pointer hover:text-amber-400 duration-150'
+                        onClick={() => navigate(`/products/${productId}`)}    
+                    />
+                </Tooltip>
             </div>
         );
     }
@@ -93,7 +104,7 @@ export function OrderDetail() {
             <div className='flex items-center justify-start gap-4'>
                 <DrawerModal />
 
-                <Title>Pedido - {id?.slice(0, 8)}</Title>
+                <Title>Pedido - {id?.slice(0, 8)}</Title>   
             </div>
 
             <div className='flex flex-col gap-4 w-full h-fit overflow-hidden'>
@@ -125,7 +136,7 @@ export function OrderDetail() {
                             </p>
                             <p className='capitalize text-lg font-semibold'>
                                 Total:{' '}
-                                <span className='font-bold text-3xl text-cyan-200'>
+                                <span className='font-bold text-3xl text-yellow-400'>
                                     {Number(orderData?.total).toLocaleString(
                                         'pt-br',
                                         { style: 'currency', currency: 'BRL' }
@@ -137,13 +148,14 @@ export function OrderDetail() {
                         <CardBody className='flex flex-col gap-2 m-2 text-white rounded-md border-2 border-amber-500/50 overflow-hidden overflow-y-scroll'>
                             <Box className='flex flex-col gap-2'>
                                 {orderData?.items.map(
-                                    (item: any, index: number) => {
+                                    (item: ItemEntity, index: number) => {
                                         return (
                                             <RowProductsOrder
                                                 key={index}
                                                 name={item.product.name}
                                                 value={item.product.value}
                                                 quantity={item.quantity}
+                                                productId={item.product.id}
                                             />
                                         );
                                     }

@@ -7,7 +7,6 @@ export const http = axios.create({
         Accept: 'application/json',
         Content: 'application/json',
         'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
     },
 });
 
