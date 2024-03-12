@@ -1,9 +1,7 @@
 import { z } from 'zod';
 import { http } from '../../service';
-import { Title } from '../../components/Title';
 import { LgInput } from '../../components/LgInput';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { DrawerModal } from '../../components/DrawerModal';
 import { PageContainer } from '../../components/PageContainer';
 import { ArrowLeftCircle } from 'lucide-react';
 import { useEffect, useState } from 'react';
@@ -183,21 +181,15 @@ export function ProductForm() {
     }, []);
 
     return (
-        <PageContainer>
-            <div className='flex items-center justify-start gap-4'>
-                <DrawerModal />
-
-                <Button
-                    className='capitalize flex items-center gap-2'
-                    colorScheme='yellow'
-                    onClick={() => navigate(-1)}
-                >
-                    <ArrowLeftCircle />
-                    Voltar
-                </Button>
-
-                <Title>Cadastro</Title>
-            </div>
+        <PageContainer title='Cadastro'>
+            <Button
+                className='capitalize flex items-center gap-2 w-fit'
+                colorScheme='yellow'
+                onClick={() => navigate(-1)}
+            >
+                <ArrowLeftCircle />
+                Voltar
+            </Button>
 
             <form
                 onSubmit={handleSubmit(onSubmit)}

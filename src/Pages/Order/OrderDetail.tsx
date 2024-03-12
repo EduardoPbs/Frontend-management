@@ -14,8 +14,6 @@ import {
     CardHeader,
     Tooltip,
 } from '@chakra-ui/react';
-import { DrawerModal } from '../../components/DrawerModal';
-import { Title } from '../../components/Title';
 
 export function OrderDetail() {
     const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -81,9 +79,9 @@ export function OrderDetail() {
                 </p>
 
                 <Tooltip label='Detalhes do produto'>
-                    <ArrowRightCircle 
+                    <ArrowRightCircle
                         className='size-8 hover:cursor-pointer hover:text-amber-400 duration-150'
-                        onClick={() => navigate(`/products/${productId}`)}    
+                        onClick={() => navigate(`/products/${productId}`)}
                     />
                 </Tooltip>
             </div>
@@ -100,71 +98,63 @@ export function OrderDetail() {
         );
 
     return (
-        <PageContainer>
-            <div className='flex items-center justify-start gap-4'>
-                <DrawerModal />
+        <PageContainer title={`Pedido - ${id?.slice(0, 8)}`}>
+            <Box className='flex items-center'>
+                <Button
+                    colorScheme='yellow'
+                    className='flex items-center gap-2 capitalize select-none'
+                    onClick={() => navigate(-1)}
+                >
+                    <ArrowLeft />
+                    Voltar
+                </Button>
+            </Box>
 
-                <Title>Pedido - {id?.slice(0, 8)}</Title>   
-            </div>
-
-            <div className='flex flex-col gap-4 w-full h-fit overflow-hidden'>
-                <Box className='flex items-center'>
-                    <Button
-                        colorScheme='yellow'
-                        className='flex items-center gap-2 capitalize select-none'
-                        onClick={() => navigate(-1)}
-                    >
-                        <ArrowLeft />
-                        Voltar
-                    </Button>
-                </Box>
-
-                <Box className='flex border-4 border-amber-500 rounded-md'>
-                    <Card className='w-full h-[500px] ' background='black'>
-                        <CardHeader className='flex items-center justify-between text-2xl font-semibold text-white'>
-                            <p className='capitalize text-lg font-semibold'>
-                                Data:{' '}
-                                <span className='font-bold text-2xl'>
-                                    {toFullLocaleDate(orderData?.date)}
-                                </span>
-                            </p>
-                            <p className='capitalize text-lg font-semibold'>
-                                Qtde. itens:{' '}
-                                <span className='font-bold text-2xl'>
-                                    {orderData?.items?.length}
-                                </span>
-                            </p>
-                            <p className='capitalize text-lg font-semibold'>
-                                Total:{' '}
-                                <span className='font-bold text-3xl text-yellow-400'>
-                                    {Number(orderData?.total).toLocaleString(
-                                        'pt-br',
-                                        { style: 'currency', currency: 'BRL' }
-                                    )}
-                                </span>
-                            </p>
-                        </CardHeader>
-
-                        <CardBody className='flex flex-col gap-2 m-2 text-white rounded-md border-2 border-amber-500/50 overflow-hidden overflow-y-scroll'>
-                            <Box className='flex flex-col gap-2'>
-                                {orderData?.items.map(
-                                    (item: ItemEntity, index: number) => {
-                                        return (
-                                            <RowProductsOrder
-                                                key={index}
-                                                name={item.product.name}
-                                                value={item.product.value}
-                                                quantity={item.quantity}
-                                                productId={item.product.id}
-                                            />
-                                        );
-                                    }
+            <Box className='flex border-4 border-amber-500 rounded-md'>
+                <Card className='w-full h-[500px] ' background='black'>
+                    <CardHeader className='flex items-center justify-between text-2xl font-semibold text-white'>
+                        <p className='capitalize text-lg font-semibold'>
+                            Data:{' '}
+                            <span className='font-bold text-2xl'>
+                                {toFullLocaleDate(orderData?.date)}
+                            </span>
+                        </p>
+                        <p className='capitalize text-lg font-semibold'>
+                            Qtde. itens:{' '}
+                            <span className='font-bold text-2xl'>
+                                {orderData?.items?.length}
+                            </span>
+                        </p>
+                        <p className='capitalize text-lg font-semibold'>
+                            Total:{' '}
+                            <span className='font-bold text-3xl text-yellow-400'>
+                                {Number(orderData?.total).toLocaleString(
+                                    'pt-br',
+                                    { style: 'currency', currency: 'BRL' }
                                 )}
-                            </Box>
-                        </CardBody>
-                    </Card>
-                </Box>
-            </div>
+                            </span>
+                        </p>
+                    </CardHeader>
+
+                    <CardBody className='flex flex-col gap-2 m-2 text-white rounded-md border-2 border-amber-500/50 overflow-hidden overflow-y-scroll'>
+                        <Box className='flex flex-col gap-2'>
+                            {orderData?.items.map(
+                                (item: ItemEntity, index: number) => {
+                                    return (
+                                        <RowProductsOrder
+                                            key={index}
+                                            name={item.product.name}
+                                            value={item.product.value}
+                                            quantity={item.quantity}
+                                            productId={item.product.id}
+                                        />
+                                    );
+                                }
+                            )}
+                        </Box>
+                    </CardBody>
+                </Card>
+            </Box>
         </PageContainer>
     );
 }

@@ -16,7 +16,6 @@ import {
     Spinner,
     TableContainer,
 } from '@chakra-ui/react';
-import { DrawerModal } from '../../components/DrawerModal';
 
 function OrderTable() {
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -205,41 +204,33 @@ function ProductTable() {
 
 export function Home() {
     return (
-        <PageContainer>
-            <div className='flex items-center justify-start gap-4'>
-                <DrawerModal />
-
-                <Title>Home</Title>
-            </div>
-            
-            <div className='flex flex-col gap-4 w-full overflow-y-auto'>
-                <div className='flex items-center gap-2'>
-                    <Content className='w-full'>
-                        <Title variant='h2'>Notificações</Title>
-
-                        <div></div>
-                    </Content>
-                </div>
-
+        <PageContainer title='Home'>
+            <div className='flex items-center gap-2'>
                 <Content className='w-full'>
-                    <Title variant='h2'>
-                        Estatísticas Recentes {''}
-                        <span className='text-lg opacity-50 capitalize'>
-                            | Últimos pedidos feitos / Estoque de produtos
-                        </span>
-                    </Title>
+                    <Title variant='h2'>Notificações</Title>
 
-                    <div className='flex items-start justify-between gap-2 max-h-fit'>
-                        <Content className='w-1/2'>
-                            <OrderTable />
-                        </Content>
-
-                        <Content className='w-1/2'>
-                            <ProductTable />
-                        </Content>
-                    </div>
+                    <div></div>
                 </Content>
             </div>
+
+            <Content className='w-full'>
+                <Title variant='h2'>
+                    Estatísticas Recentes {''}
+                    <span className='text-lg opacity-50 capitalize'>
+                        | Últimos pedidos feitos / Estoque de produtos
+                    </span>
+                </Title>
+
+                <div className='flex items-start justify-between gap-2 max-h-fit'>
+                    <Content className='w-1/2'>
+                        <OrderTable />
+                    </Content>
+
+                    <Content className='w-1/2'>
+                        <ProductTable />
+                    </Content>
+                </div>
+            </Content>
         </PageContainer>
     );
 }
