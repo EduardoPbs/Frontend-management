@@ -18,7 +18,6 @@ import {
     Spinner,
     TableContainer,
 } from '@chakra-ui/react';
-import { DrawerModal } from '../../components/DrawerModal';
 
 export function Orders() {
     const [isLoading, setIsLoading] = useState<boolean>(true);

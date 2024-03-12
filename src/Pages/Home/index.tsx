@@ -76,7 +76,6 @@ function OrderTable() {
                               dataOrders.orders
                                   .slice(0, 8)
                                   .map((order: OrderEntity) => {
-                                  .map((order: OrderEntity) => {
                                       return (
                                           <Tr key={order.id}>
                                               <Td>
