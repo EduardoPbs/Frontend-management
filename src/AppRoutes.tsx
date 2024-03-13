@@ -6,6 +6,7 @@ import { ProductForm } from './Pages/Products/ProductForm';
 import { Login } from './Pages/Login';
 import { Orders } from './Pages/Orders';
 import { OrderDetail } from './Pages/Orders/OrderDetail';
+import { Employees } from './Pages/Employees';
 
 function AppRoutes() {
     return (
@@ -21,6 +22,8 @@ function AppRoutes() {
                     
                     <Route path='/orders' element={<Orders />} />
                     <Route path='/orders/:id' element={<OrderDetail />} />
+
+                    <Route path='/employees' element={<Employees />} />
                 </Routes>
             </BrowserRouter>
         </ChakraProvider>
