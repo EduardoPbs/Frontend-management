@@ -1,7 +1,7 @@
 export type EmployeeEntity = {
     id: string;
     name: string;
-    cpf: number;
+    cpf: string;
     address: DataAddress;
 };
 

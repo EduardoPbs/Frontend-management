@@ -1,12 +1,14 @@
 import { Home } from './Pages/Home';
-import { Products } from './Pages/Products';
-import { ChakraProvider } from '@chakra-ui/react';
-import { Routes, Route, BrowserRouter } from 'react-router-dom';
-import { ProductForm } from './Pages/Products/ProductForm';
 import { Login } from './Pages/Login';
 import { Orders } from './Pages/Orders';
-import { OrderDetail } from './Pages/Orders/OrderDetail';
+import { Products } from './Pages/Products';
 import { Employees } from './Pages/Employees';
+import { ProductForm } from './Pages/Products/ProductForm';
+import { OrderDetail } from './Pages/Orders/OrderDetail';
+import { EmployeeForm } from './Pages/Employees/EmployeeForm';
+import { ChakraProvider } from '@chakra-ui/react';
+import { EmployeeDetail } from './Pages/Employees/EmployeeDetail';
+import { Routes, Route, BrowserRouter } from 'react-router-dom';
 
 function AppRoutes() {
     return (
@@ -24,6 +26,9 @@ function AppRoutes() {
                     <Route path='/orders/:id' element={<OrderDetail />} />
 
                     <Route path='/employees' element={<Employees />} />
+                    <Route path='/employees/new' element={<EmployeeForm />} />
+                    <Route path='/employees/edit/:id' element={<EmployeeForm />} />
+                    <Route path='/employees/:id' element={<EmployeeDetail />} />
                 </Routes>
             </BrowserRouter>
         </ChakraProvider>

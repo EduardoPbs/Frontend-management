@@ -27,7 +27,6 @@ export function Employees() {
     async function getEmployeesData() {
         try {
             const response = await http('/employees/all');
-            console.log(response.data);
             setDataEmployees({
                 employees: response.data,
                 total: response.data.length,
@@ -92,7 +91,19 @@ export function Employees() {
                                                 </Td>
                                                 <Td>{employee.name}</Td>
                                                 <Td>{employee.cpf}</Td>
-                                                <Td>
+                                                <Td className='flex items-center gap-2'>
+                                                    <Button
+                                                        className='w-full'
+                                                        height={8}
+                                                        colorScheme='yellow'
+                                                        onClick={() =>
+                                                            navigate(
+                                                                `edit/${employee.id}`
+                                                            )
+                                                        }
+                                                    >
+                                                        Editar
+                                                    </Button>
                                                     <Button
                                                         className='w-full'
                                                         height={8}

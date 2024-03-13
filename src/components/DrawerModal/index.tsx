@@ -87,6 +87,7 @@ export function DrawerModal() {
                                 <Button
                                     colorScheme='yellow'
                                     className='w-full gap-3'
+                                    onClick={() => navigate('/employees')}
                                 >
                                     <Users />
                                     <span>Funcionários</span>
