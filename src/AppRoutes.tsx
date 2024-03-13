@@ -4,8 +4,8 @@ import { ChakraProvider } from '@chakra-ui/react';
 import { Routes, Route, BrowserRouter } from 'react-router-dom';
 import { ProductForm } from './Pages/Products/ProductForm';
 import { Login } from './Pages/Login';
-import { Orders } from './Pages/Order';
-import { OrderDetail } from './Pages/Order/OrderDetail';
+import { Orders } from './Pages/Orders';
+import { OrderDetail } from './Pages/Orders/OrderDetail';
 
 function AppRoutes() {
     return (
