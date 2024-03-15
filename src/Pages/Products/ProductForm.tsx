@@ -181,7 +181,7 @@ export function ProductForm() {
     }, []);
 
     return (
-        <PageContainer title='Cadastro'>
+        <PageContainer title={id ? 'Atualizar' : 'Cadastro'}>
             <Button
                 className='capitalize flex items-center gap-2 w-fit'
                 colorScheme='yellow'

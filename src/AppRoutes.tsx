@@ -3,6 +3,7 @@ import { Login } from './Pages/Login';
 import { Orders } from './Pages/Orders';
 import { Products } from './Pages/Products';
 import { Employees } from './Pages/Employees';
+import { OrderForm } from './Pages/Orders/OrderForm';
 import { ProductForm } from './Pages/Products/ProductForm';
 import { OrderDetail } from './Pages/Orders/OrderDetail';
 import { EmployeeForm } from './Pages/Employees/EmployeeForm';
@@ -23,6 +24,7 @@ function AppRoutes() {
                     <Route path='/products/edit/:id' element={<ProductForm />} />
                     
                     <Route path='/orders' element={<Orders />} />
+                    <Route path='/orders/new/:id' element={<OrderForm />} />
                     <Route path='/orders/:id' element={<OrderDetail />} />
 
                     <Route path='/employees' element={<Employees />} />
