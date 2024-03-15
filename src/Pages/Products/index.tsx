@@ -84,6 +84,7 @@ export function Products() {
     }
 
     useEffect(() => {
+        document.title = 'Management | Produtos'
         getDataProducts();
     }, []);
 

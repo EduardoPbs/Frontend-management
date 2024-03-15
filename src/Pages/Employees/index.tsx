@@ -37,6 +37,7 @@ export function Employees() {
     }
 
     useEffect(() => {
+        document.title = 'Management | Funcionários'
         getEmployeesData();
     }, []);
 

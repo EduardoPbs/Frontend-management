@@ -45,6 +45,7 @@ function OrderTable() {
     }
 
     useEffect(() => {
+        document.title = 'Management | Home'
         getOrdersData();
     }, []);
 

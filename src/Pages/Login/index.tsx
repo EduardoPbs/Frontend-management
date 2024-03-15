@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { http } from '../../service';
 import { LgInput } from '../../components/LgInput';
 import { useForm } from 'react-hook-form';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
@@ -69,6 +69,10 @@ export function Login() {
             setLoading(false);
         }
     }
+
+    useEffect(() => {
+        document.title = 'Management | Login'
+    }, []);
 
     return (
         <section className='flex flex-col justify-start gap-4 px-4 py-6 bg-black h-screen text-white selection:bg-amber-700 selection:text-white'>
