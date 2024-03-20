@@ -1,9 +1,12 @@
 import { useRef } from 'react';
+import { IconButton } from '../IconButton';
 import { useNavigate } from 'react-router';
 import {
+    Box,
     Button,
     Drawer,
     Divider,
+    Tooltip,
     DrawerBody,
     DrawerFooter,
     DrawerHeader,
@@ -15,11 +18,14 @@ import {
 import {
     Menu,
     Users,
-    Inbox,
+    LogOut,
     Package,
+    Settings,
     HomeIcon,
-    Settings2,
+    ShoppingBag,
     PercentCircle,
+    Package2,
+    Store,
 } from 'lucide-react';
 
 export function DrawerModal() {
@@ -50,14 +56,7 @@ export function DrawerModal() {
 
                     <DrawerBody className='flex flex-col gap-4 my-4'>
                         <div className='flex flex-col justify-center gap-2'>
-                            <Button
-                                colorScheme='yellow'
-                                className='w-full gap-3'
-                                onClick={() => navigate('/')}
-                            >
-                                <HomeIcon />
-                                <span>Início</span>
-                            </Button>
+                            <IconButton to='/' label='Início' icon={HomeIcon} />
                         </div>
 
                         <div className='flex flex-col justify-center gap-2'>
@@ -66,49 +65,64 @@ export function DrawerModal() {
                             </span>
                             <Divider />
                             <div className='flex flex-col justify-center gap-4'>
-                                <Button
-                                    colorScheme='yellow'
-                                    className='w-full gap-3'
-                                    onClick={() => navigate('/products')}
-                                >
-                                    <Package />
-                                    <span>Produtos</span>
-                                </Button>
-
-                                <Button
-                                    colorScheme='yellow'
-                                    className='w-full gap-3'
-                                    onClick={() => navigate('/orders')}
-                                >
-                                    <Inbox />
-                                    <span>Pedidos</span>
-                                </Button>
-
-                                <Button
-                                    colorScheme='yellow'
-                                    className='w-full gap-3'
-                                    onClick={() => navigate('/employees')}
-                                >
-                                    <Users />
-                                    <span>Funcionários</span>
-                                </Button>
-
-                                <Button
-                                    colorScheme='yellow'
-                                    className='w-full gap-3'
-                                >
-                                    <PercentCircle />
-                                    <span>Promo</span>
-                                </Button>
+                                <IconButton
+                                    icon={Package}
+                                    label='Produtos'
+                                    to='/products'
+                                />
+                                <IconButton
+                                    icon={ShoppingBag}
+                                    label='Vendas'
+                                    to='/orders'
+                                />
+                                <IconButton
+                                    icon={Users}
+                                    label='Funcionários'
+                                    to='/employees'
+                                />
+                                <IconButton
+                                    icon={Package2}
+                                    label='Pedidos'
+                                    to='#'
+                                />
+                                <IconButton
+                                    icon={PercentCircle}
+                                    label='Promo'
+                                    to='#'
+                                />
+                                <IconButton
+                                    icon={Store}
+                                    label='Caixa'
+                                    to='#'
+                                />
                             </div>
                         </div>
                     </DrawerBody>
 
                     <DrawerFooter>
-                        <Button colorScheme='yellow' className='w-full gap-3'>
-                            <Settings2 />
-                            <span>Configurações</span>
-                        </Button>
+                        <Box className='flex items-center gap-2 w-full'>
+                            <Tooltip label='Ir para configurações'>
+                                <Button
+                                    colorScheme='yellow'
+                                    className='w-full gap-3'
+                                    onClick={() => {
+                                        navigate('#');
+                                    }}
+                                >
+                                    <Settings />
+                                </Button>
+                            </Tooltip>
+                            <IconButton
+                                icon={LogOut}
+                                label='Sair'
+                                to='/login'
+                                iconStyle='size-10'
+                                colorScheme='red'
+                                onClick={() => {
+                                    sessionStorage.removeItem('token');
+                                }}
+                            />
+                        </Box>
                     </DrawerFooter>
                 </DrawerContent>
             </Drawer>
