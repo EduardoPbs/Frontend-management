@@ -82,19 +82,15 @@ export function DrawerModal() {
                                 />
                                 <IconButton
                                     icon={Package2}
-                                    label='Pedidos'
+                                    label='Compras'
                                     to='#'
                                 />
                                 <IconButton
                                     icon={PercentCircle}
-                                    label='Promo'
+                                    label='Promoções'
                                     to='#'
                                 />
-                                <IconButton
-                                    icon={Store}
-                                    label='Caixa'
-                                    to='#'
-                                />
+                                <IconButton icon={Store} label='Caixa' to='#' />
                             </div>
                         </div>
                     </DrawerBody>
