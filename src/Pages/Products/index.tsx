@@ -54,9 +54,7 @@ export function Products() {
 
     async function disableProduct(id: string) {
         try {
-            await http.put(`/products/${id}`, {
-                active: false,
-            });
+            await http.delete(`/products/${id}`);
             window.location.reload();
         } catch (err) {
             console.error(err);
@@ -65,9 +63,7 @@ export function Products() {
 
     async function enableProduct(id: string) {
         try {
-            await http.put(`/products/${id}`, {
-                active: true,
-            });
+            await http.patch(`/products/${id}`);
             window.location.reload();
         } catch (err) {
             console.error(err);
