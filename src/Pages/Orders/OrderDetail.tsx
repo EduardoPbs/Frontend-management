@@ -52,7 +52,7 @@ export function OrderDetail() {
         );
 
     return (
-        <PageContainer title={`Pedido - ${id?.slice(0, 8)}`}>
+        <PageContainer title={`Venda - ${id?.slice(0, 8)}`}>
             <Box className='flex items-center'>
                 <Button
                     colorScheme='yellow'

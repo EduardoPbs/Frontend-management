@@ -102,7 +102,7 @@ export function Orders() {
         );
 
     return (
-        <PageContainer title='Pedidos'>
+        <PageContainer title='Vendas'>
             <Box className='flex items-center'>
                 <Button
                     className='flex items-center gap-2'
@@ -110,7 +110,7 @@ export function Orders() {
                     colorScheme='yellow'
                 >
                     <PlusCircle />
-                    Novo pedido
+                    Nova venda
                 </Button>
                 <Modal
                     initialFocusRef={initialRef}

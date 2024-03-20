@@ -180,7 +180,7 @@ export function OrderForm() {
     }, []);
 
     return (
-        <PageContainer title='Novo Pedido'>
+        <PageContainer title='Nova Venda'>
             <Box className='flex items-center gap-4 w-full justify-between'>
                 <div className='flex items-center gap-12'>
                     <Button
@@ -196,7 +196,7 @@ export function OrderForm() {
                         width={250}
                         borderColor='orange'
                         focusBorderColor='yellow.400'
-                        placeholder='Pesquisar...'
+                        placeholder='Pesquisar produto...'
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                             setSearchInput(e.target.value)
                         }
