@@ -93,7 +93,9 @@ export function Purchases() {
 
                 <Title variant='h3'>
                     Cadastrados:{' '}
-                    <span className='text-4xl text-amber-400'>5751</span>
+                    <span className='text-4xl text-amber-400'>
+                        {purchaseData.purchases.length}
+                    </span>
                 </Title>
             </div>
 
