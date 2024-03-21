@@ -87,7 +87,7 @@ export function Orders() {
     }
 
     useEffect(() => {
-        document.title = 'Management | Pedidos'
+        document.title = 'Management | Vendas'
         getDataOrders();
         getEmployees();
     }, []);

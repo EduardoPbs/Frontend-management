@@ -2,10 +2,12 @@ import { Home } from './Pages/Home';
 import { Login } from './Pages/Login';
 import { Orders } from './Pages/Orders';
 import { Products } from './Pages/Products';
+import { Purchases } from './Pages/Purchases';
 import { Employees } from './Pages/Employees';
 import { OrderForm } from './Pages/Orders/OrderForm';
 import { ProductForm } from './Pages/Products/ProductForm';
 import { OrderDetail } from './Pages/Orders/OrderDetail';
+import { PurchaseForm } from './Pages/Purchases/PurchaseForm';
 import { EmployeeForm } from './Pages/Employees/EmployeeForm';
 import { ChakraProvider } from '@chakra-ui/react';
 import { EmployeeDetail } from './Pages/Employees/EmployeeDetail';
@@ -31,6 +33,10 @@ function AppRoutes() {
                     <Route path='/employees/new' element={<EmployeeForm />} />
                     <Route path='/employees/edit/:id' element={<EmployeeForm />} />
                     <Route path='/employees/:id' element={<EmployeeDetail />} />
+
+                    <Route path='/purchases' element={<Purchases />} />
+                    <Route path='/purchases/new/:id' element={<PurchaseForm />} />
+                    {/* <Route path='/purchases/:id' element={<PurchaseDetail />} /> */}
                 </Routes>
             </BrowserRouter>
         </ChakraProvider>

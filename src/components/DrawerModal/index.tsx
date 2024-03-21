@@ -83,7 +83,7 @@ export function DrawerModal() {
                                 <IconButton
                                     icon={Package2}
                                     label='Compras'
-                                    to='#'
+                                    to='/purchases'
                                 />
                                 <IconButton
                                     icon={PercentCircle}
