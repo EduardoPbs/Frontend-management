@@ -21,7 +21,7 @@ import {
 function CustomTh({ children }: { children: React.ReactNode }) {
     return (
         <Th>
-            <span className='text-white text-lg'>{children}</span>
+            <span className='text-slate-50 text-lg'>{children}</span>
         </Th>
     );
 }
@@ -136,19 +136,26 @@ export function Purchases() {
                                                     currency: 'BRL',
                                                 })}
                                             </Td>
-                                            <Td className='text-amber-400'>
-                                                FINALIZADO
+                                            <Td
+                                                className={
+                                                    purchase.status ===
+                                                    'PENDENTE'
+                                                        ? 'text-orange-500'
+                                                        : 'text-yellow-400'
+                                                }
+                                            >
+                                                {purchase.status}
                                             </Td>
                                             <Td>
                                                 <Button
                                                     className='w-full'
                                                     height={8}
                                                     colorScheme='yellow'
-                                                    onClick={() =>
+                                                    onClick={() => {
                                                         navigate(
                                                             `${purchase.id}`
-                                                        )
-                                                    }
+                                                        );
+                                                    }}
                                                 >
                                                     Ver detalhes
                                                 </Button>

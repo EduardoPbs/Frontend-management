@@ -12,6 +12,7 @@ import { EmployeeForm } from './Pages/Employees/EmployeeForm';
 import { ChakraProvider } from '@chakra-ui/react';
 import { EmployeeDetail } from './Pages/Employees/EmployeeDetail';
 import { Routes, Route, BrowserRouter } from 'react-router-dom';
+import { PurchaseDetail } from './Pages/Purchases/PurchaseDetail';
 
 function AppRoutes() {
     return (
@@ -36,7 +37,7 @@ function AppRoutes() {
 
                     <Route path='/purchases' element={<Purchases />} />
                     <Route path='/purchases/new/:id' element={<PurchaseForm />} />
-                    {/* <Route path='/purchases/:id' element={<PurchaseDetail />} /> */}
+                    <Route path='/purchases/:id' element={<PurchaseDetail />} />
                 </Routes>
             </BrowserRouter>
         </ChakraProvider>
