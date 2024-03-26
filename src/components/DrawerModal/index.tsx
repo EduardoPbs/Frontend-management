@@ -90,7 +90,11 @@ export function DrawerModal() {
                                     label='Promoções'
                                     to='#'
                                 />
-                                <IconButton icon={Store} label='Caixa' to='#' />
+                                <IconButton
+                                    icon={Store}
+                                    label='Caixa'
+                                    to='/cash-register'
+                                />
                             </div>
                         </div>
                     </DrawerBody>
