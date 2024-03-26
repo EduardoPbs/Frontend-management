@@ -1,10 +1,10 @@
 import { http } from '../../service';
+import { CustomTh } from '../../components/CustomTh';
 import { useNavigate } from 'react-router';
 import { PageContainer } from '../../components/PageContainer';
 import { toFullLocaleDate } from '../../utils/toFullLocaleDate';
 import { useEffect, useState } from 'react';
 import {
-    Th,
     Tr,
     Td,
     Box,
@@ -13,14 +13,6 @@ import {
     Table,
     TableContainer,
 } from '@chakra-ui/react';
-
-function CustomTh({ children }: { children: React.ReactNode }) {
-    return (
-        <Th>
-            <span className='text-slate-50 text-lg'>{children}</span>
-        </Th>
-    );
-}
 
 export function CashRegister() {
     const [cashRegisterData, setCashRegisterData] = useState({
@@ -73,7 +65,7 @@ export function CashRegister() {
             </p>
             <Box className='overflow-y-scroll scrollbar-hide border-2 rounded-md'>
                 <TableContainer>
-                    <Table size='md'>
+                    <Table size='sm'>
                         <Thead className='text-white text-xl select-none'>
                             <Tr>
                                 <CustomTh>Cód. registro</CustomTh>

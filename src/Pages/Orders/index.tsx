@@ -1,5 +1,6 @@
 import { http } from '../../service';
 import { Title } from '../../components/Title';
+import { CustomTh } from '../../components/CustomTh';
 import { PlusCircle } from 'lucide-react';
 import { useNavigate } from 'react-router';
 import { OrderEntity } from '../../constants/order';
@@ -10,7 +11,6 @@ import { Controller, useForm } from 'react-hook-form';
 import { useEffect, useRef, useState } from 'react';
 import {
     Td,
-    Th,
     Tr,
     Box,
     Tbody,
@@ -198,11 +198,11 @@ export function Orders() {
                     <Table size='sm'>
                         <Thead className='text-white text-xl select-none'>
                             <Tr>
-                                <Th>Cód. Pedido</Th>
-                                <Th>Qtde. itens</Th>
-                                <Th>Data</Th>
-                                <Th>Total</Th>
-                                <Th>Ações</Th>
+                                <CustomTh>Cód. Pedido</CustomTh>
+                                <CustomTh>Qtde. itens</CustomTh>
+                                <CustomTh>Data</CustomTh>
+                                <CustomTh>Total</CustomTh>
+                                <CustomTh>Ações</CustomTh>
                             </Tr>
                         </Thead>
 

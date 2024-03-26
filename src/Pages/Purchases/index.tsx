@@ -1,5 +1,6 @@
 import { http } from '../../service';
 import { Title } from '../../components/Title';
+import { CustomTh } from '../../components/CustomTh';
 import { PackagePlus } from 'lucide-react';
 import { useNavigate } from 'react-router';
 import { PageContainer } from '../../components/PageContainer';
@@ -7,7 +8,6 @@ import { toFullLocaleDate } from '../../utils/toFullLocaleDate';
 import { useEffect, useState } from 'react';
 import {
     Tr,
-    Th,
     Td,
     Box,
     Table,
@@ -17,14 +17,6 @@ import {
     Spinner,
     TableContainer,
 } from '@chakra-ui/react';
-
-function CustomTh({ children }: { children: React.ReactNode }) {
-    return (
-        <Th>
-            <span className='text-slate-50 text-lg'>{children}</span>
-        </Th>
-    );
-}
 
 export function Purchases() {
     const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -92,6 +84,28 @@ export function Purchases() {
                 <Title variant='h3'>Resumo - Pedidos</Title>
 
                 <Title variant='h3'>
+                    Pendentes:{' '}
+                    <span className='text-4xl text-amber-400'>
+                        {
+                            purchaseData.purchases.filter((p: any) => {
+                                return p.status === 'PENDENTE';
+                            }).length
+                        }
+                    </span>
+                </Title>
+
+                <Title variant='h3'>
+                    Finalizados:{' '}
+                    <span className='text-4xl text-amber-400'>
+                        {
+                            purchaseData.purchases.filter((p: any) => {
+                                return p.status === 'FINALIZADO';
+                            }).length
+                        }
+                    </span>
+                </Title>
+
+                <Title variant='h3'>
                     Cadastrados:{' '}
                     <span className='text-4xl text-amber-400'>
                         {purchaseData.purchases.length}
@@ -101,7 +115,7 @@ export function Purchases() {
 
             <Box className='overflow-y-scroll scrollbar-hide border-2 rounded-md'>
                 <TableContainer>
-                    <Table size='md'>
+                    <Table size='sm'>
                         <Thead className='text-white text-xl select-none'>
                             <Tr>
                                 <CustomTh>Cód. Compra</CustomTh>

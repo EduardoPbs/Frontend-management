@@ -1,5 +1,6 @@
 import { http } from '../../service';
 import { Title } from '../../components/Title';
+import { CustomTh } from '../../components/CustomTh';
 import { useNavigate } from 'react-router';
 import { PageContainer } from '../../components/PageContainer';
 import { ProductEntity } from '../../constants/product';
@@ -7,7 +8,6 @@ import { useState, useEffect } from 'react';
 import { PlusCircle, Settings } from 'lucide-react';
 import {
     Tr,
-    Th,
     Td,
     Box,
     Table,
@@ -80,7 +80,7 @@ export function Products() {
     }
 
     useEffect(() => {
-        document.title = 'Management | Produtos'
+        document.title = 'Management | Produtos';
         getDataProducts();
     }, []);
 
@@ -122,13 +122,13 @@ export function Products() {
                     <Table size='sm'>
                         <Thead className='text-white text-xl select-none'>
                             <Tr>
-                                <Th>Cód. Produto</Th>
-                                <Th>Nome</Th>
-                                <Th>Categoria</Th>
-                                <Th>Estoque</Th>
-                                <Th isNumeric>Valor (R$)</Th>
-                                <Th>Status</Th>
-                                <Th>Ações</Th>
+                                <CustomTh>Cód. Produto</CustomTh>
+                                <CustomTh>Nome</CustomTh>
+                                <CustomTh>Categoria</CustomTh>
+                                <CustomTh>Estoque</CustomTh>
+                                <CustomTh>Valor (R$)</CustomTh>
+                                <CustomTh>Status</CustomTh>
+                                <CustomTh>Ações</CustomTh>
                             </Tr>
                         </Thead>
 
@@ -151,7 +151,7 @@ export function Products() {
                                         >
                                             {product.stock}
                                         </Td>
-                                        <Td isNumeric>
+                                        <Td>
                                             {Number(
                                                 product.value
                                             ).toLocaleString('pt-BR', {

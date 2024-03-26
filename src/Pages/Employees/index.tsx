@@ -1,5 +1,6 @@
 import { http } from '../../service';
 import { Title } from '../../components/Title';
+import { CustomTh } from '../../components/CustomTh';
 import { PlusCircle } from 'lucide-react';
 import { useNavigate } from 'react-router';
 import { PageContainer } from '../../components/PageContainer';
@@ -8,7 +9,6 @@ import { useEffect, useState } from 'react';
 import {
     Tr,
     Td,
-    Th,
     Box,
     Tbody,
     Table,
@@ -68,10 +68,10 @@ export function Employees() {
                     <Table size='sm'>
                         <Thead className='text-white text-xl select-none'>
                             <Tr>
-                                <Th>Cód. Funcionário</Th>
-                                <Th>Nome</Th>
-                                <Th>CPF</Th>
-                                <Th>Ações</Th>
+                                <CustomTh>Cód. Funcionário</CustomTh>
+                                <CustomTh>Nome</CustomTh>
+                                <CustomTh>CPF</CustomTh>
+                                <CustomTh>Ações</CustomTh>
                             </Tr>
                         </Thead>
 
