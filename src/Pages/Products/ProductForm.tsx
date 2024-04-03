@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { http } from '../../service';
 import { LgInput } from '../../components/LgInput';
+import { IconButton } from '../../components/IconButton';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { PageContainer } from '../../components/PageContainer';
 import { ArrowLeftCircle } from 'lucide-react';
@@ -8,6 +9,11 @@ import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router';
 import { Button, Select, useToast } from '@chakra-ui/react';
+import {
+    primary_red,
+    primary_white,
+    primary_hover_red,
+} from '../../constants/styles';
 
 export interface ProductEntity {
     code: number | undefined;
@@ -182,14 +188,15 @@ export function ProductForm() {
 
     return (
         <PageContainer title={id ? 'Atualizar' : 'Cadastro'}>
-            <Button
-                className='capitalize flex items-center gap-2 w-fit'
-                colorScheme='yellow'
-                onClick={() => navigate(-1)}
-            >
-                <ArrowLeftCircle />
-                Voltar
-            </Button>
+            <IconButton
+                to={-1}
+                label='Voltar'
+                className='w-fit'
+                icon={ArrowLeftCircle}
+                bgColor={primary_red}
+                textColor={primary_white}
+                bgHoverColor={primary_hover_red}
+            />
 
             <form
                 onSubmit={handleSubmit(onSubmit)}

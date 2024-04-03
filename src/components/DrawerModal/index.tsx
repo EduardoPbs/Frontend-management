@@ -18,15 +18,16 @@ import {
 import {
     Menu,
     Users,
+    Store,
     LogOut,
     Package,
     Settings,
+    Package2,
     HomeIcon,
     ShoppingBag,
     PercentCircle,
-    Package2,
-    Store,
 } from 'lucide-react';
+import { custom_red, primary_red } from '../../constants/styles';
 
 export function DrawerModal() {
     const { isOpen, onOpen, onClose } = useDisclosure();
@@ -35,9 +36,10 @@ export function DrawerModal() {
 
     return (
         <>
-            <Button ref={btnRef} colorScheme='orange' onClick={onOpen}>
-                <Menu />
-            </Button>
+            <Menu
+                className='text-primary-red hover:text-primary-hover-red size-10 rounded-[4px] hover:cursor-pointer duration-150'
+                onClick={onOpen}
+            />
 
             <Drawer
                 isOpen={isOpen}
@@ -47,8 +49,8 @@ export function DrawerModal() {
             >
                 <DrawerOverlay />
 
-                <DrawerContent color='white' bg='gray.900'>
-                    <DrawerCloseButton />
+                <DrawerContent color='#F7F7FF' bg='#131112'>
+                    <DrawerCloseButton _hover={{ color: '#F40000' }} />
 
                     <DrawerHeader>Painel</DrawerHeader>
 
@@ -98,12 +100,15 @@ export function DrawerModal() {
                             </div>
                         </div>
                     </DrawerBody>
-
                     <DrawerFooter>
                         <Box className='flex items-center gap-2 w-full'>
                             <Tooltip label='Ir para configurações'>
                                 <Button
-                                    colorScheme='yellow'
+                                    rounded={6}
+                                    _hover={{
+                                        bg: primary_red,
+                                        color: '#F7F7FF',
+                                    }}
                                     className='w-full gap-3'
                                     onClick={() => {
                                         navigate('#');
@@ -112,16 +117,23 @@ export function DrawerModal() {
                                     <Settings />
                                 </Button>
                             </Tooltip>
-                            <IconButton
-                                icon={LogOut}
-                                label='Sair'
-                                to='/login'
-                                iconStyle='size-10'
-                                colorScheme='red'
+                            <Button
+                                variant='outline'
+                                _hover={{
+                                    borderColor: custom_red,
+                                    color: custom_red,
+                                }}
+                                _active={{ bg: 'transparent' }}
+                                color='white'
                                 onClick={() => {
                                     sessionStorage.removeItem('token');
+                                    navigate('/login');
                                 }}
-                            />
+                                className='flex item-center w-full gap-2'
+                            >
+                                <LogOut className='size-6' />
+                                Sair
+                            </Button>
                         </Box>
                     </DrawerFooter>
                 </DrawerContent>

@@ -2,12 +2,18 @@ import { http } from '../../service';
 import { Title } from '../../components/Title';
 import { RowDetail } from '../../components/RowDetail';
 import { ItemEntity } from '../../constants/order';
+import { IconButton } from '../../components/IconButton';
 import { CellDetail } from '../../components/CellDetail';
 import { PageContainer } from '../../components/PageContainer';
 import { toFullLocaleDate } from '../../utils/toFullLocaleDate';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import { ArrowLeftCircle, ArrowRightCircle } from 'lucide-react';
+import {
+    primary_red,
+    primary_white,
+    primary_hover_red,
+} from '../../constants/styles';
 import {
     Box,
     Card,
@@ -52,14 +58,15 @@ export function PurchaseDetail() {
 
     return (
         <PageContainer title={`Compra - ${id?.slice(0, 8)}`}>
-            <Button
-                className='capitalize flex items-center gap-2 w-fit'
-                colorScheme='yellow'
-                onClick={() => navigate(-1)}
-            >
-                <ArrowLeftCircle />
-                Voltar
-            </Button>
+            <IconButton
+                to={-1}
+                label='Voltar'
+                className='w-fit'
+                icon={ArrowLeftCircle}
+                bgColor={primary_red}
+                textColor={primary_white}
+                bgHoverColor={primary_hover_red}
+            />
             <Box className='flex border-4 border-amber-500 rounded-md'>
                 <Card className='w-full h-[550px] ' background='black'>
                     <CardHeader className='flex flex-col justify-center text-2xl font-semibold text-white'>

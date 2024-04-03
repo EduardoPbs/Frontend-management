@@ -1,7 +1,7 @@
 import { http } from '../../service';
 import { CustomTh } from '../../components/CustomTh';
-import { useNavigate } from 'react-router';
 import { PageContainer } from '../../components/PageContainer';
+import { table_row_hover } from '../../constants/styles';
 import { toFullLocaleDate } from '../../utils/toFullLocaleDate';
 import { useEffect, useState } from 'react';
 import {
@@ -19,8 +19,6 @@ export function CashRegister() {
         activities: [],
         amount: 0,
     });
-
-    const navigate = useNavigate();
 
     async function getCashRegisterData() {
         try {
@@ -40,11 +38,11 @@ export function CashRegister() {
     function operationType(operation: string) {
         switch (operation) {
             case 'ENTRANCE':
-                return <span className='text-green-300'>ENTRADA</span>;
+                return <span className='text-agreed-green'>ENTRADA</span>;
             case 'PULLOUT':
-                return <span className='text-yellow-600'>RETIRADA</span>;
+                return <span className='text-primary-hover-red'>RETIRADA</span>;
             default:
-                return <span className='text-zinc-400'>Não informado.</span>;
+                return <span className='text-dark-gray'>Não informado.</span>;
         }
     }
 
@@ -56,7 +54,7 @@ export function CashRegister() {
         <PageContainer title='Caixa'>
             <p className='text-lg font-semibold'>
                 Total em caixa:{' '}
-                <span className='text-2xl font-bold text-amber-400'>
+                <span className='text-2xl font-bold text-primary-red'>
                     {Number(cashRegisterData.amount).toLocaleString('pt-BR', {
                         style: 'currency',
                         currency: 'BRL',
@@ -66,7 +64,7 @@ export function CashRegister() {
             <Box className='overflow-y-scroll scrollbar-hide border-2 rounded-md'>
                 <TableContainer>
                     <Table size='sm'>
-                        <Thead className='text-white text-xl select-none'>
+                        <Thead className='text-primary-white text-xl select-none'>
                             <Tr>
                                 <CustomTh>Cód. registro</CustomTh>
                                 <CustomTh>Operação</CustomTh>
@@ -82,7 +80,7 @@ export function CashRegister() {
                                         return (
                                             <Tr
                                                 key={index}
-                                                className='font-semibold hover:bg-zinc-100/30 duration-150'
+                                                className={table_row_hover}
                                             >
                                                 <Td>
                                                     {activity.id.slice(0, 8)}

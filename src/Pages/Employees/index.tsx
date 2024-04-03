@@ -2,10 +2,18 @@ import { http } from '../../service';
 import { Title } from '../../components/Title';
 import { CustomTh } from '../../components/CustomTh';
 import { PlusCircle } from 'lucide-react';
+import { IconButton } from '../../components/IconButton';
 import { useNavigate } from 'react-router';
 import { PageContainer } from '../../components/PageContainer';
 import { EmployeeEntity } from '../../constants/employee';
 import { useEffect, useState } from 'react';
+import {
+    primary_red,
+    primary_white,
+    table_row_hover,
+    primary_hover_red,
+    round_default,
+} from '../../constants/styles';
 import {
     Tr,
     Td,
@@ -37,27 +45,26 @@ export function Employees() {
     }
 
     useEffect(() => {
-        document.title = 'Management | Funcionários'
+        document.title = 'Management | Funcionários';
         getEmployeesData();
     }, []);
 
     return (
         <PageContainer title='Funcionários'>
-            <Box className='flex items-center'>
-                <Button
-                    colorScheme='yellow'
-                    className='flex items-center gap-2 capitalize select-none'
-                    onClick={() => navigate('new')}
-                >
-                    <PlusCircle />
-                    Novo Funcionário
-                </Button>
-            </Box>
+            <IconButton
+                to='new'
+                label='Novo Funcionário'
+                className='w-fit'
+                icon={PlusCircle}
+                bgColor={primary_red}
+                textColor={primary_white}
+                bgHoverColor={primary_hover_red}
+            />
 
             <div className='flex items-center justify-between'>
                 <Title variant='h3'>
                     Cadastrados:{' '}
-                    <span className='text-4xl text-amber-400'>
+                    <span className='text-4xl text-primary-red'>
                         {dataEmployees?.total}
                     </span>
                 </Title>
@@ -71,7 +78,7 @@ export function Employees() {
                                 <CustomTh>Cód. Funcionário</CustomTh>
                                 <CustomTh>Nome</CustomTh>
                                 <CustomTh>CPF</CustomTh>
-                                <CustomTh>Ações</CustomTh>
+                                <CustomTh outStyle='border-r-0'>Ações</CustomTh>
                             </Tr>
                         </Thead>
 
@@ -85,7 +92,7 @@ export function Employees() {
                                         return (
                                             <Tr
                                                 key={index}
-                                                className='font-semibold hover:bg-zinc-100/30 duration-150'
+                                                className={table_row_hover}
                                             >
                                                 <Td>
                                                     {employee.id.slice(0, 8)}
@@ -96,7 +103,16 @@ export function Employees() {
                                                     <Button
                                                         className='w-full'
                                                         height={8}
-                                                        colorScheme='yellow'
+                                                        borderRadius={
+                                                            round_default
+                                                        }
+                                                        backgroundColor={
+                                                            primary_red
+                                                        }
+                                                        color={primary_white}
+                                                        _hover={{
+                                                            bg: primary_hover_red,
+                                                        }}
                                                         onClick={() =>
                                                             navigate(
                                                                 `edit/${employee.id}`
@@ -108,7 +124,16 @@ export function Employees() {
                                                     <Button
                                                         className='w-full'
                                                         height={8}
-                                                        colorScheme='yellow'
+                                                        borderRadius={
+                                                            round_default
+                                                        }
+                                                        backgroundColor={
+                                                            primary_red
+                                                        }
+                                                        color={primary_white}
+                                                        _hover={{
+                                                            bg: primary_hover_red,
+                                                        }}
                                                         onClick={() =>
                                                             navigate(
                                                                 `${employee.id}`

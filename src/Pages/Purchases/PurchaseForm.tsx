@@ -1,11 +1,17 @@
 import { http } from '../../service';
 import { RowDetail } from '../../components/RowDetail';
 import { CellDetail } from '../../components/CellDetail';
+import { IconButton } from '../../components/IconButton';
 import { PageContainer } from '../../components/PageContainer';
 import { ProductEntity } from '../../constants/product';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import { ItemPurchaseCreate, PurchaseCreate } from '../../constants/purchase';
+import {
+    primary_hover_red,
+    primary_red,
+    primary_white,
+} from '../../constants/styles';
 import {
     ArchiveRestore,
     ArrowLeftCircle,
@@ -255,14 +261,15 @@ export function PurchaseForm() {
         <PageContainer title='Nova Compra'>
             <Box className='flex items-center gap-4 w-full justify-between'>
                 <div className='flex items-center gap-12'>
-                    <Button
-                        className='capitalize flex items-center gap-2 w-fit'
-                        colorScheme='yellow'
-                        onClick={() => navigate(-1)}
-                    >
-                        <ArrowLeftCircle />
-                        Voltar
-                    </Button>
+                    <IconButton
+                        to={-1}
+                        label='Voltar'
+                        className='w-fit'
+                        icon={ArrowLeftCircle}
+                        bgColor={primary_red}
+                        textColor={primary_white}
+                        bgHoverColor={primary_hover_red}
+                    />
 
                     <Input
                         width={250}

@@ -1,11 +1,19 @@
 import { http } from '../../service';
 import { Title } from '../../components/Title';
 import { CustomTh } from '../../components/CustomTh';
+import { IconButton } from '../../components/IconButton';
 import { PackagePlus } from 'lucide-react';
 import { useNavigate } from 'react-router';
 import { PageContainer } from '../../components/PageContainer';
 import { toFullLocaleDate } from '../../utils/toFullLocaleDate';
 import { useEffect, useState } from 'react';
+import {
+    primary_red,
+    primary_white,
+    table_row_hover,
+    primary_hover_red,
+    round_default,
+} from '../../constants/styles';
 import {
     Tr,
     Td,
@@ -69,23 +77,22 @@ export function Purchases() {
 
     return (
         <PageContainer title='Compras'>
-            <Box className='flex items-center'>
-                <Button
-                    className='flex items-center gap-2'
-                    onClick={createPurchase}
-                    colorScheme='yellow'
-                >
-                    <PackagePlus />
-                    Nova Compra
-                </Button>
-            </Box>
+            <IconButton
+                onClick={createPurchase}
+                label='Nova Compra'
+                className='w-fit py-4'
+                icon={PackagePlus}
+                bgColor={primary_red}
+                textColor={primary_white}
+                bgHoverColor={primary_hover_red}
+            />
 
             <div className='flex items-center justify-between'>
                 <Title variant='h3'>Resumo - Pedidos</Title>
 
                 <Title variant='h3'>
                     Pendentes:{' '}
-                    <span className='text-4xl text-amber-400'>
+                    <span className='text-4xl text-primary-red'>
                         {
                             purchaseData.purchases.filter((p: any) => {
                                 return p.status === 'PENDENTE';
@@ -96,7 +103,7 @@ export function Purchases() {
 
                 <Title variant='h3'>
                     Finalizados:{' '}
-                    <span className='text-4xl text-amber-400'>
+                    <span className='text-4xl text-primary-red'>
                         {
                             purchaseData.purchases.filter((p: any) => {
                                 return p.status === 'FINALIZADO';
@@ -107,7 +114,7 @@ export function Purchases() {
 
                 <Title variant='h3'>
                     Cadastrados:{' '}
-                    <span className='text-4xl text-amber-400'>
+                    <span className='text-4xl text-primary-red'>
                         {purchaseData.purchases.length}
                     </span>
                 </Title>
@@ -123,7 +130,7 @@ export function Purchases() {
                                 <CustomTh>Data</CustomTh>
                                 <CustomTh>Total</CustomTh>
                                 <CustomTh>Status</CustomTh>
-                                <CustomTh>Ações</CustomTh>
+                                <CustomTh outStyle='border-r-0'>Ações</CustomTh>
                             </Tr>
                         </Thead>
 
@@ -133,7 +140,7 @@ export function Purchases() {
                                     return (
                                         <Tr
                                             key={purchase.id}
-                                            className='font-semibold hover:bg-zinc-100/30 duration-150'
+                                            className={table_row_hover}
                                         >
                                             <Td>{purchase.id.slice(0, 8)}</Td>
                                             <Td>{purchase.items.length}</Td>
@@ -151,12 +158,12 @@ export function Purchases() {
                                                 })}
                                             </Td>
                                             <Td
-                                                className={
+                                                className={`font-bold ${
                                                     purchase.status ===
                                                     'PENDENTE'
-                                                        ? 'text-orange-500'
-                                                        : 'text-yellow-400'
-                                                }
+                                                        ? 'text-warning-red'
+                                                        : 'text-agreed-green'
+                                                }`}
                                             >
                                                 {purchase.status}
                                             </Td>
@@ -164,7 +171,14 @@ export function Purchases() {
                                                 <Button
                                                     className='w-full'
                                                     height={8}
-                                                    colorScheme='yellow'
+                                                    borderRadius={round_default}
+                                                    backgroundColor={
+                                                        primary_red
+                                                    }
+                                                    color={primary_white}
+                                                    _hover={{
+                                                        bg: primary_hover_red,
+                                                    }}
                                                     onClick={() => {
                                                         navigate(
                                                             `${purchase.id}`

@@ -1,11 +1,22 @@
 import { http } from '../../service';
 import { Title } from '../../components/Title';
 import { CustomTh } from '../../components/CustomTh';
+import { IconButton } from '../../components/IconButton';
 import { useNavigate } from 'react-router';
 import { PageContainer } from '../../components/PageContainer';
 import { ProductEntity } from '../../constants/product';
 import { useState, useEffect } from 'react';
 import { PlusCircle, Settings } from 'lucide-react';
+import {
+    primary_red,
+    agreed_green,
+    primary_white,
+    table_row_hover,
+    primary_hover_red,
+    agreed_hover_green,
+    custom_red,
+    round_default,
+} from '../../constants/styles';
 import {
     Tr,
     Td,
@@ -72,9 +83,9 @@ export function Products() {
 
     function stockWarn(quantity: number): string {
         if (quantity < 6) {
-            return 'text-red-500';
+            return 'text-primary-hover-red';
         } else if (quantity < 11) {
-            return 'text-amber-400';
+            return 'text-warning-red';
         }
         return '';
     }
@@ -95,29 +106,28 @@ export function Products() {
 
     return (
         <PageContainer title='Produtos'>
-            <Box className='flex items-center'>
-                <Button
-                    colorScheme='yellow'
-                    className='flex items-center gap-2 capitalize select-none'
-                    onClick={() => navigate('new')}
-                >
-                    <PlusCircle />
-                    Novo produto
-                </Button>
-            </Box>
+            <IconButton
+                to='new'
+                label='Novo produto'
+                className='w-fit py-4'
+                icon={PlusCircle}
+                bgColor={primary_red}
+                textColor={primary_white}
+                bgHoverColor={primary_hover_red}
+            />
 
             <div className='flex items-center justify-between'>
                 <Title variant='h3'>Resumo - Produtos</Title>
 
                 <Title variant='h3'>
                     Cadastrados:{' '}
-                    <span className='text-4xl text-amber-400'>
+                    <span className='text-4xl text-primary-red'>
                         {dataProducts.total}
                     </span>
                 </Title>
             </div>
 
-            <Box className='overflow-y-scroll scrollbar-hide border-2 rounded-md'>
+            <Box className='overflow-y-scroll scrollbar-hide border-2 border-border-gray rounded-md'>
                 <TableContainer>
                     <Table size='sm'>
                         <Thead className='text-white text-xl select-none'>
@@ -128,7 +138,7 @@ export function Products() {
                                 <CustomTh>Estoque</CustomTh>
                                 <CustomTh>Valor (R$)</CustomTh>
                                 <CustomTh>Status</CustomTh>
-                                <CustomTh>Ações</CustomTh>
+                                <CustomTh outStyle='border-r-0'>Ações</CustomTh>
                             </Tr>
                         </Thead>
 
@@ -137,7 +147,7 @@ export function Products() {
                                 dataProducts?.products.map((product: any) => (
                                     <Tr
                                         key={product.id}
-                                        className='font-semibold hover:bg-zinc-100/30 duration-150'
+                                        className={table_row_hover}
                                     >
                                         <Td>{product.code}</Td>
                                         <Td>{product.name}</Td>
@@ -161,13 +171,13 @@ export function Products() {
                                         </Td>
                                         <Td>
                                             {product.active ? (
-                                                <span className='flex items-center gap-1 text-yellow-400'>
-                                                    <div className='size-2 bg-yellow-400 rounded-full' />
+                                                <span className='flex items-center gap-1 text-agreed-green'>
+                                                    <div className='size-2 bg-agreed-green rounded-full' />
                                                     Online
                                                 </span>
                                             ) : (
-                                                <span className='flex items-center gap-1 text-red-400/75'>
-                                                    <div className='size-2 bg-red-400 rounded-full' />
+                                                <span className='flex items-center gap-1 text-primary-hover-red'>
+                                                    <div className='size-2 bg-primary-hover-red rounded-full' />
                                                     Offline
                                                 </span>
                                             )}
@@ -176,7 +186,7 @@ export function Products() {
                                             <Popover closeOnBlur={false}>
                                                 <PopoverTrigger>
                                                     <Button colorScheme='amber'>
-                                                        <Settings className='text-yellow-400/85 hover:text-amber-500 hover:cursor-pointer duration-150' />
+                                                        <Settings className='text-primary-black hover:text-primary-red hover:cursor-pointer duration-150' />
                                                     </Button>
                                                 </PopoverTrigger>
                                                 <Portal>
@@ -185,7 +195,13 @@ export function Products() {
                                                         <PopoverBody>
                                                             <Box className='flex gap-2'>
                                                                 <Button
-                                                                    colorScheme='yellow'
+                                                                    borderRadius={
+                                                                        round_default
+                                                                    }
+                                                                    _hover={{
+                                                                        bg: primary_red,
+                                                                        color: primary_white,
+                                                                    }}
                                                                     onClick={() =>
                                                                         navigate(
                                                                             `edit/${product.id}`
@@ -199,7 +215,18 @@ export function Products() {
                                                                         {product.active ? (
                                                                             <Button
                                                                                 type='button'
-                                                                                background='red.400'
+                                                                                borderRadius={
+                                                                                    round_default
+                                                                                }
+                                                                                backgroundColor={
+                                                                                    custom_red
+                                                                                }
+                                                                                color={
+                                                                                    primary_white
+                                                                                }
+                                                                                _hover={{
+                                                                                    bg: primary_hover_red,
+                                                                                }}
                                                                                 onClick={() =>
                                                                                     disableProduct(
                                                                                         product.id
@@ -211,7 +238,18 @@ export function Products() {
                                                                         ) : (
                                                                             <Button
                                                                                 type='button'
-                                                                                colorScheme='blue'
+                                                                                borderRadius={
+                                                                                    round_default
+                                                                                }
+                                                                                backgroundColor={
+                                                                                    agreed_green
+                                                                                }
+                                                                                color={
+                                                                                    primary_white
+                                                                                }
+                                                                                _hover={{
+                                                                                    bg: agreed_hover_green,
+                                                                                }}
                                                                                 onClick={() =>
                                                                                     enableProduct(
                                                                                         product.id

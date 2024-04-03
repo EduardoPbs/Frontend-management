@@ -1,16 +1,21 @@
 import { http } from '../../service';
 import { RowDetail } from '../../components/RowDetail';
 import { CellDetail } from '../../components/CellDetail';
+import { IconButton } from '../../components/IconButton';
 import { PageContainer } from '../../components/PageContainer';
 import { toFullLocaleDate } from '../../utils/toFullLocaleDate';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import { ItemEntity, OrderEntity } from '../../constants/order';
-import { ArrowLeft, ArrowRightCircle } from 'lucide-react';
+import { ArrowLeftCircle, ArrowRightCircle } from 'lucide-react';
+import {
+    primary_red,
+    primary_white,
+    primary_hover_red,
+} from '../../constants/styles';
 import {
     Box,
     Card,
-    Button,
     Spinner,
     Tooltip,
     CardBody,
@@ -53,16 +58,15 @@ export function OrderDetail() {
 
     return (
         <PageContainer title={`Venda - ${id?.slice(0, 8)}`}>
-            <Box className='flex items-center'>
-                <Button
-                    colorScheme='yellow'
-                    className='flex items-center gap-2 capitalize select-none'
-                    onClick={() => navigate(-1)}
-                >
-                    <ArrowLeft />
-                    Voltar
-                </Button>
-            </Box>
+            <IconButton
+                to={-1}
+                label='Voltar'
+                className='w-fit'
+                icon={ArrowLeftCircle}
+                bgColor={primary_red}
+                textColor={primary_white}
+                bgHoverColor={primary_hover_red}
+            />
 
             <Box className='flex border-4 border-amber-500 rounded-md'>
                 <Card className='w-full h-[500px] ' background='black'>

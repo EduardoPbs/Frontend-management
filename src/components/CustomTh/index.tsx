@@ -1,9 +1,22 @@
 import { Th } from '@chakra-ui/react';
+import { twMerge } from 'tailwind-merge';
+import { border_gray } from '../../constants/styles';
 
-export function CustomTh({ children }: { children: React.ReactNode }) {
+interface CustomThProps {
+    children: React.ReactNode;
+    outStyle?: string;
+    inStyle?: string;
+}
+
+export function CustomTh({ children, outStyle, inStyle }: CustomThProps) {
     return (
-        <Th className='border-x-2'>
-            <span className='text-zinc-300 text-lg'>{children}</span>
+        <Th
+            borderColor={border_gray}
+            className={twMerge('bg-light-gray border-r-[3px]', outStyle)}
+        >
+            <span className={twMerge('text-primary-black text-lg', inStyle)}>
+                {children}
+            </span>
         </Th>
     );
 }

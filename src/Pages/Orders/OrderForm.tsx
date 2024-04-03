@@ -1,16 +1,50 @@
 import { http } from '../../service';
 import { RowDetail } from '../../components/RowDetail';
 import { CellDetail } from '../../components/CellDetail';
+import { IconButton } from '../../components/IconButton';
 import { PageContainer } from '../../components/PageContainer';
 import { ProductEntity } from '../../constants/product';
 import { useNavigate, useParams } from 'react-router';
 import { useEffect, useRef, useState } from 'react';
 import { ItemOrderCreate, OrderCreate } from '../../constants/order';
-import { PlusCircle, MinusCircle, ArrowLeftCircle, ArchiveRestore } from 'lucide-react';
-import { Box, Card, Input, Modal, Button, CardBody, useToast, ModalBody, CardHeader, ModalHeader, ModalFooter, ModalOverlay, ModalContent, useDisclosure, ModalCloseButton } from '@chakra-ui/react';
+import {
+    primary_red,
+    primary_white,
+    primary_hover_red,
+} from '../../constants/styles';
+import {
+    PlusCircle,
+    MinusCircle,
+    ArchiveRestore,
+    ArrowLeftCircle,
+} from 'lucide-react';
+import {
+    Box,
+    Card,
+    Input,
+    Modal,
+    Button,
+    CardBody,
+    useToast,
+    ModalBody,
+    CardHeader,
+    ModalHeader,
+    ModalFooter,
+    ModalOverlay,
+    ModalContent,
+    useDisclosure,
+    ModalCloseButton,
+} from '@chakra-ui/react';
 
-
-function RowProductsOrder({ name, code, value, quantity, productId, selectedProducts, setSelectedProducts }: {
+function RowProductsOrder({
+    name,
+    code,
+    value,
+    quantity,
+    productId,
+    selectedProducts,
+    setSelectedProducts,
+}: {
     name: string;
     code: number;
     value: number;
@@ -183,14 +217,15 @@ export function OrderForm() {
         <PageContainer title='Nova Venda'>
             <Box className='flex items-center gap-4 w-full justify-between'>
                 <div className='flex items-center gap-12'>
-                    <Button
-                        className='capitalize flex items-center gap-2 w-fit'
-                        colorScheme='yellow'
-                        onClick={() => navigate(-1)}
-                    >
-                        <ArrowLeftCircle />
-                        Voltar
-                    </Button>
+                    <IconButton
+                        to={-1}
+                        label='Voltar'
+                        className='w-fit'
+                        icon={ArrowLeftCircle}
+                        bgColor={primary_red}
+                        textColor={primary_white}
+                        bgHoverColor={primary_hover_red}
+                    />
 
                     <Input
                         width={250}

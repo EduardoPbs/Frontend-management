@@ -2,9 +2,11 @@ import { http } from '../../service';
 import { Title } from '../../components/Title';
 import { Content } from '../../components/Content';
 import { OrderEntity } from '../../constants/order';
+import { useNavigate } from 'react-router';
 import { PageContainer } from '../../components/PageContainer';
 import { ProductEntity } from '../../constants/product';
 import { useEffect, useState } from 'react';
+import { AlertCircle, ArrowRightCircle } from 'lucide-react';
 import {
     Th,
     Tr,
@@ -13,12 +15,10 @@ import {
     Tbody,
     Thead,
     Table,
+    Tooltip,
     Spinner,
     TableContainer,
-    Tooltip,
 } from '@chakra-ui/react';
-import { AlertCircle, ArrowRightCircle } from 'lucide-react';
-import { useNavigate } from 'react-router';
 
 function OrderTable() {
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -65,7 +65,12 @@ function OrderTable() {
                 <div className='flex items-center justify-between'>
                     <Title variant='h3'>Resumo - Pedidos</Title>
 
-                    <Title variant='h3'>Total: {dataOrders.total}</Title>
+                    <Title variant='h3'>
+                        Total:{' '}
+                        <span className='text-3xl text-primary-hover-red'>
+                            {dataOrders.total}
+                        </span>
+                    </Title>
                 </div>
                 <Table size='sm'>
                     <Thead>
@@ -83,7 +88,10 @@ function OrderTable() {
                                   .slice(0, 8)
                                   .map((order: OrderEntity) => {
                                       return (
-                                          <Tr key={order.id}>
+                                          <Tr
+                                              key={order.id}
+                                              className='border-t-2 border-primary-black hover:bg-light-gray duration-150'
+                                          >
                                               <Td>
                                                   {String(order.id).slice(0, 8)}
                                               </Td>
@@ -136,9 +144,9 @@ function ProductTable() {
 
     function stockWarn(quantity: number): string {
         if (quantity < 6) {
-            return 'text-red-500';
+            return 'text-primary-hover-red';
         } else if (quantity < 11) {
-            return 'text-amber-400';
+            return 'text-warning-red';
         }
         return '';
     }
@@ -160,7 +168,12 @@ function ProductTable() {
                 <div className='flex items-center justify-between'>
                     <Title variant='h3'>Resumo - Produtos</Title>
 
-                    <Title variant='h3'>Total: {dataProducts.total}</Title>
+                    <Title variant='h3'>
+                        Total:{' '}
+                        <span className='text-3xl text-primary-hover-red'>
+                            {dataProducts.total}
+                        </span>
+                    </Title>
                 </div>
 
                 <Table size='sm' className=''>
@@ -170,16 +183,19 @@ function ProductTable() {
                             <Th>Nome</Th>
                             <Th>Categoria</Th>
                             <Th>Estoque</Th>
-                            <Th isNumeric>Valor (R$)</Th>
+                            <Th>Valor (R$)</Th>
                         </Tr>
                     </Thead>
 
-                    <Tbody className=''>
+                    <Tbody>
                         {dataProducts.products.length > 1
                             ? dataProducts.products
                                   .slice(0, 8)
-                                  .map((product: any) => (
-                                      <Tr key={product.id}>
+                                  .map((product: any, index: number) => (
+                                      <Tr
+                                          key={index}
+                                          className='border-t-2 border-primary-black hover:bg-light-gray duration-150'
+                                      >
                                           <Td>{product.code}</Td>
                                           <Td>{product.name}</Td>
                                           <Td>{product.category}</Td>
@@ -190,7 +206,7 @@ function ProductTable() {
                                           >
                                               {product.stock}
                                           </Td>
-                                          <Td isNumeric>
+                                          <Td>
                                               {Number(
                                                   product.value
                                               ).toLocaleString('pt-BR', {
@@ -215,7 +231,7 @@ export function Home() {
 
     async function getProductsData() {
         try {
-            const response = await http.get('/products');
+            const response = await http.get('/products/all');
             if (response.data) {
                 setDataProducts(response.data);
             }
@@ -239,8 +255,8 @@ export function Home() {
 
     return (
         <PageContainer title='Home'>
-            <div className='flex items-center gap-2'>
-                <Content className='w-full'>
+            <div className='flex items-center gap-2 bg-light-gray/30 shadow-sm'>
+                <Content className='w-full border-border-gray'>
                     <Title variant='h3'>
                         Notificações{' '}
                         <span className='text-sm opacity-50 capitalize'>
@@ -248,7 +264,7 @@ export function Home() {
                         </span>
                     </Title>
 
-                    <div className='flex flex-col gap-2 max-h-[110px] overflow-hidden overflow-y-scroll rounded-sm'>
+                    <div className='flex flex-col gap-2 max-h-[100px] overflow-hidden overflow-y-scroll rounded-round-default'>
                         {dataProducts &&
                             dataProducts
                                 ?.filter((p: any) => {
@@ -258,10 +274,10 @@ export function Home() {
                                     return (
                                         <p
                                             key={index}
-                                            className='flex items-center justify-between gap-4 border-2 px-4 py-2 hover:border-amber-400 hover:bg-white/30 hover:cursor-default duration-100'
+                                            className='flex items-center justify-between gap-4 border-2 border-gray-400/60 rounded-round-default px-4 py-2 font-semibold hover:border-primary-hover-red hover:bg-primary-white/50 hover:cursor-default hover:shadow-md duration-150'
                                         >
                                             <span className='flex items-center gap-2'>
-                                                <AlertCircle className='text-orange-300' />
+                                                <AlertCircle className='text-warning-red' />
                                                 <span className='w-[200px]'>
                                                     {prod.name}
                                                 </span>
@@ -271,8 +287,8 @@ export function Home() {
                                                 <span
                                                     className={
                                                         prod.stock > 5
-                                                            ? 'text-orange-300'
-                                                            : 'text-red-500'
+                                                            ? 'text-custom-red'
+                                                            : 'text-primary-hover-red'
                                                     }
                                                 >
                                                     {prod.stock}
@@ -283,8 +299,8 @@ export function Home() {
                                                 <span
                                                     className={
                                                         prod.active
-                                                            ? 'text-green-300'
-                                                            : 'text-yellow-500'
+                                                            ? 'text-agreed-green'
+                                                            : 'text-primary-hover-red'
                                                     }
                                                 >
                                                     {prod.active
@@ -294,8 +310,8 @@ export function Home() {
                                             </span>
 
                                             <Tooltip label='Ir para produtos'>
-                                                <ArrowRightCircle 
-                                                    className='hover:cursor-pointer' 
+                                                <ArrowRightCircle
+                                                    className='hover:cursor-pointer'
                                                     onClick={() => {
                                                         navigate('/products');
                                                     }}
@@ -308,7 +324,7 @@ export function Home() {
                 </Content>
             </div>
 
-            <Content className='w-full'>
+            <Content className='w-full border-border-gray rounded-round-default bg-light-gray/30 shadow-sm'>
                 <Title variant='h2'>
                     Estatísticas Recentes {''}
                     <span className='text-lg opacity-50 capitalize'>
@@ -316,12 +332,12 @@ export function Home() {
                     </span>
                 </Title>
 
-                <div className='flex items-start justify-between gap-2 max-h-fit'>
-                    <Content className='w-1/2'>
+                <div className='flex items-start justify-between gap-2 max-h-fit font-semibold'>
+                    <Content className='w-1/2 border-primary-black/20 rounded-round-default shadow-md'>
                         <OrderTable />
                     </Content>
 
-                    <Content className='w-1/2'>
+                    <Content className='w-1/2 border-primary-black/20 rounded-round-default shadow-md'>
                         <ProductTable />
                     </Content>
                 </div>

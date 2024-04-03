@@ -2,6 +2,7 @@ import { http } from '../../service';
 import { Title } from '../../components/Title';
 import { CustomTh } from '../../components/CustomTh';
 import { PlusCircle } from 'lucide-react';
+import { IconButton } from '../../components/IconButton';
 import { useNavigate } from 'react-router';
 import { OrderEntity } from '../../constants/order';
 import { PageContainer } from '../../components/PageContainer';
@@ -9,6 +10,13 @@ import { EmployeeEntity } from '../../constants/employee';
 import { toFullLocaleDate } from '../../utils/toFullLocaleDate';
 import { Controller, useForm } from 'react-hook-form';
 import { useEffect, useRef, useState } from 'react';
+import {
+    primary_red,
+    primary_white,
+    table_row_hover,
+    primary_hover_red,
+    round_default,
+} from '../../constants/styles';
 import {
     Td,
     Tr,
@@ -32,14 +40,16 @@ import {
     ModalCloseButton,
 } from '@chakra-ui/react';
 
+type OrderData = {
+    orders: OrderEntity[];
+    total: number;
+}
+
 export function Orders() {
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [employees, setEmployees] = useState<EmployeeEntity[]>([]);
     const [selectedEmployee, setSelectedEmployee] = useState<string>('');
-    const [dataOrders, setDataOrders] = useState<{
-        orders: OrderEntity[];
-        total: number;
-    }>({
+    const [dataOrders, setDataOrders] = useState<OrderData>({
         orders: [],
         total: 0,
     });
@@ -65,7 +75,8 @@ export function Orders() {
 
     async function getDataOrders() {
         try {
-            const response = await http.get('/orders');
+            const response = await http.get<any>('/orders');
+            if (!response.data) return;
             setDataOrders({
                 orders: response.data,
                 total: response.data.length,
@@ -79,7 +90,8 @@ export function Orders() {
 
     async function getEmployees() {
         try {
-            const response = await http.get('/employees/all');
+            const response = await http.get<EmployeeEntity[]>('/employees/all');
+            if (!response.data) return;
             setEmployees(response.data);
         } catch (error) {
             console.error(error);
@@ -87,7 +99,7 @@ export function Orders() {
     }
 
     useEffect(() => {
-        document.title = 'Management | Vendas'
+        document.title = 'Management | Vendas';
         getDataOrders();
         getEmployees();
     }, []);
@@ -104,14 +116,15 @@ export function Orders() {
     return (
         <PageContainer title='Vendas'>
             <Box className='flex items-center'>
-                <Button
-                    className='flex items-center gap-2'
+                <IconButton
+                    label='Nova venda'
+                    className='w-fit'
                     onClick={onOpen}
-                    colorScheme='yellow'
-                >
-                    <PlusCircle />
-                    Nova venda
-                </Button>
+                    icon={PlusCircle}
+                    bgColor={primary_red}
+                    textColor={primary_white}
+                    bgHoverColor={primary_hover_red}
+                />
                 <Modal
                     initialFocusRef={initialRef}
                     finalFocusRef={finalRef}
@@ -187,7 +200,7 @@ export function Orders() {
 
                 <Title variant='h3'>
                     Cadastrados:{' '}
-                    <span className='text-4xl text-amber-400'>
+                    <span className='text-4xl text-primary-red'>
                         {dataOrders.total}
                     </span>
                 </Title>
@@ -202,7 +215,7 @@ export function Orders() {
                                 <CustomTh>Qtde. itens</CustomTh>
                                 <CustomTh>Data</CustomTh>
                                 <CustomTh>Total</CustomTh>
-                                <CustomTh>Ações</CustomTh>
+                                <CustomTh outStyle='border-r-0'>Ações</CustomTh>
                             </Tr>
                         </Thead>
 
@@ -212,7 +225,7 @@ export function Orders() {
                                     return (
                                         <Tr
                                             key={order.id}
-                                            className='font-semibold hover:bg-zinc-100/30 duration-150'
+                                            className={table_row_hover}
                                         >
                                             <Td>{order.id.slice(0, 8)}</Td>
                                             <Td>{order.items.length}</Td>
@@ -231,7 +244,14 @@ export function Orders() {
                                                 <Button
                                                     className='w-full'
                                                     height={8}
-                                                    colorScheme='yellow'
+                                                    borderRadius={round_default}
+                                                    backgroundColor={
+                                                        primary_red
+                                                    }
+                                                    color={primary_white}
+                                                    _hover={{
+                                                        bg: primary_hover_red,
+                                                    }}
                                                     onClick={() =>
                                                         navigate(`${order.id}`)
                                                     }
