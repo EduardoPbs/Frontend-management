@@ -6,7 +6,7 @@ import { PageContainer } from '../../components/PageContainer';
 import { toFullLocaleDate } from '../../utils/toFullLocaleDate';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
-import { ItemEntity, OrderEntity } from '../../constants/order';
+import { ItemEntity, OrderEntity } from '../../types/order';
 import { ArrowLeftCircle, ArrowRightCircle } from 'lucide-react';
 import {
     primary_red,

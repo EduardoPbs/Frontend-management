@@ -1,7 +1,7 @@
 import { http } from '../../service';
 import { Title } from '../../components/Title';
 import { RowDetail } from '../../components/RowDetail';
-import { ItemEntity } from '../../constants/order';
+import { ItemEntity } from '../../types/order';
 import { IconButton } from '../../components/IconButton';
 import { CellDetail } from '../../components/CellDetail';
 import { PageContainer } from '../../components/PageContainer';

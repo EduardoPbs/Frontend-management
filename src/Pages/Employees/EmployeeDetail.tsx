@@ -3,7 +3,7 @@ import { Title } from '../../components/Title';
 import { useParams } from 'react-router';
 import { IconButton } from '../../components/IconButton';
 import { PageContainer } from '../../components/PageContainer';
-import { EmployeeEntity } from '../../constants/employee';
+import { EmployeeEntity } from '../../types/employee';
 import { ArrowLeftCircle } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import {

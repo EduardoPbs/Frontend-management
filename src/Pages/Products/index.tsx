@@ -4,7 +4,7 @@ import { CustomTh } from '../../components/CustomTh';
 import { IconButton } from '../../components/IconButton';
 import { useNavigate } from 'react-router';
 import { PageContainer } from '../../components/PageContainer';
-import { ProductEntity } from '../../constants/product';
+import { ProductEntity } from '../../types/product';
 import { useState, useEffect } from 'react';
 import { PlusCircle, Settings } from 'lucide-react';
 import {

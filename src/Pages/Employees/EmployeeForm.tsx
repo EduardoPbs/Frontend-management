@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { IconButton } from '../../components/IconButton';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { PageContainer } from '../../components/PageContainer';
-import { EmployeeEntity } from '../../constants/employee';
+import { EmployeeEntity } from '../../types/employee';
 import { ArrowLeftCircle } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';

@@ -1,11 +1,11 @@
-import { http } from '../../service';
 import { Title } from '../../components/Title';
 import { Content } from '../../components/Content';
-import { OrderEntity } from '../../constants/order';
+import { useOrder } from '../../hooks/useOrder';
+import { useEffect } from 'react';
+import { useProduct } from '../../hooks/useProduct';
 import { useNavigate } from 'react-router';
+import { OrderEntity } from '../../types/order';
 import { PageContainer } from '../../components/PageContainer';
-import { ProductEntity } from '../../constants/product';
-import { useEffect, useState } from 'react';
 import { AlertCircle, ArrowRightCircle } from 'lucide-react';
 import {
     Th,
@@ -21,35 +21,10 @@ import {
 } from '@chakra-ui/react';
 
 function OrderTable() {
-    const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [dataOrders, setDataOrders] = useState<{
-        orders: OrderEntity[];
-        total: number;
-    }>({
-        orders: [],
-        total: 0,
-    });
-
-    async function getOrdersData() {
-        setIsLoading(true);
-        try {
-            const response = await http.get('/orders');
-            if (response.data) {
-                setDataOrders({
-                    orders: response.data,
-                    total: response.data.length,
-                });
-            }
-        } catch (error) {
-            console.error(error);
-        } finally {
-            setIsLoading(false);
-        }
-    }
+    const { dataOrders, isLoading } = useOrder();
 
     useEffect(() => {
         document.title = 'Management | Home';
-        getOrdersData();
     }, []);
 
     if (isLoading)
@@ -116,46 +91,9 @@ function OrderTable() {
 }
 
 function ProductTable() {
-    const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [dataProducts, setDataProducts] = useState<{
-        products: ProductEntity[];
-        total: number;
-    }>({
-        products: [],
-        total: 0,
-    });
+    const { activeProducts, loadingActive, stockWarn } = useProduct();
 
-    async function getProductsData() {
-        setIsLoading(true);
-        try {
-            const response = await http.get('/products');
-            if (response.data) {
-                setDataProducts({
-                    products: response.data,
-                    total: response.data.length,
-                });
-            }
-        } catch (error) {
-            console.error(error);
-        } finally {
-            setIsLoading(false);
-        }
-    }
-
-    function stockWarn(quantity: number): string {
-        if (quantity < 6) {
-            return 'text-primary-hover-red';
-        } else if (quantity < 11) {
-            return 'text-warning-red';
-        }
-        return '';
-    }
-
-    useEffect(() => {
-        getProductsData();
-    }, []);
-
-    if (isLoading)
+    if (loadingActive)
         return (
             <div className='flex justify-center'>
                 <Spinner size='xl' color='yellow.500' />
@@ -171,7 +109,7 @@ function ProductTable() {
                     <Title variant='h3'>
                         Total:{' '}
                         <span className='text-3xl text-primary-hover-red'>
-                            {dataProducts.total}
+                            {activeProducts.total}
                         </span>
                     </Title>
                 </div>
@@ -188,8 +126,8 @@ function ProductTable() {
                     </Thead>
 
                     <Tbody>
-                        {dataProducts.products.length > 1
-                            ? dataProducts.products
+                        {activeProducts.products.length > 1
+                            ? activeProducts.products
                                   .slice(0, 8)
                                   .map((product: any, index: number) => (
                                       <Tr
@@ -225,28 +163,10 @@ function ProductTable() {
 }
 
 export function Home() {
-    const [isLoading, setIsLoading] = useState<boolean>(true);
-    const [dataProducts, setDataProducts] = useState([]);
+    const { loadingAll, allProducts } = useProduct();
     const navigate = useNavigate();
 
-    async function getProductsData() {
-        try {
-            const response = await http.get('/products/all');
-            if (response.data) {
-                setDataProducts(response.data);
-            }
-        } catch (error) {
-            console.error(error);
-        } finally {
-            setIsLoading(false);
-        }
-    }
-
-    useEffect(() => {
-        getProductsData();
-    }, []);
-
-    if (isLoading)
+    if (loadingAll)
         return (
             <div className='flex justify-center'>
                 <Spinner size='xl' color='yellow.500' />
@@ -265,9 +185,9 @@ export function Home() {
                     </Title>
 
                     <div className='flex flex-col gap-2 max-h-[100px] overflow-hidden overflow-y-scroll rounded-round-default'>
-                        {dataProducts &&
-                            dataProducts
-                                ?.filter((p: any) => {
+                        {allProducts.products &&
+                            allProducts?.products
+                                .filter((p: any) => {
                                     return p.stock <= 10;
                                 })
                                 .map((prod: any, index: number) => {

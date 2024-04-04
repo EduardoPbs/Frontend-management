@@ -3,10 +3,10 @@ import { RowDetail } from '../../components/RowDetail';
 import { CellDetail } from '../../components/CellDetail';
 import { IconButton } from '../../components/IconButton';
 import { PageContainer } from '../../components/PageContainer';
-import { ProductEntity } from '../../constants/product';
+import { ProductEntity } from '../../types/product';
 import { useNavigate, useParams } from 'react-router';
 import { useEffect, useRef, useState } from 'react';
-import { ItemOrderCreate, OrderCreate } from '../../constants/order';
+import { ItemOrderCreate, OrderCreate } from '../../types/order';
 import {
     primary_red,
     primary_white,

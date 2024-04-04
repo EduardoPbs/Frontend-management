@@ -52,7 +52,7 @@ export function DrawerModal() {
                 <DrawerContent color='#F7F7FF' bg='#131112'>
                     <DrawerCloseButton _hover={{ color: '#F40000' }} />
 
-                    <DrawerHeader>Painel</DrawerHeader>
+                    <DrawerHeader className='select-none'>Painel</DrawerHeader>
 
                     <Divider />
 

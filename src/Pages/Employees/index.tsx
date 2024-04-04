@@ -5,7 +5,7 @@ import { PlusCircle } from 'lucide-react';
 import { IconButton } from '../../components/IconButton';
 import { useNavigate } from 'react-router';
 import { PageContainer } from '../../components/PageContainer';
-import { EmployeeEntity } from '../../constants/employee';
+import { EmployeeEntity } from '../../types/employee';
 import { useEffect, useState } from 'react';
 import {
     primary_red,
