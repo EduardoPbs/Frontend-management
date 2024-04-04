@@ -1,67 +1,27 @@
-import { z } from 'zod';
 import { http } from '../../service';
 import { LgInput } from '../../components/LgInput';
+import { useEffect } from 'react';
+import { useParams } from 'react-router';
+import { useProduct } from '../../hooks/useProduct';
 import { IconButton } from '../../components/IconButton';
+import { useCategory } from '../../hooks/useCategory';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { PageContainer } from '../../components/PageContainer';
+import { Button, Select } from '@chakra-ui/react';
 import { ArrowLeftCircle } from 'lucide-react';
-import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { useNavigate, useParams } from 'react-router';
-import { Button, Select, useToast } from '@chakra-ui/react';
 import {
     primary_red,
     primary_white,
     primary_hover_red,
 } from '../../constants/styles';
 
-export interface ProductEntity {
-    code: number | undefined;
-    name: string;
-    stock: number;
-    value: number;
-    category: string;
-}
-
 export function ProductForm() {
-    const [categories, setCategories] = useState<string[]>([]);
-    const [productData, setProductData] = useState({
-        code: '',
-        name: '',
-        stock: '',
-        value: '',
-        category: '',
-    });
-    const allCategories: [string, ...string[]] = ['Categorias', ...categories];
-    const navigate = useNavigate();
-    const toast = useToast();
-    const { id } = useParams();
+    const { onSubmit, setNewProductData, newProductData, ProductFormSchema } =
+        useProduct();
+    const { categories } = useCategory();
 
-    const ProductFormSchema = z.object({
-        code: z
-            .string({
-                required_error: 'Obrigatório.',
-            })
-            .min(1, { message: 'Deve conter pelo menos 1 caractere.' }),
-        name: z
-            .string({
-                required_error: 'Obrigatório.',
-            })
-            .min(3, { message: 'Deve conter pelo menos 3 letras.' }),
-        stock: z
-            .string({
-                required_error: 'Obrigatório.',
-            })
-            .min(1, { message: 'Deve conter pelo menos 1 caractere.' }),
-        value: z
-            .string({ required_error: 'Obrigatório.' })
-            .min(1, { message: 'Deve conter pelo menos 1 caractere.' }),
-        category: z.enum(allCategories, {
-            errorMap: (_issue, _ctx) => {
-                return { message: 'Selecione uma categoria.' };
-            },
-        }),
-    });
+    const { id } = useParams();
 
     const {
         reset,
@@ -71,18 +31,18 @@ export function ProductForm() {
     } = useForm({
         resolver: zodResolver(ProductFormSchema),
         defaultValues: {
-            code: productData.code || '',
-            name: productData.name || '',
-            stock: productData.stock || '',
-            value: productData.value || '',
-            category: productData.category || '',
+            code: newProductData.code || '',
+            name: newProductData.name || '',
+            stock: newProductData.stock || '',
+            value: newProductData.value || '',
+            category: newProductData.category || '',
         },
     });
 
     async function dataProductToUpdate(id: string | undefined) {
         try {
             const response = await http.get(`/products/${id}`);
-            setProductData({
+            setNewProductData({
                 code: response.data.code,
                 name: response.data.name,
                 stock: response.data.stock,
@@ -102,88 +62,10 @@ export function ProductForm() {
         }
     }
 
-    async function getCategories() {
-        try {
-            const response = await http.get('/products/categories');
-            setCategories(response.data);
-        } catch (error) {
-            console.error(error);
-        }
-    }
-
-    async function updateProduct(id: string | undefined, data: ProductEntity) {
-        try {
-            await http
-                .put(`/products/${id}`, data)
-                .then((res) => console.log(res.data))
-                .then(() =>
-                    toast({
-                        title: 'Sucesso',
-                        colorScheme: 'cyan',
-                        description: `O produto foi atualizado.`,
-                        status: 'success',
-                        position: 'top-right',
-                        isClosable: true,
-                        duration: 2000,
-                    })
-                )
-                .then(() => navigate(-1));
-        } catch (err) {
-            console.error(err);
-        }
-    }
-
-    async function createProduct(data: ProductEntity) {
-        try {
-            await http
-                .post('/products', data)
-                .then((res) => console.log(res.data))
-                .then(() =>
-                    toast({
-                        title: 'Sucesso',
-                        colorScheme: 'cyan',
-                        description: `O produto foi cadastrado.`,
-                        status: 'success',
-                        position: 'top-right',
-                        isClosable: true,
-                        duration: 2000,
-                    })
-                )
-                .then(() => navigate(-1));
-        } catch (err) {
-            console.error(err);
-        }
-    }
-
-    async function onSubmit(event: any) {
-        const product: ProductEntity = {
-            code: event.code,
-            name: event.name,
-            stock: Number(event.stock),
-            value: Number(event.value),
-            category: event.category,
-        };
-        console.log(product);
-        try {
-            id ? updateProduct(id, product) : createProduct(product);
-        } catch (error: any) {
-            toast({
-                title: 'Erro',
-                description: `Falha ao cadastrar o produto: ${error.response?.data?.message}`,
-                status: 'error',
-                position: 'top-right',
-                isClosable: true,
-                duration: 3000,
-            });
-        }
-    }
-
     useEffect(() => {
         if (id !== undefined) {
             dataProductToUpdate(id);
         }
-
-        getCategories();
     }, []);
 
     return (
