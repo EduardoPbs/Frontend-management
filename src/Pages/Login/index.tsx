@@ -1,9 +1,8 @@
 import { z } from 'zod';
-import { http } from '../../service';
 import { LgInput } from '../../components/LgInput';
 import { useForm } from 'react-hook-form';
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router';
+import { useLogin } from '../../hooks/useLogin';
+import { useEffect } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
     Box,
@@ -12,66 +11,32 @@ import {
     CardBody,
     CardHeader,
     Heading,
-    useToast,
 } from '@chakra-ui/react';
 
 export function Login() {
-    const [loading, setLoading] = useState<boolean>(false);
-    const [user, setUser] = useState({
-        login: 'depois@gmail.com',
-        password: '123',
-    });
-
-    const navigate = useNavigate();
-    const toast = useToast();
+    const { loading, onSubmit } = useLogin();
 
     const loginFormSchema = z.object({
-        login: z.string().email(),
-        password: z.string(),
+        login: z.string().email({ message: 'Email inválido!' }),
+        password: z.string({
+            required_error: 'Senha obrigatória!',
+        }),
     });
 
     const {
-        formState: { errors },
         control,
         handleSubmit,
+        formState: { errors },
     } = useForm({
         resolver: zodResolver(loginFormSchema),
         defaultValues: {
-            login: user.login || '',
-            password: user.password || '',
+            login: 'depois@gmail.com',
+            password: '123',
         },
     });
 
-    async function onSubmit(event: any) {
-        setLoading(true);
-        const credentials = {
-            login: event.login,
-            password: event.password,
-        };
-        try {
-            await http
-                .post('/auth/login', credentials)
-                .then((res) => {
-                    const JwtToken = res.data.token;
-                    sessionStorage.setItem('token', JwtToken);
-                })
-                .then(() => navigate('/'));
-        } catch (error) {
-            console.error(error);
-            toast({
-                title: 'Falha ao realizar login.',
-                description: 'Email ou senha incorreto!',
-                position: 'top-right',
-                status: 'error',
-                isClosable: true,
-            });
-        } finally {
-            setLoading(false);
-        }
-    }
-
     useEffect(() => {
-        document.title = 'Management | Login'
+        document.title = 'Management | Login';
     }, []);
 
     return (
