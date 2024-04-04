@@ -1,5 +1,4 @@
 import { Title } from '../Title';
-import { Table } from 'lucide-react';
 import { useProduct } from '../../hooks/useProduct';
 import {
     Th,
@@ -8,6 +7,7 @@ import {
     Box,
     Tbody,
     Thead,
+    Table,
     Spinner,
     TableContainer,
 } from '@chakra-ui/react';

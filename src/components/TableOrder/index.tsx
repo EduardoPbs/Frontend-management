@@ -1,4 +1,3 @@
-import { Table } from 'lucide-react';
 import { Title } from '../Title';
 import { useOrder } from '../../hooks/useOrder';
 import { useEffect } from 'react';
@@ -9,6 +8,7 @@ import {
     Td,
     Box,
     Tbody,
+    Table,
     Thead,
     Spinner,
     TableContainer,
