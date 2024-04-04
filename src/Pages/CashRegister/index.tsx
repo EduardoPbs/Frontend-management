@@ -1,9 +1,8 @@
-import { http } from '../../service';
 import { CustomTh } from '../../components/CustomTh';
 import { PageContainer } from '../../components/PageContainer';
 import { table_row_hover } from '../../constants/styles';
+import { useCashRegister } from '../../hooks/useCashRegister';
 import { toFullLocaleDate } from '../../utils/toFullLocaleDate';
-import { useEffect, useState } from 'react';
 import {
     Tr,
     Td,
@@ -15,25 +14,7 @@ import {
 } from '@chakra-ui/react';
 
 export function CashRegister() {
-    const [cashRegisterData, setCashRegisterData] = useState({
-        activities: [],
-        amount: 0,
-    });
-
-    async function getCashRegisterData() {
-        try {
-            const [respTotal, respAct] = await Promise.all([
-                http.get('/cash-register/balance'),
-                http.get('/cash-register/all-activities'),
-            ]);
-            setCashRegisterData({
-                activities: respAct.data,
-                amount: respTotal.data,
-            });
-        } catch (error) {
-            console.error(error);
-        }
-    }
+    const { cashRegisterData } = useCashRegister();
 
     function operationType(operation: string) {
         switch (operation) {
@@ -45,10 +26,6 @@ export function CashRegister() {
                 return <span className='text-dark-gray'>Não informado.</span>;
         }
     }
-
-    useEffect(() => {
-        getCashRegisterData();
-    }, []);
 
     return (
         <PageContainer title='Caixa'>
