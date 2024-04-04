@@ -51,6 +51,24 @@ export function useProduct() {
         }
     }
 
+    async function enableProduct(id: string) {
+        try {
+            await http.patch(`/products/${id}`);
+            window.location.reload();
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    async function disableProduct(id: string) {
+        try {
+            await http.delete(`/products/${id}`);
+            window.location.reload();
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
     function stockWarn(quantity: number): string {
         if (quantity < 6) {
             return 'text-primary-hover-red';
@@ -71,5 +89,7 @@ export function useProduct() {
         loadingActive,
         loadingAll,
         stockWarn,
+        enableProduct,
+        disableProduct,
     };
 }
