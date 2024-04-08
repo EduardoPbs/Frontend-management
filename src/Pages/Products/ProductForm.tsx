@@ -1,63 +1,28 @@
-import { z } from 'zod';
-import { http } from '../../../service';
-import { Title } from '../../../components/Title';
-import { LgInput } from '../../../components/LgInput';
+import { http } from '../../service';
+import { LgInput } from '../../components/LgInput';
+import { useEffect } from 'react';
+import { useParams } from 'react-router';
+import { useProduct } from '../../hooks/useProduct';
+import { IconButton } from '../../components/IconButton';
+import { useCategory } from '../../hooks/useCategory';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { DrawerModal } from '../../../components/DrawerModal';
-import { useNavigate, useParams } from 'react-router';
-import { PageContainer } from '../../../components/PageContainer';
+import { PageContainer } from '../../components/PageContainer';
+import { Button, Select } from '@chakra-ui/react';
 import { ArrowLeftCircle } from 'lucide-react';
-import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { Button, Select, useToast } from '@chakra-ui/react';
-
-export interface ProductEntity {
-    code: number | undefined;
-    name: string;
-    stock: number;
-    value: number;
-    category: string;
-}
+import {
+    primary_red,
+    primary_white,
+    primary_hover_red,
+    round_default,
+} from '../../constants/styles';
 
 export function ProductForm() {
-    const [categories, setCategories] = useState<string[]>([]);
-    const [productData, setProductData] = useState({
-        code: '',
-        name: '',
-        stock: '',
-        value: '',
-        category: '',
-    });
-    const allCategories: [string, ...string[]] = ['Categorias', ...categories];
-    const navigate = useNavigate();
-    const toast = useToast();
-    const { id } = useParams();
+    const { onSubmit, setNewProductData, newProductData, ProductFormSchema } =
+        useProduct();
+    const { categories } = useCategory();
 
-    const ProductFormSchema = z.object({
-        code: z
-            .string({
-                required_error: 'Obrigatório.',
-            })
-            .min(1, { message: 'Deve conter pelo menos 1 caractere.' }),
-        name: z
-            .string({
-                required_error: 'Obrigatório.',
-            })
-            .min(3, { message: 'Deve conter pelo menos 3 letras.' }),
-        stock: z
-            .string({
-                required_error: 'Obrigatório.',
-            })
-            .min(1, { message: 'Deve conter pelo menos 1 caractere.' }),
-        value: z
-            .string({ required_error: 'Obrigatório.' })
-            .min(1, { message: 'Deve conter pelo menos 1 caractere.' }),
-        category: z.enum(allCategories, {
-            errorMap: (_issue, _ctx) => {
-                return { message: 'Selecione uma categoria.' };
-            },
-        }),
-    });
+    const { id } = useParams();
 
     const {
         reset,
@@ -67,18 +32,18 @@ export function ProductForm() {
     } = useForm({
         resolver: zodResolver(ProductFormSchema),
         defaultValues: {
-            code: productData.code || '',
-            name: productData.name || '',
-            stock: productData.stock || '',
-            value: productData.value || '',
-            category: productData.category || '',
+            code: newProductData.code || '',
+            name: newProductData.name || '',
+            stock: newProductData.stock || '',
+            value: newProductData.value || '',
+            category: newProductData.category || '',
         },
     });
 
     async function dataProductToUpdate(id: string | undefined) {
         try {
             const response = await http.get(`/products/${id}`);
-            setProductData({
+            setNewProductData({
                 code: response.data.code,
                 name: response.data.name,
                 stock: response.data.stock,
@@ -98,100 +63,23 @@ export function ProductForm() {
         }
     }
 
-    async function getCategories() {
-        try {
-            const response = await http.get('/products/categories');
-            setCategories(response.data);
-        } catch (error) {
-            console.error(error);
-        }
-    }
-
-    async function updateProduct(id: string | undefined, data: ProductEntity) {
-        try {
-            await http
-                .put(`/products/${id}`, data)
-                .then((res) => console.log(res.data))
-                .then(() =>
-                    toast({
-                        title: 'Sucesso!',
-                        description: `O produto foi atualizado!`,
-                        status: 'success',
-                        isClosable: true,
-                        duration: 2000,
-                    })
-                )
-                .then(() => navigate(-1));
-        } catch (err) {
-            console.error(err);
-        }
-    }
-
-    async function createProduct(data: ProductEntity) {
-        try {
-            await http
-                .post('/products', data)
-                .then((res) => console.log(res.data))
-                .then(() =>
-                    toast({
-                        title: 'Sucesso!',
-                        description: `O produto foi cadastrado!`,
-                        status: 'success',
-                        isClosable: true,
-                        duration: 2000,
-                    })
-                )
-                .then(() => navigate(-1));
-        } catch (err) {
-            console.error(err);
-        }
-    }
-
-    async function onSubmit(event: any) {
-        const product: ProductEntity = {
-            code: event.code,
-            name: event.name,
-            stock: Number(event.stock),
-            value: Number(event.value),
-            category: event.category,
-        };
-        console.log(product);
-        try {
-            id ? updateProduct(id, product) : createProduct(product);
-        } catch (error: any) {
-            toast({
-                title: 'Erro!',
-                description: `Falha ao cadastrar o produto: ${error.response?.data?.message}`,
-                status: 'error',
-                isClosable: true,
-                duration: 3000,
-            });
-        }
-    }
-
     useEffect(() => {
         if (id !== undefined) {
             dataProductToUpdate(id);
         }
-
-        getCategories();
     }, []);
 
     return (
-        <PageContainer>
-            <div className='flex items-center justify-start gap-4'>
-                <DrawerModal />
-
-                <Button
-                    className='capitalize'
-                    colorScheme='yellow'
-                    onClick={() => navigate(-1)}
-                >
-                    <ArrowLeftCircle />
-                </Button>
-
-                <Title>Cadastro</Title>
-            </div>
+        <PageContainer title={id ? 'Atualizar' : 'Cadastro'}>
+            <IconButton
+                to={-1}
+                label='Voltar'
+                className='w-fit'
+                icon={ArrowLeftCircle}
+                bgColor={primary_red}
+                textColor={primary_white}
+                bgHoverColor={primary_hover_red}
+            />
 
             <form
                 onSubmit={handleSubmit(onSubmit)}
@@ -244,7 +132,8 @@ export function ProductForm() {
                                 <label htmlFor='category'>Categoria</label>
                                 <Select
                                     {...field}
-                                    focusBorderColor='yellow.500'
+                                    id='category'
+                                    focusBorderColor={primary_red}
                                     placeholder='Selecione uma categoria'
                                 >
                                     {categories.map(
@@ -275,7 +164,16 @@ export function ProductForm() {
                         )}
                     />
                 </div>
-                <Button colorScheme='yellow' type='submit'>
+                <Button
+                    borderRadius={round_default}
+                    backgroundColor={primary_red}
+                    color={primary_white}
+                    _hover={{
+                        bg: primary_hover_red,
+                        color: primary_white,
+                    }}
+                    type='submit'
+                >
                     {id ? 'Atualizar' : 'Cadastrar'}
                 </Button>
             </form>
