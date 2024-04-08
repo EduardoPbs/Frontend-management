@@ -4,23 +4,19 @@ import { useForm } from 'react-hook-form';
 import { useLogin } from '../../hooks/useLogin';
 import { useEffect } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Box, Button, Heading } from '@chakra-ui/react';
 import {
-    Box,
-    Button,
-    Card,
-    CardBody,
-    CardHeader,
-    Heading,
-} from '@chakra-ui/react';
+    primary_red,
+    primary_white,
+    primary_hover_red,
+} from '../../constants/styles';
 
 export function Login() {
     const { loading, onSubmit } = useLogin();
 
     const loginFormSchema = z.object({
         login: z.string().email({ message: 'Email inválido!' }),
-        password: z.string({
-            required_error: 'Senha obrigatória!',
-        }),
+        password: z.string().min(1, { message: 'Senha obrigatória.' }),
     });
 
     const {
@@ -40,47 +36,50 @@ export function Login() {
     }, []);
 
     return (
-        <section className='flex flex-col justify-start gap-4 px-4 py-6 bg-black h-screen text-white selection:bg-amber-700 selection:text-white'>
-            <Box className='flex items-center w-full h-full justify-center'>
-                <Box className='w-[500px]'>
-                    <Card>
-                        <CardHeader>
-                            <Heading size='md'>Entrar</Heading>
-                        </CardHeader>
-                        <CardBody>
-                            <form
-                                onSubmit={handleSubmit(onSubmit)}
-                                className='flex flex-col gap-4 w-full'
-                            >
-                                <LgInput
-                                    label='Usuário'
-                                    type='email'
-                                    name='login'
-                                    placeholder='example@email.com'
-                                    errors={errors.login}
-                                    control={control}
-                                    autoComplete='disabled'
-                                />
-                                <LgInput
-                                    label='Senha'
-                                    type='password'
-                                    name='password'
-                                    placeholder='******'
-                                    errors={errors.password}
-                                    control={control}
-                                    autoComplete='disabled'
-                                />
-                                <Button
-                                    isLoading={loading}
-                                    loadingText='Carregando...'
-                                    colorScheme='yellow'
-                                    type='submit'
-                                >
-                                    Entrar
-                                </Button>
-                            </form>
-                        </CardBody>
-                    </Card>
+        <section className='flex flex-col justify-center gap-4 px-4 py-6 bg-primary-white h-screen text-white selection:bg-primary-red selection:text-white'>
+            <Box className='flex items-center justify-center w-full h-full'>
+                <Box className='flex flex-col justify-between w-[500px] gap-4 bg-slate-950 rounded-round-default px-8 py-6 shadow-lg shadow-border-gray'>
+                    <Heading color={primary_white} size='md'>
+                        LogIn
+                    </Heading>
+                    <form
+                        onSubmit={handleSubmit(onSubmit)}
+                        className='flex flex-col gap-4 w-full font-semibold select-none '
+                    >
+                        <LgInput
+                            label='Usuário'
+                            type='email'
+                            name='login'
+                            placeholder='example@email.com'
+                            errors={errors.login}
+                            control={control}
+                            autoComplete='disabled'
+                        />
+                        <LgInput
+                            label='Senha'
+                            type='password'
+                            name='password'
+                            placeholder='******'
+                            errors={errors.password}
+                            control={control}
+                            autoComplete='disabled'
+                        />
+                        <Button
+                            rounded={6}
+                            _hover={{
+                                bg: primary_hover_red,
+                                color: '#F7F7FF',
+                            }}
+                            color={primary_white}
+                            backgroundColor={primary_red}
+                            isLoading={loading}
+                            loadingText='Carregando...'
+                            colorScheme='yellow'
+                            type='submit'
+                        >
+                            Entrar
+                        </Button>
+                    </form>
                 </Box>
             </Box>
         </section>
