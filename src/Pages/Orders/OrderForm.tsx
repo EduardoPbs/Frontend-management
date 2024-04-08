@@ -11,6 +11,8 @@ import {
     primary_red,
     primary_white,
     primary_hover_red,
+    round_default,
+    light_gray,
 } from '../../constants/styles';
 import {
     PlusCircle,
@@ -114,14 +116,14 @@ function RowProductsOrder({
 
             <Box className='flex items-center gap-2'>
                 <MinusCircle
-                    className='size-6 hover:cursor-pointer hover:text-red-400 duration-150'
+                    className='size-6 hover:cursor-pointer hover:text-custom-red duration-150'
                     onClick={handleMinusQuantity}
                 />
-                <span className='text-2xl text-amber-400 font-bold text-center w-[42px]'>
+                <span className='text-2xl text-primary-red font-bold text-center w-[42px]'>
                     {currQuantity}
                 </span>
                 <PlusCircle
-                    className='size-6 hover:cursor-pointer hover:text-yellow-400 duration-150'
+                    className='size-6 hover:cursor-pointer hover:text-custom-red duration-150'
                     onClick={() => {
                         if (quantity === 0 || quantity <= currQuantity) {
                             toast({
@@ -229,8 +231,8 @@ export function OrderForm() {
 
                     <Input
                         width={250}
-                        borderColor='orange'
-                        focusBorderColor='yellow.400'
+                        borderColor={primary_hover_red}
+                        focusBorderColor={primary_red}
                         placeholder='Pesquisar produto...'
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                             setSearchInput(e.target.value)
@@ -241,7 +243,13 @@ export function OrderForm() {
                     <Button
                         className='capitalize flex items-center gap-2'
                         width={200}
-                        colorScheme='yellow'
+                        borderRadius={round_default}
+                        backgroundColor={primary_red}
+                        color={primary_white}
+                        _hover={{
+                            bg: primary_hover_red,
+                            color: primary_white,
+                        }}
                         onClick={() => {
                             onOpen();
                         }}
@@ -272,7 +280,7 @@ export function OrderForm() {
                                             (item, index: number) => (
                                                 <span
                                                     key={index}
-                                                    className='flex items-center text-[17.5px] justify-between bg-amber-300 w-full font-semibold px-4 text-black rounded-sm hover:bg-amber-500 duration-150 hover:cursor-default'
+                                                    className='flex items-center text-[17.5px] justify-between bg-primary-red w-full font-semibold px-4 text-primary-white rounded-round-default hover:bg-primary-hover-red duration-150 hover:cursor-default'
                                                 >
                                                     <span className=''>
                                                         <span className='text-sm'>
@@ -335,7 +343,13 @@ export function OrderForm() {
                                     </p>
 
                                     <Button
-                                        colorScheme='yellow'
+                                        borderRadius={round_default}
+                                        backgroundColor={primary_red}
+                                        color={primary_white}
+                                        _hover={{
+                                            bg: primary_hover_red,
+                                            color: primary_white,
+                                        }}
                                         onClick={() => {
                                             onSubmit(orderData);
                                             onClose();
@@ -351,10 +365,10 @@ export function OrderForm() {
                 </Box>
             </Box>
 
-            <Box>
-                <Card className='w-full h-[500px] ' background='black'>
-                    <CardHeader className='flex flex-col justify-center text-2xl font-semibold text-white'>
-                        <Box className='flex items-center justify-between w-full h-[55px] bg-zinc-100/15 rounded-md px-1'>
+            <Box className='flex border-4 border-border-gray rounded-round-default'>
+                <Card className='w-full h-[500px]' background={light_gray}>
+                    <CardHeader className='flex flex-col justify-center text-2xl font-semibold text-primary-black'>
+                        <Box className='flex items-center justify-between w-full h-[55px] bg-zinc-100/15 rounded-round-default px-1'>
                             <CellDetail
                                 name='Itens'
                                 content={
@@ -400,7 +414,7 @@ export function OrderForm() {
                         </Box>
                     </CardHeader>
 
-                    <CardBody className='flex flex-col gap-2 m-2 text-white rounded-md border-2 border-amber-500/50 overflow-hidden overflow-y-scroll scrollbar-hide'>
+                    <CardBody className='flex flex-col gap-2 m-2 text-primary-black rounded-md border-2 border-border-gray overflow-hidden overflow-y-scroll scrollbar-hide'>
                         <Box className='flex flex-col gap-2'>
                             {filteredProducts}
                         </Box>

@@ -14,6 +14,7 @@ import {
     primary_red,
     primary_white,
     primary_hover_red,
+    round_default,
 } from '../../constants/styles';
 
 export function ProductForm() {
@@ -132,7 +133,7 @@ export function ProductForm() {
                                 <Select
                                     {...field}
                                     id='category'
-                                    focusBorderColor='yellow.500'
+                                    focusBorderColor={primary_red}
                                     placeholder='Selecione uma categoria'
                                 >
                                     {categories.map(
@@ -163,7 +164,16 @@ export function ProductForm() {
                         )}
                     />
                 </div>
-                <Button colorScheme='yellow' type='submit'>
+                <Button
+                    borderRadius={round_default}
+                    backgroundColor={primary_red}
+                    color={primary_white}
+                    _hover={{
+                        bg: primary_hover_red,
+                        color: primary_white,
+                    }}
+                    type='submit'
+                >
                     {id ? 'Atualizar' : 'Cadastrar'}
                 </Button>
             </form>

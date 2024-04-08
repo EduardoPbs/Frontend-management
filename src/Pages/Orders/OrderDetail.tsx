@@ -1,5 +1,6 @@
 import { http } from '../../service';
 import { RowDetail } from '../../components/RowDetail';
+import { LgSpinner } from '../../components/LgSpinner';
 import { CellDetail } from '../../components/CellDetail';
 import { IconButton } from '../../components/IconButton';
 import { PageContainer } from '../../components/PageContainer';
@@ -9,18 +10,12 @@ import { useNavigate, useParams } from 'react-router';
 import { ItemEntity, OrderEntity } from '../../types/order';
 import { ArrowLeftCircle, ArrowRightCircle } from 'lucide-react';
 import {
+    light_gray,
     primary_red,
     primary_white,
     primary_hover_red,
 } from '../../constants/styles';
-import {
-    Box,
-    Card,
-    Spinner,
-    Tooltip,
-    CardBody,
-    CardHeader,
-} from '@chakra-ui/react';
+import { Box, Card, Tooltip, CardBody, CardHeader } from '@chakra-ui/react';
 
 export function OrderDetail() {
     const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -47,14 +42,7 @@ export function OrderDetail() {
         }
     }, []);
 
-    if (isLoading)
-        return (
-            <PageContainer>
-                <div className='flex justify-center'>
-                    <Spinner size='xl' color='yellow.500' />
-                </div>
-            </PageContainer>
-        );
+    if (isLoading) return <LgSpinner />;
 
     return (
         <PageContainer title={`Venda - ${id?.slice(0, 8)}`}>
@@ -68,10 +56,10 @@ export function OrderDetail() {
                 bgHoverColor={primary_hover_red}
             />
 
-            <Box className='flex border-4 border-amber-500 rounded-md'>
-                <Card className='w-full h-[500px] ' background='black'>
-                    <CardHeader className='flex flex-col justify-center text-2xl font-semibold text-white'>
-                        <Box className='flex items-center justify-between w-full bg-zinc-100/15 rounded-t-md p-1'>
+            <Box className='flex border-4 border-border-gray rounded-round-default'>
+                <Card className='w-full h-[500px]' background={light_gray}>
+                    <CardHeader className='flex flex-col justify-center text-2xl font-semibold text-primary-black'>
+                        <Box className='flex items-center justify-between w-full bg-zinc-100/15 rounded-round-default p-1'>
                             <CellDetail
                                 name='Data'
                                 content={
@@ -80,13 +68,13 @@ export function OrderDetail() {
                                         : '--'
                                 }
                                 className={rowStyle}
-                                style='text-3xl text-white'
+                                style='text-3xl text-primary-black'
                             />
                             <CellDetail
                                 name='Qtde. itens'
                                 content={orderData?.items?.length || ''}
                                 className={rowStyle}
-                                style='text-3xl text-white'
+                                style='text-3xl text-primary-black'
                             />
                             <CellDetail
                                 name='Total'
@@ -101,7 +89,7 @@ export function OrderDetail() {
                             />
                         </Box>
 
-                        <Box className='flex items-center justify-between w-full bg-zinc-100/15 rounded-b-md p-1'>
+                        <Box className='flex items-center justify-between w-full bg-zinc-100/15 rounded-round-default p-1'>
                             <CellDetail
                                 name='Vendido por'
                                 content={orderData?.employee.name || ''}
@@ -121,7 +109,7 @@ export function OrderDetail() {
                         </Box>
                     </CardHeader>
 
-                    <CardBody className='flex flex-col gap-2 m-2 text-white rounded-md border-2 border-amber-500/50 overflow-hidden overflow-y-scroll scrollbar-hide'>
+                    <CardBody className='flex flex-col gap-2 m-2 text-white bg-primary-white/15 rounded-md border-2 border-border-gray overflow-hidden overflow-y-scroll scrollbar-hide'>
                         <Box className='flex flex-col gap-2'>
                             {orderData?.items.map(
                                 (item: ItemEntity, index: number) => {
@@ -156,7 +144,7 @@ export function OrderDetail() {
                                             />
                                             <Tooltip label='Detalhes do produto'>
                                                 <ArrowRightCircle
-                                                    className='size-8 hover:cursor-pointer hover:text-amber-400 duration-150'
+                                                    className='size-8 hover:cursor-pointer hover:text-custom-red duration-150'
                                                     onClick={() =>
                                                         navigate(
                                                             `/products/${item.product.id}`

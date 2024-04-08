@@ -1,6 +1,7 @@
 import { http } from '../../service';
 import { Title } from '../../components/Title';
 import { CustomTh } from '../../components/CustomTh';
+import { LgSpinner } from '../../components/LgSpinner';
 import { PlusCircle } from 'lucide-react';
 import { IconButton } from '../../components/IconButton';
 import { useNavigate } from 'react-router';
@@ -11,11 +12,12 @@ import { toFullLocaleDate } from '../../utils/toFullLocaleDate';
 import { Controller, useForm } from 'react-hook-form';
 import { useEffect, useRef, useState } from 'react';
 import {
+    custom_red,
     primary_red,
+    round_default,
     primary_white,
     table_row_hover,
     primary_hover_red,
-    round_default,
 } from '../../constants/styles';
 import {
     Td,
@@ -27,7 +29,6 @@ import {
     Thead,
     Button,
     Select,
-    Spinner,
     ModalBody,
     FormLabel,
     ModalHeader,
@@ -43,7 +44,7 @@ import {
 type OrderData = {
     orders: OrderEntity[];
     total: number;
-}
+};
 
 export function Orders() {
     const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -104,14 +105,7 @@ export function Orders() {
         getEmployees();
     }, []);
 
-    if (isLoading)
-        return (
-            <PageContainer>
-                <div className='flex justify-center'>
-                    <Spinner size='xl' color='yellow.500' />
-                </div>
-            </PageContainer>
-        );
+    if (isLoading) return <LgSpinner />;
 
     return (
         <PageContainer title='Vendas'>
@@ -146,7 +140,7 @@ export function Orders() {
                                         <Select
                                             {...field}
                                             id='employee_id'
-                                            focusBorderColor='yellow.500'
+                                            focusBorderColor={custom_red}
                                             placeholder='Selecione um funcionário'
                                             onChange={(e) =>
                                                 setSelectedEmployee(
@@ -183,7 +177,13 @@ export function Orders() {
                                 Cancelar
                             </Button>
                             <Button
-                                colorScheme='yellow'
+                                borderRadius={round_default}
+                                backgroundColor={primary_red}
+                                color={primary_white}
+                                _hover={{
+                                    bg: primary_hover_red,
+                                    color: primary_white,
+                                }}
                                 onClick={() => {
                                     createOrder(selectedEmployee);
                                 }}
@@ -206,7 +206,7 @@ export function Orders() {
                 </Title>
             </div>
 
-            <Box className='overflow-y-scroll scrollbar-hide border-2 rounded-md'>
+            <Box className='overflow-y-scroll scrollbar-hide border-2 border-border-gray rounded-round-default'>
                 <TableContainer>
                     <Table size='sm'>
                         <Thead className='text-white text-xl select-none'>

@@ -10,6 +10,7 @@ import {
     primary_red,
     primary_white,
     primary_hover_red,
+    light_gray,
 } from '../../constants/styles';
 import {
     Box,
@@ -51,43 +52,43 @@ export function EmployeeDetail() {
                 bgHoverColor={primary_hover_red}
             />
 
-            <Box className='flex border-4 border-amber-500 rounded-md'>
-                <Card className='w-full h-fit ' background='black'>
-                    <CardHeader className='flex flex-col justify-center text-2xl font-semibold text-white'>
-                        <Box className='flex items-center justify-between w-full bg-zinc-100/15 rounded-b-md px-1'>
+            <Box className='flex border-4 border-border-gray rounded-round-default'>
+                <Card className='w-full h-fit ' background={light_gray}>
+                    <CardHeader className='flex flex-col justify-center text-2xl font-semibold text-primary-black'>
+                        <Box className='flex items-center justify-between w-full bg-primary-white/40 rounded-round-default px-1'>
                             <Title>Detalhes</Title>
                         </Box>
                     </CardHeader>
 
-                    <CardBody className='flex flex-col gap-2 m-2 text-white rounded-md'>
+                    <CardBody className='flex flex-col gap-2 m-2 text-primary-black rounded-round-default'>
                         <Box className='flex items-center justify-between'>
                             <p className='capitalize text-lg font-semibold'>
                                 Funcionário:{' '}
-                                <span className='font-bold text-3xl text-yellow-400'>
+                                <span className='font-bold text-3xl text-primary-red'>
                                     {employeeData?.name}
                                 </span>
                             </p>
                             <p className='capitalize text-lg font-semibold'>
                                 CPF:{' '}
-                                <span className='font-bold text-3xl text-yellow-400'>
+                                <span className='font-bold text-3xl text-primary-red'>
                                     {employeeData?.cpf}
                                 </span>
                             </p>
                             <p className='capitalize text-lg font-semibold'>
                                 ID:{' '}
-                                <span className='font-bold text-xl text-yellow-400'>
+                                <span className='font-bold text-xl text-primary-red'>
                                     {employeeData?.id}
                                 </span>
                             </p>
                         </Box>
 
                         <Box position='relative' marginY={4}>
-                            <Divider />
+                            <Divider bg='red' />
                             <AbsoluteCenter
-                                bg='yellow.400'
+                                bg={primary_red}
                                 paddingX={2}
                                 borderRadius={3}
-                                textColor='black'
+                                textColor={primary_white}
                                 className='text-md uppercase font-semibold'
                             >
                                 Endereço
@@ -97,25 +98,25 @@ export function EmployeeDetail() {
                         <Box className='flex justify-between'>
                             <p className='capitalize text-lg font-semibold'>
                                 Rua:{' '}
-                                <span className='font-bold text-3xl text-yellow-400'>
+                                <span className='font-bold text-3xl text-primary-red'>
                                     {employeeData?.address.street}
                                 </span>
                             </p>
                             <p className='capitalize text-lg font-semibold'>
                                 Bairro:{' '}
-                                <span className='font-bold text-3xl text-yellow-400'>
+                                <span className='font-bold text-3xl text-primary-red'>
                                     {employeeData?.address.district}
                                 </span>
                             </p>
                             <p className='capitalize text-lg font-semibold'>
                                 Número:{' '}
-                                <span className='font-bold text-3xl text-yellow-400'>
+                                <span className='font-bold text-3xl text-primary-red'>
                                     {employeeData?.address.number}
                                 </span>
                             </p>
                             <p className='capitalize text-lg font-semibold'>
                                 Complemento:{' '}
-                                <span className='font-bold text-3xl text-yellow-400'>
+                                <span className='font-bold text-3xl text-primary-red'>
                                     {employeeData?.address.complement}
                                 </span>
                             </p>

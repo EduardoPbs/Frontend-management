@@ -13,6 +13,7 @@ import {
     primary_red,
     primary_white,
     primary_hover_red,
+    round_default,
 } from '../../constants/styles';
 import {
     Box,
@@ -190,7 +191,7 @@ export function EmployeeForm() {
             />
 
             <form onSubmit={handleSubmit(onSubmit)}>
-                <Box className='flex flex-col gap-4 border-4 px-4 py-2 border-amber-500 rounded-md'>
+                <Box className='flex flex-col gap-4 border-4 px-4 py-2 border-primary-red rounded-round-default'>
                     <div className='flex items-center w-full gap-4'>
                         <LgInput
                             label='Nome'
@@ -213,10 +214,10 @@ export function EmployeeForm() {
                     <Box position='relative' marginTop={4}>
                         <Divider />
                         <AbsoluteCenter
-                            bg='yellow.400'
+                            bg={primary_red}
                             paddingX={2}
                             borderRadius={3}
-                            textColor='black'
+                            textColor={primary_white}
                             className='text-md uppercase font-semibold'
                         >
                             Endereço
@@ -257,7 +258,16 @@ export function EmployeeForm() {
                             autoComplete='disabled'
                         />
                     </div>
-                    <Button colorScheme='yellow' type='submit'>
+                    <Button
+                        borderRadius={round_default}
+                        backgroundColor={primary_red}
+                        color={primary_white}
+                        _hover={{
+                            bg: primary_hover_red,
+                            color: primary_white,
+                        }}
+                        type='submit'
+                    >
                         {id ? 'Atualizar' : 'Cadastrar'}
                     </Button>
                 </Box>

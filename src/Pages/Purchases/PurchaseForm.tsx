@@ -8,15 +8,19 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import { ItemPurchaseCreate, PurchaseCreate } from '../../types/purchase';
 import {
-    primary_hover_red,
+    custom_red,
+    light_gray,
     primary_red,
+    agreed_green,
+    round_default,
     primary_white,
+    primary_hover_red,
 } from '../../constants/styles';
 import {
+    PlusCircle,
+    MinusCircle,
     ArchiveRestore,
     ArrowLeftCircle,
-    MinusCircle,
-    PlusCircle,
 } from 'lucide-react';
 import {
     Box,
@@ -24,8 +28,8 @@ import {
     Input,
     Button,
     CardBody,
-    CardHeader,
     useToast,
+    CardHeader,
 } from '@chakra-ui/react';
 
 function RowProductsPurchase({
@@ -133,28 +137,43 @@ function RowProductsPurchase({
             <CellDetail name='Produto' content={name} />
             <CellDetail name='No estoque' content={quantity} />
             <Box className='flex items-center gap-2'>
-                <Button colorScheme='red' onClick={handleMinus10}>
+                <Button
+                    borderRadius={round_default}
+                    backgroundColor={custom_red}
+                    color={primary_white}
+                    _hover={{
+                        bg: primary_hover_red,
+                        color: primary_white,
+                    }}
+                    onClick={handleMinus10}
+                >
                     -10
                 </Button>
                 <MinusCircle
                     className={`size-6 ${
                         currQuantity <= 0
                             ? 'text-zinc-400 hover:cursor-default'
-                            : 'hover:text-red-400 hover:cursor-pointer'
+                            : 'hover:text-primary-red hover:cursor-pointer'
                     } duration-150`}
                     onClick={handleMinusQuantity}
                 />
-                <span className='text-2xl text-amber-400 font-bold text-center w-[42px]'>
+                <span className='text-2xl text-primary-red font-bold text-center w-[42px]'>
                     {currQuantity}
                 </span>
                 <PlusCircle
-                    className='size-6 hover:cursor-pointer hover:text-yellow-400 duration-150'
+                    className='size-6 hover:cursor-pointer hover:text-primary-red duration-150'
                     onClick={() => {
                         handlePlusQuantity();
                     }}
                 />
                 <Button
-                    colorScheme='yellow'
+                    borderRadius={round_default}
+                    backgroundColor={agreed_green}
+                    color={primary_white}
+                    _hover={{
+                        bg: primary_hover_red,
+                        color: primary_white,
+                    }}
                     onClick={() => {
                         handlePlus10();
                     }}
@@ -273,8 +292,11 @@ export function PurchaseForm() {
 
                     <Input
                         width={250}
-                        borderColor='orange'
-                        focusBorderColor='yellow.400'
+                        borderColor={primary_hover_red}
+                        _hover={{
+                            borderColor: custom_red,
+                        }}
+                        focusBorderColor={primary_red}
                         placeholder='Pesquisar produto...'
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                             setSearchInput(e.target.value)
@@ -284,7 +306,13 @@ export function PurchaseForm() {
                 <Button
                     className='capitalize flex items-center gap-2'
                     width={200}
-                    colorScheme='yellow'
+                    borderRadius={round_default}
+                    backgroundColor={primary_red}
+                    color={primary_white}
+                    _hover={{
+                        bg: primary_hover_red,
+                        color: primary_white,
+                    }}
                     onClick={() => {
                         onSubmit();
                     }}
@@ -293,10 +321,10 @@ export function PurchaseForm() {
                     <ArchiveRestore />
                 </Button>
             </Box>
-            <Box>
-                <Card className='w-full h-[500px] ' background='black'>
-                    <CardHeader className='flex flex-col justify-center text-2xl font-semibold text-white'>
-                        <Box className='flex items-center justify-between w-full h-[55px] bg-zinc-100/15 rounded-md px-1'>
+            <Box className='flex border-4 border-border-gray rounded-round-default'>
+                <Card className='w-full h-[500px]' background={light_gray}>
+                    <CardHeader className='flex flex-col justify-center text-2xl font-semibold text-primary-black'>
+                        <Box className='flex items-center justify-between w-full h-[55px] bg-zinc-100/15 rounded-round-default px-1'>
                             <CellDetail
                                 name='Itens'
                                 content={
@@ -329,8 +357,14 @@ export function PurchaseForm() {
                                 style='text-2xl'
                             /> */}
                             <Button
-                                height={8}
-                                colorScheme='red'
+                                height={10}
+                                borderRadius={round_default}
+                                backgroundColor={primary_red}
+                                color={primary_white}
+                                _hover={{
+                                    bg: primary_hover_red,
+                                    color: primary_white,
+                                }}
                                 onClick={() =>
                                     setPurchaseData((prev: any) => {
                                         return { ...prev, data_items: [] };
@@ -342,7 +376,7 @@ export function PurchaseForm() {
                         </Box>
                     </CardHeader>
 
-                    <CardBody className='flex flex-col gap-2 m-2 text-white rounded-md border-2 border-amber-500/50 overflow-hidden overflow-y-scroll scrollbar-hide'>
+                    <CardBody className='flex flex-col gap-2 m-2 text-primary-black rounded-md border-2 border-border-gray overflow-hidden overflow-y-scroll scrollbar-hide'>
                         <Box className='flex flex-col gap-2'>
                             {filteredProducts}
                         </Box>

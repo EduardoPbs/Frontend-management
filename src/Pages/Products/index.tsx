@@ -48,7 +48,10 @@ export function Products() {
         document.title = 'Management | Produtos';
     }, []);
 
-    if (loadingAll) return <LgSpinner />;
+    if (loadingAll)
+        return (
+            <LgSpinner />
+        );
 
     return (
         <PageContainer title='Produtos'>

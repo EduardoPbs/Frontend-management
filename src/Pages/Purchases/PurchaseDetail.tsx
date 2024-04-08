@@ -13,6 +13,7 @@ import {
     primary_red,
     primary_white,
     primary_hover_red,
+    light_gray,
 } from '../../constants/styles';
 import {
     Box,
@@ -67,14 +68,14 @@ export function PurchaseDetail() {
                 textColor={primary_white}
                 bgHoverColor={primary_hover_red}
             />
-            <Box className='flex border-4 border-amber-500 rounded-md'>
-                <Card className='w-full h-[550px] ' background='black'>
-                    <CardHeader className='flex flex-col justify-center text-2xl font-semibold text-white'>
-                        <Box className='flex items-center justify-between w-full bg-zinc-100/15 rounded-b-md px-1'>
+            <Box className='flex border-4 border-border-gray rounded-round-default'>
+                <Card className='w-full h-[550px] ' background={light_gray}>
+                    <CardHeader className='flex flex-col justify-center text-2xl font-semibold text-primary-black'>
+                        <Box className='flex items-center justify-between w-full bg-zinc-100/15 rounded-round-default px-1'>
                             <Title>Detalhes</Title>
                             <Button
                                 height={35}
-                                colorScheme='yellow'
+                                colorScheme='red'
                                 onClick={() => {
                                     handleStatus(
                                         purchaseData?.status,
@@ -96,13 +97,13 @@ export function PurchaseDetail() {
                                         : '--'
                                 }
                                 className={rowStyle}
-                                style='text-2xl text-white'
+                                style='text-2xl text-primary-black'
                             />
                             <CellDetail
                                 name='Qtde. itens'
                                 content={purchaseData?.items?.length || ''}
                                 className={rowStyle}
-                                style='text-2xl text-white'
+                                style='text-2xl text-primary-black'
                             />
                             <CellDetail
                                 name='Status'
@@ -111,7 +112,7 @@ export function PurchaseDetail() {
                                 style={
                                     purchaseData?.status === 'PENDENTE'
                                         ? 'text-orange-500 text-2xl'
-                                        : 'text-yellow-400 text-2xl'
+                                        : 'text-emerald-500 text-2xl'
                                 }
                             />
                             <CellDetail
@@ -128,7 +129,7 @@ export function PurchaseDetail() {
                         </Box>
                     </CardHeader>
 
-                    <CardBody className='flex flex-col gap-2 m-2 text-white rounded-md border-2 border-amber-500/50 overflow-hidden overflow-y-scroll scrollbar-hide'>
+                    <CardBody className='flex flex-col gap-2 m-2 rounded-round-default border-2 border-border-gray overflow-hidden overflow-y-scroll scrollbar-hide'>
                         <Box className='flex flex-col gap-2 '>
                             {purchaseData?.items.map(
                                 (item: ItemEntity, index: number) => {
@@ -163,7 +164,7 @@ export function PurchaseDetail() {
                                             />
                                             <Tooltip label='Detalhes do produto'>
                                                 <ArrowRightCircle
-                                                    className='size-8 hover:cursor-pointer hover:text-amber-400 duration-150'
+                                                    className='size-8 hover:cursor-pointer hover:text-custom-red duration-150'
                                                     onClick={() =>
                                                         navigate(
                                                             `/products/${item.product.id}`
