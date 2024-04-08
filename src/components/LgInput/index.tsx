@@ -1,5 +1,6 @@
 import { Input } from '@chakra-ui/react';
 import { Controller } from "react-hook-form";
+import { primary_red } from '../../constants/styles';
 
 type LgInputProps = Partial<HTMLInputElement> & {
     label?: string;
@@ -32,7 +33,7 @@ export const LgInput: React.FC<LgInputProps> = ({
                         {...field}
                         type={type}
                         autoComplete={autoComplete}
-                        focusBorderColor='yellow.500'
+                        focusBorderColor={primary_red}
                         placeholder={placeholder}
                     />
                     {errors && (
