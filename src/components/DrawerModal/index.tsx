@@ -32,6 +32,7 @@ import {
     primary_black,
     primary_red,
     primary_white,
+    round_default,
 } from '../../constants/styles';
 import logo from '../../assets/cloverFlare.jpg';
 
@@ -119,7 +120,7 @@ export function DrawerModal() {
                         <Box className='flex items-center gap-2 w-full'>
                             <Tooltip label='Ir para configurações'>
                                 <Button
-                                    rounded={6}
+                                    rounded={round_default}
                                     _hover={{
                                         bg: primary_red,
                                     }}

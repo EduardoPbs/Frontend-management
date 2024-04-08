@@ -38,7 +38,7 @@ export function CashRegister() {
                     })}
                 </span>
             </p>
-            <Box className='overflow-y-scroll scrollbar-hide border-2 rounded-md'>
+            <Box className='overflow-y-scroll scrollbar-hide border-2 border-border-gray rounded-round-default'>
                 <TableContainer>
                     <Table size='sm'>
                         <Thead className='text-primary-white text-xl select-none'>

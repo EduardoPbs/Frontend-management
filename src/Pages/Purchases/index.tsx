@@ -1,6 +1,7 @@
 import { http } from '../../service';
 import { Title } from '../../components/Title';
 import { CustomTh } from '../../components/CustomTh';
+import { LgSpinner } from '../../components/LgSpinner';
 import { IconButton } from '../../components/IconButton';
 import { PackagePlus } from 'lucide-react';
 import { useNavigate } from 'react-router';
@@ -10,9 +11,9 @@ import { useEffect, useState } from 'react';
 import {
     primary_red,
     primary_white,
+    round_default,
     table_row_hover,
     primary_hover_red,
-    round_default,
 } from '../../constants/styles';
 import {
     Tr,
@@ -22,7 +23,6 @@ import {
     Thead,
     Tbody,
     Button,
-    Spinner,
     TableContainer,
 } from '@chakra-ui/react';
 
@@ -66,14 +66,7 @@ export function Purchases() {
         getPurchaseData();
     }, []);
 
-    if (isLoading)
-        return (
-            <PageContainer>
-                <div className='flex justify-center'>
-                    <Spinner size='xl' color='yellow.500' />
-                </div>
-            </PageContainer>
-        );
+    if (isLoading) return <LgSpinner />;
 
     return (
         <PageContainer title='Compras'>

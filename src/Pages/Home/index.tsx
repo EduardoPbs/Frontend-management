@@ -1,23 +1,19 @@
 import { Title } from '../../components/Title';
 import { Content } from '../../components/Content';
+import { Tooltip } from '@chakra-ui/react';
+import { LgSpinner } from '../../components/LgSpinner';
 import { useProduct } from '../../hooks/useProduct';
 import { OrderTable } from '../../components/TableOrder';
 import { useNavigate } from 'react-router';
 import { ProductTable } from '../../components/TableProducts';
 import { PageContainer } from '../../components/PageContainer';
-import { Tooltip, Spinner } from '@chakra-ui/react';
 import { AlertCircle, ArrowRightCircle } from 'lucide-react';
 
 export function Home() {
     const { loadingAll, allProducts } = useProduct();
     const navigate = useNavigate();
 
-    if (loadingAll)
-        return (
-            <div className='flex justify-center'>
-                <Spinner size='xl' color='yellow.500' />
-            </div>
-        );
+    if (loadingAll) return <LgSpinner />;
 
     return (
         <PageContainer title='Home'>

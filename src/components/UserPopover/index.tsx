@@ -1,5 +1,5 @@
 import { ArrowUpRightIcon, LogOut } from 'lucide-react';
-import { custom_red, primary_red, primary_white } from '../../constants/styles';
+import { custom_red, primary_black, primary_red, primary_white, round_default } from '../../constants/styles';
 import {
     Box,
     Button,
@@ -46,8 +46,8 @@ export function UserPopover() {
                             </Button>
                             <Button
                                 height={30}
-                                rounded={6}
-                                color='#131112'
+                                rounded={round_default}
+                                color={primary_black}
                                 variant='outline'
                                 _hover={{
                                     borderColor: custom_red,

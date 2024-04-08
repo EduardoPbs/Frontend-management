@@ -1,20 +1,21 @@
 import { Title } from '../../components/Title';
 import { CustomTh } from '../../components/CustomTh';
 import { useEffect } from 'react';
+import { LgSpinner } from '../../components/LgSpinner';
 import { useProduct } from '../../hooks/useProduct';
 import { IconButton } from '../../components/IconButton';
 import { useNavigate } from 'react-router';
 import { PageContainer } from '../../components/PageContainer';
 import { PlusCircle, Settings } from 'lucide-react';
 import {
+    custom_red,
     primary_red,
     agreed_green,
+    round_default,
     primary_white,
     table_row_hover,
     primary_hover_red,
     agreed_hover_green,
-    custom_red,
-    round_default,
 } from '../../constants/styles';
 import {
     Tr,
@@ -26,7 +27,6 @@ import {
     Portal,
     Button,
     Popover,
-    Spinner,
     PopoverBody,
     PopoverArrow,
     PopoverContent,
@@ -48,14 +48,7 @@ export function Products() {
         document.title = 'Management | Produtos';
     }, []);
 
-    if (loadingAll)
-        return (
-            <PageContainer>
-                <div className='flex items-center h-screen m-auto'>
-                    <Spinner size='xl' color='yellow.500' />
-                </div>
-            </PageContainer>
-        );
+    if (loadingAll) return <LgSpinner />;
 
     return (
         <PageContainer title='Produtos'>
