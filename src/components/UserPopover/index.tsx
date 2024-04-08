@@ -1,4 +1,4 @@
-import { UserCircle2, ArrowUpRightIcon, LogOut } from 'lucide-react';
+import { ArrowUpRightIcon, LogOut } from 'lucide-react';
 import { custom_red, primary_red, primary_white } from '../../constants/styles';
 import {
     Box,
@@ -8,19 +8,30 @@ import {
     PopoverArrow,
     PopoverContent,
     PopoverTrigger,
+    Avatar,
 } from '@chakra-ui/react';
+import cloverF from '../../assets/cloverFlare.jpg';
+import { useLogin } from '../../hooks/useLogin';
 
 export function UserPopover() {
+    const { logOut } = useLogin();
+
     return (
-        <div className='flex items-center gap-1'>
+        <Box className='flex items-center gap-1 select-none'>
             <Popover>
                 <PopoverTrigger>
-                    <UserCircle2 className='size-9 text-primary-red hover:text-primary-hover-red hover:cursor-pointer duration-150' />
+                    <Avatar
+                        bg={primary_red}
+                        src={cloverF ?? ''}
+                        width={8}
+                        height={8}
+                        className='hover:cursor-pointer'
+                    />
                 </PopoverTrigger>
                 <PopoverContent width={150}>
                     <PopoverArrow />
                     <PopoverBody backgroundColor='#FBFBFF' borderRadius={8}>
-                        <Box className='flex flex-col justify-center gap-2 '>
+                        <Box className='flex flex-col justify-center gap-2'>
                             <Button
                                 rounded={6}
                                 className='flex items-center gap-2'
@@ -43,6 +54,9 @@ export function UserPopover() {
                                     color: custom_red,
                                 }}
                                 className='flex items-center gap-2'
+                                onClick={() => {
+                                    logOut();
+                                }}
                             >
                                 Sair
                                 <LogOut className='size-5' />
@@ -51,7 +65,7 @@ export function UserPopover() {
                     </PopoverBody>
                 </PopoverContent>
             </Popover>
-            <a className='hover:cursor-pointer select-none'>Lorem ipsum dolor sit</a>
-        </div>
+            <a className='hover:cursor-pointer font-semibold'>Clover Flare</a>
+        </Box>
     );
 }
