@@ -120,7 +120,7 @@ export function Purchases() {
                 </Title>
             </div>
 
-            <Box className='overflow-y-scroll scrollbar-hide border-2 rounded-md'>
+            <Box className='overflow-y-scroll scrollbar-hide border-2 border-border-gray rounded-md'>
                 <TableContainer>
                     <Table size='sm'>
                         <Thead className='text-white text-xl select-none'>
