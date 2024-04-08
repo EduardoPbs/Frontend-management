@@ -10,14 +10,16 @@ interface HeaderProps {
 
 export function Header({ title }: HeaderProps) {
     return (
-        <header className='flex items-center justify-between gap-4 bg-primary-black px-4 py-3 shadow-md shadow-gray-400/80'>
-            <div className='flex items-end gap-4 min-w-60'>
+        <header className='flex items-center sm:justify-between gap-4 bg-primary-black px-4 py-3 shadow-md shadow-gray-400/80'>
+            <div className='flex flex-none items-end justify-start gap-4'>
                 <DrawerModal />
 
-                <Title variant='h2'>{title}</Title>
+                <div className='min-w-[180px]'>
+                    <Title variant='h2'>{title}</Title>
+                </div>
             </div>
 
-            <div className='flex w-full h-full justify-between items-center gap-1'>
+            <div className='flex w-full h-full xl:justify-between justify-end xl:items-center gap-1'>
                 <NavLink>
                     <Link label='Início' to='/' />
                     <Link label='Produtos' to='/products' />
