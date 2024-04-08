@@ -11,7 +11,7 @@ interface ProductData {
     total: number;
 }
 
-export type ofAtr = 'id' | 'active';
+type ofAtr = 'id' | 'active';
 
 export function useProduct() {
     const [loadingAll, setLoadingAll] = useState<boolean>(true);

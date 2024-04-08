@@ -28,7 +28,7 @@ export function useLogin() {
             console.error(error);
             toast({
                 title: 'Falha ao realizar login.',
-                description: 'Email ou senha incorreto!',
+                description: 'Email ou senha incorretos!',
                 position: 'top-right',
                 status: 'error',
                 isClosable: true,
@@ -38,8 +38,14 @@ export function useLogin() {
         }
     }
 
+    function logOut() {
+        sessionStorage.removeItem('token');
+        navigate('/login');
+    }
+
     return {
         loading,
         onSubmit,
+        logOut,
     };
 }
