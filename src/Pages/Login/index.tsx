@@ -68,13 +68,11 @@ export function Login() {
                             rounded={6}
                             _hover={{
                                 bg: primary_hover_red,
-                                color: '#F7F7FF',
                             }}
                             color={primary_white}
                             backgroundColor={primary_red}
                             isLoading={loading}
                             loadingText='Carregando...'
-                            colorScheme='yellow'
                             type='submit'
                         >
                             Entrar
