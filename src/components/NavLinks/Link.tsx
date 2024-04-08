@@ -10,7 +10,7 @@ export function Link({ label, to }: LinkProps) {
 
     return (
         <li
-            className='uppercase font-semibold hover:cursor-pointer hover:text-primary-red duration-150'
+            className='uppercase font-semibold hover:cursor-pointer hover:bg-primary-red px-1 rounded-round-default duration-150'
             onClick={() => navigate(to)}
         >
             {label}
