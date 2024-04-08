@@ -27,7 +27,13 @@ import {
     ShoppingBag,
     PercentCircle,
 } from 'lucide-react';
-import { custom_red, primary_red } from '../../constants/styles';
+import {
+    custom_red,
+    primary_black,
+    primary_red,
+    primary_white,
+} from '../../constants/styles';
+import logo from '../../assets/cloverFlare.jpg';
 
 export function DrawerModal() {
     const { isOpen, onOpen, onClose } = useDisclosure();
@@ -37,7 +43,7 @@ export function DrawerModal() {
     return (
         <>
             <Menu
-                className='text-primary-red hover:text-primary-hover-red size-10 rounded-[4px] hover:cursor-pointer duration-150'
+                className='text-primary-red hover:text-primary-hover-red size-[29px] rounded-[4px] hover:cursor-pointer duration-150'
                 onClick={onOpen}
             />
 
@@ -49,10 +55,19 @@ export function DrawerModal() {
             >
                 <DrawerOverlay />
 
-                <DrawerContent color='#F7F7FF' bg='#131112'>
-                    <DrawerCloseButton _hover={{ color: '#F40000' }} />
+                <DrawerContent color={primary_white} bg={primary_black}>
+                    <DrawerCloseButton _hover={{ color: custom_red }} />
 
-                    <DrawerHeader className='select-none'>Painel</DrawerHeader>
+                    <DrawerHeader className='select-none' height={100}>
+                        <Box className='flex items-center gap-2'>
+                            <img
+                                src={logo}
+                                className='size-16 p-3 rounded-2xl bg-no-repeat'
+                                alt='Clover Flare'
+                            />
+                            <p>Menu</p>
+                        </Box>
+                    </DrawerHeader>
 
                     <Divider />
 
@@ -107,7 +122,6 @@ export function DrawerModal() {
                                     rounded={6}
                                     _hover={{
                                         bg: primary_red,
-                                        color: '#F7F7FF',
                                     }}
                                     className='w-full gap-3'
                                     onClick={() => {
