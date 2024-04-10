@@ -13,7 +13,6 @@ import {
     primary_red,
     primary_white,
     primary_hover_red,
-    light_gray,
 } from '../../constants/styles';
 import {
     Box,
@@ -69,7 +68,9 @@ export function PurchaseDetail() {
                 bgHoverColor={primary_hover_red}
             />
             <Box className='flex border-4 border-border-gray rounded-round-default'>
-                <Card className='w-full h-[550px] ' background={light_gray}>
+                <Card className='w-full h-[550px]'
+                //  background={light_gray}
+                >
                     <CardHeader className='flex flex-col justify-center text-2xl font-semibold text-primary-black'>
                         <Box className='flex items-center justify-between w-full bg-zinc-100/15 rounded-round-default px-1'>
                             <Title>Detalhes</Title>

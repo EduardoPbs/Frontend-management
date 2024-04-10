@@ -35,18 +35,6 @@ export function Purchases() {
 
     const navigate = useNavigate();
 
-    async function createPurchase() {
-        await http
-            .post('/purchase')
-            .then((response: any) => {
-                const purchaseId = response.data;
-                navigate(`new/${purchaseId}`);
-            })
-            .catch((error) => {
-                console.error(error);
-            });
-    }
-
     async function getPurchaseData() {
         try {
             const response = await http.get('/purchase');
@@ -71,7 +59,7 @@ export function Purchases() {
     return (
         <PageContainer title='Compras'>
             <IconButton
-                onClick={createPurchase}
+                to={'new'}
                 label='Nova Compra'
                 className='w-fit py-4'
                 icon={PackagePlus}

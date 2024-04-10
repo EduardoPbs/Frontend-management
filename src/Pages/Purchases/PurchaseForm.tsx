@@ -2,14 +2,13 @@ import { http } from '../../service';
 import { RowDetail } from '../../components/RowDetail';
 import { CellDetail } from '../../components/CellDetail';
 import { IconButton } from '../../components/IconButton';
+import { useNavigate } from 'react-router';
 import { PageContainer } from '../../components/PageContainer';
 import { ProductEntity } from '../../types/product';
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router';
 import { ItemPurchaseCreate, PurchaseCreate } from '../../types/purchase';
 import {
     custom_red,
-    light_gray,
     primary_red,
     agreed_green,
     round_default,
@@ -188,8 +187,8 @@ function RowProductsPurchase({
 export function PurchaseForm() {
     const [products, setProducts] = useState<ProductEntity[]>([]);
     const [searchInput, setSearchInput] = useState<string>('');
-    const [purchaseData, setPurchaseData] = useState<PurchaseCreate>();
-    const { id } = useParams();
+    const [purchaseData, setPurchaseData] =
+        useState<Omit<PurchaseCreate, 'purchase_id'>>();
     const navigate = useNavigate();
     const toast = useToast();
 
@@ -204,40 +203,40 @@ export function PurchaseForm() {
 
     async function onSubmit() {
         try {
-            const convertData = {
-                purchase_id: id,
-                data_items: purchaseData?.data_items.map(
-                    (item: ItemPurchaseCreate) => ({
-                        produto_id: item.product_id,
-                        quantity: item.quantity,
+            await http.post('/purchase').then((response) => {
+                const purchaseId = response.data;
+                const convertData = {
+                    purchase_id: purchaseId,
+                    data_items: purchaseData?.data_items.map(
+                        (item: ItemPurchaseCreate) => ({
+                            produto_id: item.product_id,
+                            quantity: item.quantity,
+                        })
+                    ),
+                };
+                http.post('/purchase/add-items', convertData)
+                    .then(() => {
+                        toast({
+                            title: 'Sucesso!',
+                            description: 'Compra registrada.',
+                            status: 'success',
+                            position: 'top-right',
+                            duration: 1500,
+                            isClosable: true,
+                        });
+                        navigate(-1);
                     })
-                ),
-            };
-
-            console.log(id);
-            await http
-                .post('/purchase/add-items', convertData)
-                .then(() => {
-                    toast({
-                        title: 'Sucesso!',
-                        description: 'Compra registrada.',
-                        status: 'success',
-                        position: 'top-right',
-                        duration: 1500,
-                        isClosable: true,
+                    .catch((err) => {
+                        toast({
+                            title: 'Erro!',
+                            description: `Falha ao registrar compra: ${err}`,
+                            status: 'error',
+                            position: 'top-right',
+                            duration: 1500,
+                            isClosable: true,
+                        });
                     });
-                    navigate(-1);
-                })
-                .catch((err) => {
-                    toast({
-                        title: 'Erro!',
-                        description: `Falha ao registrar compra: ${err}`,
-                        status: 'error',
-                        position: 'top-right',
-                        duration: 1500,
-                        isClosable: true,
-                    });
-                });
+            });
         } catch (error) {
             console.error(error);
         }
@@ -270,10 +269,7 @@ export function PurchaseForm() {
 
     useEffect(() => {
         getAllProducts();
-        setPurchaseData({
-            purchase_id: id ?? '',
-            data_items: [],
-        });
+        setPurchaseData({ data_items: [] });
     }, []);
 
     return (
@@ -322,7 +318,7 @@ export function PurchaseForm() {
                 </Button>
             </Box>
             <Box className='flex border-4 border-border-gray rounded-round-default'>
-                <Card className='w-full h-[500px]' background={light_gray}>
+                <Card className='w-full h-[500px]'>
                     <CardHeader className='flex flex-col justify-center text-2xl font-semibold text-primary-black'>
                         <Box className='flex items-center justify-between w-full h-[55px] bg-zinc-100/15 rounded-round-default px-1'>
                             <CellDetail
