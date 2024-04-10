@@ -39,7 +39,7 @@ function AppRoutes() {
                     <Route path='/employees/:id' element={<EmployeeDetail />} />
 
                     <Route path='/purchases' element={<Purchases />} />
-                    <Route path='/purchases/new/:id' element={<PurchaseForm />} />
+                    <Route path='/purchases/new' element={<PurchaseForm />} />
                     <Route path='/purchases/:id' element={<PurchaseDetail />} />
 
                     <Route path='/cash-register' element={<CashRegister />} />
