@@ -10,7 +10,6 @@ import {
     primary_red,
     primary_white,
     primary_hover_red,
-    light_gray,
 } from '../../constants/styles';
 import {
     Box,
@@ -53,7 +52,7 @@ export function EmployeeDetail() {
             />
 
             <Box className='flex border-4 border-border-gray rounded-round-default'>
-                <Card className='w-full h-fit ' background={light_gray}>
+                <Card className='w-full h-fit'>
                     <CardHeader className='flex flex-col justify-center text-2xl font-semibold text-primary-black'>
                         <Box className='flex items-center justify-between w-full bg-primary-white/40 rounded-round-default px-1'>
                             <Title>Detalhes</Title>
