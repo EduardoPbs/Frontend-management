@@ -1,4 +1,4 @@
-import { http } from '../../service';
+import { useOrder } from '../../hooks/useOrder';
 import { RowDetail } from '../../components/RowDetail';
 import { LgSpinner } from '../../components/LgSpinner';
 import { CellDetail } from '../../components/CellDetail';
@@ -9,40 +9,28 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import { ItemEntity, OrderEntity } from '../../types/order';
 import { ArrowLeftCircle, ArrowRightCircle } from 'lucide-react';
+import { Box, Card, Tooltip, CardBody, CardHeader } from '@chakra-ui/react';
 import {
-    light_gray,
     primary_red,
     primary_white,
     primary_hover_red,
 } from '../../constants/styles';
-import { Box, Card, Tooltip, CardBody, CardHeader } from '@chakra-ui/react';
 
 export function OrderDetail() {
-    const [isLoading, setIsLoading] = useState<boolean>(true);
     const [orderData, setOrderData] = useState<OrderEntity>();
+    const { getOrderById, isLoadingUnique } = useOrder();
     const { id } = useParams();
     const navigate = useNavigate();
-
-    async function getOrderById(id: string) {
-        try {
-            const response = await http.get(`/orders/${id}`);
-            setOrderData(response.data);
-        } catch (err) {
-            console.error(err);
-        } finally {
-            setIsLoading(false);
-        }
-    }
 
     const rowStyle = 'flex-row items-center w-fit gap-2';
 
     useEffect(() => {
         if (id !== undefined) {
-            getOrderById(id);
+            getOrderById(id, setOrderData);
         }
     }, []);
 
-    if (isLoading) return <LgSpinner />;
+    if (isLoadingUnique) return <LgSpinner />;
 
     return (
         <PageContainer title={`Venda - ${id?.slice(0, 8)}`}>
@@ -57,7 +45,7 @@ export function OrderDetail() {
             />
 
             <Box className='flex border-4 border-border-gray rounded-round-default'>
-                <Card className='w-full h-[500px]' background={light_gray}>
+                <Card className='w-full h-[500px]'>
                     <CardHeader className='flex flex-col justify-center text-2xl font-semibold text-primary-black'>
                         <Box className='flex items-center justify-between w-full bg-zinc-100/15 rounded-round-default p-1'>
                             <CellDetail

@@ -1,10 +1,11 @@
-import { http } from '../../service';
 import { Title } from '../../components/Title';
 import { CustomTh } from '../../components/CustomTh';
+import { useOrder } from '../../hooks/useOrder';
 import { LgSpinner } from '../../components/LgSpinner';
 import { PlusCircle } from 'lucide-react';
 import { IconButton } from '../../components/IconButton';
 import { useNavigate } from 'react-router';
+import { useEmployee } from '../../hooks/useEmployee';
 import { OrderEntity } from '../../types/order';
 import { PageContainer } from '../../components/PageContainer';
 import { EmployeeEntity } from '../../types/employee';
@@ -41,19 +42,11 @@ import {
     ModalCloseButton,
 } from '@chakra-ui/react';
 
-type OrderData = {
-    orders: OrderEntity[];
-    total: number;
-};
-
 export function Orders() {
-    const [isLoading, setIsLoading] = useState<boolean>(true);
-    const [employees, setEmployees] = useState<EmployeeEntity[]>([]);
     const [selectedEmployee, setSelectedEmployee] = useState<string>('');
-    const [dataOrders, setDataOrders] = useState<OrderData>({
-        orders: [],
-        total: 0,
-    });
+
+    const { dataOrders, isLoading, createOrder } = useOrder();
+    const { dataEmployees } = useEmployee();
 
     const navigate = useNavigate();
     const initialRef = useRef(null);
@@ -61,48 +54,8 @@ export function Orders() {
     const { control } = useForm();
     const { isOpen, onOpen, onClose } = useDisclosure();
 
-    async function createOrder(id: string) {
-        if (!selectedEmployee) alert('Escolha um funcionário.');
-
-        try {
-            const response = await http.post('/orders', {
-                employee_id: id,
-            });
-            navigate(`new/${response.data}`);
-        } catch (error) {
-            console.error(error);
-        }
-    }
-
-    async function getDataOrders() {
-        try {
-            const response = await http.get<any>('/orders');
-            if (!response.data) return;
-            setDataOrders({
-                orders: response.data,
-                total: response.data.length,
-            });
-        } catch (err) {
-            console.error(err);
-        } finally {
-            setIsLoading(false);
-        }
-    }
-
-    async function getEmployees() {
-        try {
-            const response = await http.get<EmployeeEntity[]>('/employees/all');
-            if (!response.data) return;
-            setEmployees(response.data);
-        } catch (error) {
-            console.error(error);
-        }
-    }
-
     useEffect(() => {
         document.title = 'Management | Vendas';
-        getDataOrders();
-        getEmployees();
     }, []);
 
     if (isLoading) return <LgSpinner />;
@@ -148,8 +101,8 @@ export function Orders() {
                                                 )
                                             }
                                         >
-                                            {employees &&
-                                                employees?.map(
+                                            {dataEmployees &&
+                                                dataEmployees?.map(
                                                     (
                                                         employee: EmployeeEntity,
                                                         index: number
@@ -185,6 +138,9 @@ export function Orders() {
                                     color: primary_white,
                                 }}
                                 onClick={() => {
+                                    if (!selectedEmployee)
+                                        alert('Escolha um funcionário.');
+
                                     createOrder(selectedEmployee);
                                 }}
                             >
@@ -196,7 +152,7 @@ export function Orders() {
             </Box>
 
             <div className='flex items-center justify-between'>
-                <Title variant='h3'>Resumo - Pedidos</Title>
+                <Title variant='h3'>Resumo - Vendas</Title>
 
                 <Title variant='h3'>
                     Cadastrados:{' '}

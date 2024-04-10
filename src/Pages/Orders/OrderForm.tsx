@@ -1,25 +1,20 @@
-import { http } from '../../service';
-import { RowDetail } from '../../components/RowDetail';
+import { useOrder } from '../../hooks/useOrder';
 import { CellDetail } from '../../components/CellDetail';
+import { useProduct } from '../../hooks/useProduct';
 import { IconButton } from '../../components/IconButton';
 import { PageContainer } from '../../components/PageContainer';
 import { ProductEntity } from '../../types/product';
+import { RowProductsOrder } from './RowProductsOrder';
+import { ItemOrderCreate } from '../../types/order';
 import { useNavigate, useParams } from 'react-router';
 import { useEffect, useRef, useState } from 'react';
-import { ItemOrderCreate, OrderCreate } from '../../types/order';
+import { ArchiveRestore, ArrowLeftCircle } from 'lucide-react';
 import {
     primary_red,
     primary_white,
-    primary_hover_red,
     round_default,
-    light_gray,
+    primary_hover_red,
 } from '../../constants/styles';
-import {
-    PlusCircle,
-    MinusCircle,
-    ArchiveRestore,
-    ArrowLeftCircle,
-} from 'lucide-react';
 import {
     Box,
     Card,
@@ -27,7 +22,6 @@ import {
     Modal,
     Button,
     CardBody,
-    useToast,
     ModalBody,
     CardHeader,
     ModalHeader,
@@ -38,116 +32,10 @@ import {
     ModalCloseButton,
 } from '@chakra-ui/react';
 
-function RowProductsOrder({
-    name,
-    code,
-    value,
-    quantity,
-    productId,
-    selectedProducts,
-    setSelectedProducts,
-}: {
-    name: string;
-    code: number;
-    value: number;
-    quantity: number;
-    productId: string;
-    selectedProducts: ItemOrderCreate[] | undefined;
-    setSelectedProducts: any;
-}) {
-    const toast = useToast();
-
-    const currQuantity =
-        selectedProducts?.find((p) => p.product_id === productId)?.quantity ||
-        0;
-
-    function handleMinusQuantity() {
-        setSelectedProducts(
-            (prevOrderData: OrderCreate) =>
-                prevOrderData && {
-                    ...prevOrderData,
-                    data_items: prevOrderData.data_items
-                        .map((item) =>
-                            item.product_id === productId && item.quantity > 0
-                                ? { ...item, quantity: item.quantity - 1 }
-                                : item
-                        )
-                        .filter((item) => item.quantity > 0),
-                }
-        );
-    }
-
-    function handlePlusQuantity() {
-        setSelectedProducts((prevOrderData: OrderCreate | undefined) => {
-            if (!prevOrderData) return prevOrderData;
-
-            const newItems = prevOrderData.data_items.map((item) => {
-                if (item.product_id === productId) {
-                    return { ...item, quantity: item.quantity + 1 };
-                }
-                return item;
-            });
-
-            if (!newItems.find((item) => item.product_id === productId)) {
-                newItems.push({
-                    product_id: productId,
-                    product_name: name,
-                    quantity: 1,
-                    value: value,
-                });
-            }
-
-            return { ...prevOrderData, data_items: newItems };
-        });
-    }
-
-    return (
-        <RowDetail>
-            <CellDetail name='Código' content={code} />
-            <CellDetail name='Produto' content={name} />
-            <CellDetail
-                name='Valor/unidade'
-                content={Number(value).toLocaleString('pt-BR', {
-                    style: 'currency',
-                    currency: 'BRL',
-                })}
-            />
-            <CellDetail name='Em estoque' content={quantity} />
-
-            <Box className='flex items-center gap-2'>
-                <MinusCircle
-                    className='size-6 hover:cursor-pointer hover:text-custom-red duration-150'
-                    onClick={handleMinusQuantity}
-                />
-                <span className='text-2xl text-primary-red font-bold text-center w-[42px]'>
-                    {currQuantity}
-                </span>
-                <PlusCircle
-                    className='size-6 hover:cursor-pointer hover:text-custom-red duration-150'
-                    onClick={() => {
-                        if (quantity === 0 || quantity <= currQuantity) {
-                            toast({
-                                title: 'Alerta!',
-                                description: 'Produto sem estoque suficiente.',
-                                status: 'warning',
-                                position: 'top-right',
-                                duration: 1500,
-                                isClosable: true,
-                            });
-                        } else {
-                            handlePlusQuantity();
-                        }
-                    }}
-                />
-            </Box>
-        </RowDetail>
-    );
-}
-
 export function OrderForm() {
-    const [products, setProducts] = useState<ProductEntity[]>([]);
+    const { activeProducts } = useProduct();
+    const { dataCreateOrder, setDataCreateOrder, onSubmit } = useOrder();
     const [searchInput, setSearchInput] = useState<string>('');
-    const [orderData, setOrderData] = useState<OrderCreate>();
     const navigate = useNavigate();
     const { id } = useParams();
 
@@ -155,22 +43,15 @@ export function OrderForm() {
     const initialRef = useRef(null);
     const finalRef = useRef(null);
 
-    async function getAllProducts() {
-        try {
-            const response = await http.get('products');
-            setProducts(response.data);
-        } catch (error) {
-            console.error(error);
-        }
-    }
-
-    const filterItems: ProductEntity[] = products.filter(
+    const filterItems: ProductEntity[] = activeProducts.products.filter(
         (product: ProductEntity) =>
-            product.name.toLowerCase().includes(searchInput.toLowerCase()) ||
-            String(product.code).includes(searchInput)
+            searchInput.toLowerCase().includes(product.name.toLowerCase())
     );
 
-    const mapProductToComponent = (product: ProductEntity, index: number) => (
+    const mapProductToComponent: (
+        product: ProductEntity,
+        index: number
+    ) => JSX.Element = (product: ProductEntity, index: number) => (
         <RowProductsOrder
             key={index}
             name={product.name}
@@ -178,41 +59,24 @@ export function OrderForm() {
             value={product.value}
             quantity={product.stock}
             productId={product.id}
-            selectedProducts={orderData?.data_items}
-            setSelectedProducts={setOrderData}
+            selectedProducts={dataCreateOrder?.data_items}
+            setSelectedProducts={setDataCreateOrder}
         />
     );
 
-    const filteredProducts: any = (
-        filterItems.length > 1 ? filterItems : products
+    const filteredProducts: ProductEntity[] | JSX.Element[] = (
+        filterItems.length > 1 ? filterItems : activeProducts.products
     ).map(mapProductToComponent);
-
-    async function onSubmit(data: OrderCreate | undefined) {
-        try {
-            const convertData = {
-                order_id: id,
-                data_items: data?.data_items.map((item: ItemOrderCreate) => ({
-                    produto_id: item.product_id,
-                    quantity: item.quantity,
-                })),
-            };
-
-            await http.post('/orders/add-items', convertData);
-        } catch (error) {
-            console.error(error);
-        }
-    }
 
     const rowStyle = 'flex-row items-center w-fit gap-2';
 
     useEffect(() => {
         if (id !== undefined) {
-            setOrderData({
+            setDataCreateOrder({
                 order_id: id,
                 data_items: [],
             });
         }
-        getAllProducts();
     }, []);
 
     return (
@@ -267,7 +131,7 @@ export function OrderForm() {
                         <ModalOverlay />
                         <ModalContent>
                             <ModalHeader>
-                                Resumo - {orderData?.order_id.slice(0, 8)}
+                                Resumo - {dataCreateOrder?.order_id.slice(0, 8)}
                             </ModalHeader>
                             <ModalCloseButton />
                             <ModalBody>
@@ -276,7 +140,7 @@ export function OrderForm() {
                                     className='w-full'
                                     style='flex flex-col justify-center gap-2'
                                     content={
-                                        orderData?.data_items.map(
+                                        dataCreateOrder?.data_items.map(
                                             (item, index: number) => (
                                                 <span
                                                     key={index}
@@ -327,7 +191,7 @@ export function OrderForm() {
                                     <p className='text-lg capitalize font-semibold'>
                                         Total:{' '}
                                         <span className='text-xl font-bold text-end'>
-                                            {orderData?.data_items
+                                            {dataCreateOrder?.data_items
                                                 .reduce(
                                                     (acc, currVal) =>
                                                         currVal.quantity *
@@ -351,7 +215,7 @@ export function OrderForm() {
                                             color: primary_white,
                                         }}
                                         onClick={() => {
-                                            onSubmit(orderData);
+                                            onSubmit(id, dataCreateOrder);
                                             onClose();
                                             navigate('/');
                                         }}
@@ -366,13 +230,13 @@ export function OrderForm() {
             </Box>
 
             <Box className='flex border-4 border-border-gray rounded-round-default'>
-                <Card className='w-full h-[500px]' background={light_gray}>
+                <Card className='w-full h-[500px]'>
                     <CardHeader className='flex flex-col justify-center text-2xl font-semibold text-primary-black'>
                         <Box className='flex items-center justify-between w-full h-[55px] bg-zinc-100/15 rounded-round-default px-1'>
                             <CellDetail
                                 name='Itens'
                                 content={
-                                    orderData?.data_items.reduce(
+                                    dataCreateOrder?.data_items.reduce(
                                         (acc, currVal) =>
                                             currVal.quantity + acc,
                                         0
@@ -384,9 +248,12 @@ export function OrderForm() {
                             <CellDetail
                                 name='Total'
                                 content={
-                                    orderData?.data_items
+                                    dataCreateOrder?.data_items
                                         .reduce(
-                                            (acc, currVal) =>
+                                            (
+                                                acc: number,
+                                                currVal: ItemOrderCreate
+                                            ) =>
                                                 currVal.quantity *
                                                     currVal.value +
                                                 acc,
@@ -404,7 +271,7 @@ export function OrderForm() {
                                 height={8}
                                 colorScheme='red'
                                 onClick={() =>
-                                    setOrderData((prev: any) => {
+                                    setDataCreateOrder((prev: any) => {
                                         return { ...prev, data_items: [] };
                                     })
                                 }
