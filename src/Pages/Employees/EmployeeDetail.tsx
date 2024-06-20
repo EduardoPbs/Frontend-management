@@ -1,41 +1,23 @@
-import { http } from '../../service';
 import { Title } from '../../components/Title';
+import { Content } from '@/components/Content';
 import { useParams } from 'react-router';
 import { IconButton } from '../../components/IconButton';
+import { useEmployee } from '../../hooks/useEmployee';
 import { PageContainer } from '../../components/PageContainer';
 import { EmployeeEntity } from '../../types/employee';
 import { ArrowLeftCircle } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import {
-    primary_red,
-    primary_white,
-    primary_hover_red,
-} from '../../constants/styles';
-import {
-    Box,
-    Card,
-    Divider,
-    CardBody,
-    CardHeader,
-    AbsoluteCenter,
-} from '@chakra-ui/react';
+import { primary_red, primary_white } from '../../constants/styles';
+import { Box, Card, Divider, CardBody, CardHeader, AbsoluteCenter } from '@chakra-ui/react';
 
 export function EmployeeDetail() {
     const [employeeData, setEmployeeData] = useState<EmployeeEntity>();
+    const { getEmployeeById } = useEmployee();
     const { id } = useParams();
-
-    async function getEmployee(id: string | undefined) {
-        try {
-            const response = await http.get(`/employees/${id}`);
-            setEmployeeData(response.data);
-        } catch (error) {
-            console.error(error);
-        }
-    }
 
     useEffect(() => {
         if (id !== undefined) {
-            getEmployee(id);
+            getEmployeeById(id, setEmployeeData);
         }
     }, []);
 
@@ -46,15 +28,12 @@ export function EmployeeDetail() {
                 label='Voltar'
                 className='w-fit'
                 icon={ArrowLeftCircle}
-                bgColor={primary_red}
-                textColor={primary_white}
-                bgHoverColor={primary_hover_red}
             />
 
-            <Box className='flex border-4 border-border-gray rounded-round-default'>
+            <Content className='w-full overflow-auto'>
                 <Card className='w-full h-fit'>
                     <CardHeader className='flex flex-col justify-center text-2xl font-semibold text-primary-black'>
-                        <Box className='flex items-center justify-between w-full bg-primary-white/40 rounded-round-default px-1'>
+                        <Box className='flex items-center justify-between w-full bg-slate-200 rounded-sm px-1'>
                             <Title>Detalhes</Title>
                         </Box>
                     </CardHeader>
@@ -64,7 +43,7 @@ export function EmployeeDetail() {
                             <p className='capitalize text-lg font-semibold'>
                                 Funcionário:{' '}
                                 <span className='font-bold text-3xl text-primary-red'>
-                                    {employeeData?.name}
+                                    {employeeData?.nome}
                                 </span>
                             </p>
                             <p className='capitalize text-lg font-semibold'>
@@ -73,14 +52,7 @@ export function EmployeeDetail() {
                                     {employeeData?.cpf}
                                 </span>
                             </p>
-                            <p className='capitalize text-lg font-semibold'>
-                                ID:{' '}
-                                <span className='font-bold text-xl text-primary-red'>
-                                    {employeeData?.id}
-                                </span>
-                            </p>
                         </Box>
-
                         <Box position='relative' marginY={4}>
                             <Divider bg='red' />
                             <AbsoluteCenter
@@ -93,36 +65,35 @@ export function EmployeeDetail() {
                                 Endereço
                             </AbsoluteCenter>
                         </Box>
-
                         <Box className='flex justify-between'>
                             <p className='capitalize text-lg font-semibold'>
                                 Rua:{' '}
                                 <span className='font-bold text-3xl text-primary-red'>
-                                    {employeeData?.address.street}
+                                    {employeeData?.endereco.rua}
                                 </span>
                             </p>
                             <p className='capitalize text-lg font-semibold'>
                                 Bairro:{' '}
                                 <span className='font-bold text-3xl text-primary-red'>
-                                    {employeeData?.address.district}
+                                    {employeeData?.endereco.bairro}
                                 </span>
                             </p>
                             <p className='capitalize text-lg font-semibold'>
                                 Número:{' '}
                                 <span className='font-bold text-3xl text-primary-red'>
-                                    {employeeData?.address.number}
+                                    {employeeData?.endereco.number}
                                 </span>
                             </p>
                             <p className='capitalize text-lg font-semibold'>
                                 Complemento:{' '}
                                 <span className='font-bold text-3xl text-primary-red'>
-                                    {employeeData?.address.complement}
+                                    {employeeData?.endereco.complemento}
                                 </span>
                             </p>
                         </Box>
                     </CardBody>
                 </Card>
-            </Box>
+            </Content>
         </PageContainer>
     );
 }

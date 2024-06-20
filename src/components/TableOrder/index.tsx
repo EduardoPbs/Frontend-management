@@ -1,18 +1,16 @@
-import { Title } from '../Title';
+import { Spinner } from '@chakra-ui/react';
 import { useOrder } from '../../hooks/useOrder';
 import { useEffect } from 'react';
 import { OrderEntity } from '../../types/order';
 import {
-    Tr,
-    Th,
-    Td,
-    Box,
-    Tbody,
     Table,
-    Thead,
-    Spinner,
-    TableContainer,
-} from '@chakra-ui/react';
+    TableRow,
+    TableCell,
+    TableBody,
+    TableHead,
+    TableHeader,
+} from '@/components/ui/table';
+import { table_row_hover } from '@/constants/styles';
 
 export function OrderTable() {
     const { dataOrders, isLoading } = useOrder();
@@ -29,57 +27,38 @@ export function OrderTable() {
         );
 
     return (
-        <Box className='max-h-80 max-w-full overflow-y-scroll scrollbar-hide'>
-            <TableContainer>
-                <div className='flex items-center justify-between'>
-                    <Title variant='h3'>Resumo - Pedidos</Title>
-
-                    <Title variant='h3'>
-                        Total:{' '}
-                        <span className='text-3xl text-primary-hover-red'>
-                            {dataOrders.total}
-                        </span>
-                    </Title>
-                </div>
-                <Table size='sm'>
-                    <Thead>
-                        <Tr>
-                            <Th>Cód. Pedido</Th>
-                            <Th>Qtde. itens</Th>
-                            <Th>Total (R$)</Th>
-                        </Tr>
-                    </Thead>
-
-                    <Tbody>
-                        {dataOrders
-                            ? /**@todo Remove slice() method and implement on Backend */
-                              dataOrders.orders
-                                  .slice(0, 8)
-                                  .map((order: OrderEntity) => {
-                                      return (
-                                          <Tr
-                                              key={order.id}
-                                              className='border-t-2 border-primary-black hover:bg-light-gray duration-150'
-                                          >
-                                              <Td>
-                                                  {String(order.id).slice(0, 8)}
-                                              </Td>
-                                              <Td>{order.items.length}</Td>
-                                              <Td>
-                                                  {Number(
-                                                      order.total
-                                                  ).toLocaleString('pt-BR', {
-                                                      style: 'currency',
-                                                      currency: 'BRL',
-                                                  })}
-                                              </Td>
-                                          </Tr>
-                                      );
-                                  })
-                            : []}
-                    </Tbody>
-                </Table>
-            </TableContainer>
-        </Box>
+        <Table>
+            <TableHeader>
+                <TableRow className='bg-primary-black/15 hover:bg-primary-black/15'>
+                    <TableHead className='text-primary-black uppercase'>Cód. Venda</TableHead>
+                    <TableHead className='text-primary-black uppercase'>Qtde. itens</TableHead>
+                    <TableHead className='text-primary-black uppercase'>Total (R$)</TableHead>
+                </TableRow>
+            </TableHeader>
+            <TableBody>
+                {dataOrders ?
+                    dataOrders.orders
+                        .slice(0, 8)
+                        .map((order: OrderEntity) => {
+                            return (
+                                <TableRow
+                                    key={order.id}
+                                    className={table_row_hover}
+                                >
+                                    <TableCell>
+                                        {String(order.id).slice(0, 8)}
+                                    </TableCell>
+                                    <TableCell>
+                                        {order.total}
+                                    </TableCell>
+                                    <TableCell>
+                                        {Number(order.total).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+                                    </TableCell>
+                                </TableRow>
+                            );
+                        })
+                    : []}
+            </TableBody>
+        </Table>
     );
 }

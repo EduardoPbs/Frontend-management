@@ -9,29 +9,24 @@ import { EmployeeEntity } from '../../types/employee';
 import { ArrowLeftCircle } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
-import {
-    primary_red,
-    primary_white,
-    primary_hover_red,
-    round_default,
-} from '../../constants/styles';
+import { primary_red, primary_white } from '../../constants/styles';
 import {
     Box,
-    Button,
     Divider,
     useToast,
     AbsoluteCenter,
 } from '@chakra-ui/react';
+import { Button } from '@/components/ui/button';
 
 export function EmployeeForm() {
     const [employeeData, setEmployeeData] = useState<Partial<EmployeeEntity>>({
-        name: '',
+        nome: '',
         cpf: '',
-        address: {
-            street: '',
-            district: '',
+        endereco: {
+            rua: '',
+            bairro: '',
             number: '',
-            complement: '',
+            complemento: '',
         },
     });
     const navigate = useNavigate();
@@ -39,21 +34,21 @@ export function EmployeeForm() {
     const { id } = useParams();
 
     const EmployeeFormSchema = z.object({
-        name: z
+        nome: z
             .string({ required_error: 'Obrigatório.' })
             .min(3, { message: 'Deve conter pelo menos 3 caracteres.' }),
         cpf: z
             .string({ required_error: 'Obrigatório.' })
             .min(11, { message: 'Deve conter 11 caracteres.' })
             .max(11, { message: 'Deve conter 11 caracteres.' }),
-        street: z
+        rua: z
             .string({ required_error: 'Obrigatório.' })
             .min(3, { message: 'Deve conter pelo menos 3 caracteres.' }),
-        district: z
+        bairro: z
             .string({ required_error: 'Obrigatório.' })
             .min(3, { message: 'Deve conter pelo menos 3 caracteres.' }),
         number: z.string().optional(),
-        complement: z.string().optional(),
+        complemento: z.string().optional(),
     });
 
     const {
@@ -64,12 +59,12 @@ export function EmployeeForm() {
     } = useForm({
         resolver: zodResolver(EmployeeFormSchema),
         defaultValues: {
-            name: employeeData.name || '',
+            nome: employeeData.nome || '',
             cpf: employeeData.cpf || '',
-            street: employeeData.address?.street || '',
-            number: employeeData.address?.number || '',
-            district: employeeData.address?.district || '',
-            complement: employeeData.address?.complement || '',
+            rua: employeeData.endereco?.rua || '',
+            number: employeeData.endereco?.number || '',
+            bairro: employeeData.endereco?.bairro || '',
+            complemento: employeeData.endereco?.complemento || '',
         },
     });
 
@@ -77,23 +72,23 @@ export function EmployeeForm() {
         try {
             const response = await http.get(`/employees/${id}`);
             setEmployeeData({
-                name: response.data.name,
+                nome: response.data.nome,
                 cpf: response.data.cpf,
-                address: {
-                    street: response.data.address.street,
-                    district: response.data.address.district,
-                    number: response.data.address.number,
-                    complement: response.data.address.complement,
+                endereco: {
+                    rua: response.data.endereco.rua,
+                    bairro: response.data.endereco.bairro,
+                    number: response.data.endereco.number,
+                    complemento: response.data.endereco.complemento,
                 },
             });
 
             reset({
-                name: response.data.name,
+                nome: response.data.nome,
                 cpf: response.data.cpf,
-                street: response.data.address.street,
-                district: response.data.address.district,
-                number: response.data.address.number,
-                complement: response.data.address.complement,
+                rua: response.data.endereco.rua,
+                bairro: response.data.endereco.bairro,
+                number: response.data.endereco.number,
+                complemento: response.data.endereco.complemento,
             });
         } catch (error) {
             console.error(error);
@@ -149,13 +144,13 @@ export function EmployeeForm() {
 
     async function onSubmit(event: any) {
         const employee: Partial<EmployeeEntity> = {
-            name: event.name,
+            nome: event.nome,
             cpf: event.cpf,
-            address: {
-                street: event.street,
-                district: event.district,
+            endereco: {
+                rua: event.rua,
+                bairro: event.bairro,
                 number: event.number,
-                complement: event.complement,
+                complemento: event.complemento,
             },
         };
         try {
@@ -185,92 +180,84 @@ export function EmployeeForm() {
                 label='Voltar'
                 className='w-fit'
                 icon={ArrowLeftCircle}
-                bgColor={primary_red}
-                textColor={primary_white}
-                bgHoverColor={primary_hover_red}
             />
 
-            <form onSubmit={handleSubmit(onSubmit)}>
-                <Box className='flex flex-col gap-4 border-4 px-4 py-2 border-primary-red rounded-round-default'>
-                    <div className='flex items-center w-full gap-4'>
-                        <LgInput
-                            label='Nome'
-                            name='name'
-                            placeholder='Luci'
-                            errors={errors.name}
-                            control={control}
-                            autoComplete='disabled'
-                        />
-                        <LgInput
-                            label='CPF'
-                            name='cpf'
-                            placeholder='xxx.xxx.xxx-xx'
-                            errors={errors.cpf}
-                            control={control}
-                            autoComplete='disabled'
-                        />
-                    </div>
+            <form
+                className='flex flex-col gap-4'
+                onSubmit={handleSubmit(onSubmit)}
+            >
+                <div className='flex items-center w-full gap-5'>
+                    <LgInput
+                        label='Nome'
+                        name='nome'
+                        placeholder='Luci'
+                        errors={errors.nome}
+                        control={control}
+                        autoComplete='disabled'
+                    />
+                    <LgInput
+                        label='CPF'
+                        name='cpf'
+                        placeholder='xxx.xxx.xxx-xx'
+                        errors={errors.cpf}
+                        control={control}
+                        autoComplete='disabled'
+                    />
+                </div>
 
-                    <Box position='relative' marginTop={4}>
-                        <Divider />
-                        <AbsoluteCenter
-                            bg={primary_red}
-                            paddingX={2}
-                            borderRadius={3}
-                            textColor={primary_white}
-                            className='text-md uppercase font-semibold'
-                        >
-                            Endereço
-                        </AbsoluteCenter>
-                    </Box>
-
-                    <div className='flex items-center w-full gap-4'>
-                        <LgInput
-                            label='Rua'
-                            name='street'
-                            placeholder='Rua A'
-                            errors={errors.street}
-                            control={control}
-                            autoComplete='disabled'
-                        />
-                        <LgInput
-                            label='Bairro'
-                            name='district'
-                            placeholder='Jardim Paraná'
-                            errors={errors.district}
-                            control={control}
-                            autoComplete='disabled'
-                        />
-                        <LgInput
-                            label='Número'
-                            name='number'
-                            placeholder='123'
-                            errors={errors.number}
-                            control={control}
-                            autoComplete='disabled'
-                        />
-                        <LgInput
-                            label='Complemento'
-                            name='complement'
-                            placeholder='Casa'
-                            errors={errors.complement}
-                            control={control}
-                            autoComplete='disabled'
-                        />
-                    </div>
-                    <Button
-                        borderRadius={round_default}
-                        backgroundColor={primary_red}
-                        color={primary_white}
-                        _hover={{
-                            bg: primary_hover_red,
-                            color: primary_white,
-                        }}
-                        type='submit'
+                <Box position='relative' marginTop={4}>
+                    <Divider />
+                    <AbsoluteCenter
+                        bg={primary_red}
+                        paddingX={2}
+                        borderRadius={3}
+                        textColor={primary_white}
+                        className='text-md uppercase font-semibold'
                     >
-                        {id ? 'Atualizar' : 'Cadastrar'}
-                    </Button>
+                        Endereço
+                    </AbsoluteCenter>
                 </Box>
+
+                <div className='flex items-center w-full gap-4'>
+                    <LgInput
+                        label='Rua'
+                        name='rua'
+                        placeholder='Rua A'
+                        errors={errors.rua}
+                        control={control}
+                        autoComplete='disabled'
+                    />
+                    <LgInput
+                        label='Bairro'
+                        name='bairro'
+                        placeholder='Jardim Paraná'
+                        errors={errors.bairro}
+                        control={control}
+                        autoComplete='disabled'
+                    />
+                    <LgInput
+                        label='Número'
+                        name='number'
+                        placeholder='123'
+                        errors={errors.number}
+                        control={control}
+                        autoComplete='disabled'
+                    />
+                    <LgInput
+                        label='Complemento'
+                        name='complemento'
+                        placeholder='Casa'
+                        errors={errors.complemento}
+                        control={control}
+                        autoComplete='disabled'
+                    />
+                </div>
+                <Button
+                    className='w-full hover:bg-primary-hover-red'
+                    type='submit'
+                >
+                    {id ? 'Atualizar' : 'Cadastrar'}
+                </Button>
             </form>
         </PageContainer>
     );

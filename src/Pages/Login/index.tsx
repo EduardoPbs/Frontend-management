@@ -15,7 +15,7 @@ export function Login() {
     const { loading, onSubmit } = useLogin();
 
     const loginFormSchema = z.object({
-        login: z.string().email({ message: 'Email inválido!' }),
+        email: z.string().email({ message: 'Email inválido!' }),
         password: z.string().min(1, { message: 'Senha obrigatória.' }),
     });
 
@@ -26,7 +26,7 @@ export function Login() {
     } = useForm({
         resolver: zodResolver(loginFormSchema),
         defaultValues: {
-            login: 'depois@gmail.com',
+            email: 'depois@gmail.com',
             password: '123',
         },
     });
@@ -49,9 +49,9 @@ export function Login() {
                         <LgInput
                             label='Usuário'
                             type='email'
-                            name='login'
+                            name='email'
                             placeholder='example@email.com'
-                            errors={errors.login}
+                            errors={errors.email}
                             control={control}
                             autoComplete='disabled'
                         />

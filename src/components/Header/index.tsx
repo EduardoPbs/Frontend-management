@@ -3,6 +3,7 @@ import { Title } from '../Title';
 import { NavLink } from '../NavLinks';
 import { DrawerModal } from '../DrawerModal';
 import { UserPopover } from '../UserPopover';
+import { NavigationMenu, NavigationMenuList } from '@/components/ui/navigation-menu';
 
 interface HeaderProps {
     title?: string;
@@ -20,15 +21,19 @@ export function Header({ title }: HeaderProps) {
             </div>
 
             <div className='flex w-full h-full xl:justify-between justify-end xl:items-center gap-1'>
-                <NavLink>
-                    <Link label='Início' to='/' />
-                    <Link label='Produtos' to='/products' />
-                    <Link label='Compras' to='/purchases' />
-                    <Link label='Vendas' to='/orders' />
-                    <Link label='Funcionários' to='/employees' />
-                    <Link label='Caixa' to='/cash-register' />
-                    <Link label='Promoções' to='/promos' />
-                </NavLink>
+                <NavigationMenu>
+                    <NavigationMenuList>
+                        <NavLink>
+                            <Link label='Início' to='/' />
+                            <Link label='Produtos' to='/products' />
+                            <Link label='Compras' to='/purchases' />
+                            <Link label='Vendas' to='/orders' />
+                            <Link label='Funcionários' to='/employees' />
+                            <Link label='Caixa' to='/cash-register' />
+                            <Link label='Promoções' to='/promos' />
+                        </NavLink>
+                    </NavigationMenuList>
+                </NavigationMenu>
 
                 <UserPopover />
             </div>

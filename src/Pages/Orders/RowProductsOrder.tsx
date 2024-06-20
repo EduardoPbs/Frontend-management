@@ -1,9 +1,9 @@
+import { Box, useToast } from '@chakra-ui/react';
+import { useOrder } from '../../hooks/useOrder';
 import { RowDetail } from '../../components/RowDetail';
 import { CellDetail } from '../../components/CellDetail';
-import { Box, useToast } from '@chakra-ui/react';
-import { MinusCircle, PlusCircle } from 'lucide-react';
 import { ItemOrderCreate } from '../../types/order';
-import { useOrder } from '../../hooks/useOrder';
+import { MinusCircle, PlusCircle } from 'lucide-react';
 
 interface IRowProductsOrder {
     name: string;
@@ -26,35 +26,12 @@ export function RowProductsOrder(props: IRowProductsOrder) {
         setSelectedProducts,
     } = props;
     const { handleMinusQuantity, handlePlusQuantity } = useOrder();
-    const toast = useToast();
 
     const currQuantity =
-        selectedProducts?.find((p) => p.product_id === productId)?.quantity ||
+        selectedProducts?.find((p) => p.produto_id === productId)?.quantidade ||
         0;
 
-    // function handlePlusQuantity() {
-    //     setSelectedProducts((prevOrderData: OrderCreate | undefined) => {
-    //         if (!prevOrderData) return prevOrderData;
-
-    //         const newItems = prevOrderData.data_items.map((item) => {
-    //             if (item.product_id === productId) {
-    //                 return { ...item, quantity: item.quantity + 1 };
-    //             }
-    //             return item;
-    //         });
-
-    //         if (!newItems.find((item) => item.product_id === productId)) {
-    //             newItems.push({
-    //                 product_id: productId,
-    //                 product_name: name,
-    //                 quantity: 1,
-    //                 value: value,
-    //             });
-    //         }
-
-    //         return { ...prevOrderData, data_items: newItems };
-    //     });
-    // }
+    const toast = useToast();
 
     return (
         <RowDetail>
@@ -62,10 +39,7 @@ export function RowProductsOrder(props: IRowProductsOrder) {
             <CellDetail name='Produto' content={name} />
             <CellDetail
                 name='Valor/unidade'
-                content={Number(value).toLocaleString('pt-BR', {
-                    style: 'currency',
-                    currency: 'BRL',
-                })}
+                content={Number(value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
             />
             <CellDetail name='Em estoque' content={quantity} />
 
@@ -84,9 +58,9 @@ export function RowProductsOrder(props: IRowProductsOrder) {
                     onClick={() => {
                         if (quantity === 0 || quantity <= currQuantity) {
                             toast({
-                                title: 'Alerta!',
+                                title: 'Aviso!',
                                 description: 'Produto sem estoque suficiente.',
-                                status: 'warning',
+                                status: 'info',
                                 position: 'top-right',
                                 duration: 1500,
                                 isClosable: true,
