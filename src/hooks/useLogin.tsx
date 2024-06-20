@@ -13,7 +13,7 @@ export function useLogin() {
     async function onSubmit(event: UserLogin) {
         setLoading(true);
         const credentials: UserLogin = {
-            login: event.login,
+            email: event.email,
             password: event.password,
         };
         try {
@@ -28,7 +28,7 @@ export function useLogin() {
             console.error(error);
             toast({
                 title: 'Falha ao realizar login.',
-                description: 'Email ou senha incorretos!',
+                description: 'Algo deu errado!',
                 position: 'top-right',
                 status: 'error',
                 isClosable: true,

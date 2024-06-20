@@ -6,7 +6,7 @@ export function useCategory() {
 
     async function getCategories() {
         try {
-            const response = await http.get('/products/categories');
+            const response = await http.get('/commodities/categories');
             setCategories(response.data);
         } catch (error) {
             console.error(error);

@@ -7,9 +7,22 @@ export function useEmployee() {
 
     async function getDataEmployees() {
         try {
-            const response = await http.get<EmployeeEntity[]>('/employees/all');
+            const response = await http.get<EmployeeEntity[]>('/employees');
             if (!response.data) return;
             setDataEmployees(response.data);
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    async function getEmployeeById(
+        id: string,
+        setDataEmployee: (data: EmployeeEntity) => void
+    ) {
+        try {
+            const response = await http.get(`/employees/${id}`);
+            const employeeFounded = response.data;
+            setDataEmployee(employeeFounded);
         } catch (error) {
             console.error(error);
         }
@@ -19,5 +32,5 @@ export function useEmployee() {
         getDataEmployees();
     }, []);
 
-    return { dataEmployees };
+    return { dataEmployees, getEmployeeById };
 }

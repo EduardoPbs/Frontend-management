@@ -1,7 +1,8 @@
+import { http } from '../service';
+import { useEmployee } from '@/hooks/useEmployee';
+import { EmployeeEntity } from '@/types/employee';
 import { useEffect, useState } from 'react';
 import { ItemOrderCreate, OrderCreate, OrderEntity } from '../types/order';
-import { http } from '../service';
-import { useNavigate } from 'react-router';
 
 interface OrderData {
     orders: OrderEntity[];
@@ -15,14 +16,19 @@ export function useOrder() {
         orders: [],
         total: 0,
     });
-    const [dataCreateOrder, setDataCreateOrder] = useState<OrderCreate>();
+    const [dataCreateOrder, setDataCreateOrder] = useState<OrderCreate>({
+        order_id: '',
+        data_items: []
+    });
+    const [orderItems, setOrderItems] = useState<ItemOrderCreate[]>([]);
+    const [currentEmployee, setCurrentEmployee] = useState<EmployeeEntity>();
 
-    const navigate = useNavigate();
+    const { getEmployeeById } = useEmployee();
 
     async function getOrdersData() {
         setIsLoading(true);
         try {
-            const response = await http.get<OrderEntity[]>('/orders');
+            const response = await http.get<OrderEntity[]>('/transactions/type/VENDA');
             if (response.data) {
                 setDataOrders({
                     orders: response.data,
@@ -36,14 +42,30 @@ export function useOrder() {
         }
     }
 
-    async function createOrder(employeeId: string) {
-        try {
-            const response = await http.post('/orders', {
-                employee_id: employeeId,
-            });
-            navigate(`new/${response.data}`);
-        } catch (error) {
-            console.error(error);
+    async function createOrder(employeeId: string, itens: ItemOrderCreate[], purchase: boolean = false): Promise<void | string> {
+        if (purchase) {
+            try {
+                const response = await http.post('/transactions/procurements', {
+                    itens: itens,
+                    funcionario_id: employeeId,
+                });
+
+                return response.data;
+            } catch (error) {
+                console.error(error);
+            }
+        } else {
+            try {
+                await http.post('/transactions/sales', {
+                    itens: itens,
+                    funcionario_id: employeeId,
+                }).then((response) => {
+                    const saleId: string = response.data.slice(30, 66);
+                    http.put(`/transactions/finalize/${saleId}`);
+                });
+            } catch (error) {
+                console.error(error);
+            }
         }
     }
 
@@ -52,32 +74,19 @@ export function useOrder() {
         setDataOrder: (data: OrderEntity) => void
     ): Promise<void> {
         try {
-            const response = await http.get<OrderEntity>(`/orders/${id}`);
-            const orderFounded: OrderEntity = response.data;
+            const [order, items] = await Promise.all([
+                http.get<OrderEntity>(`/transactions/${id}`),
+                http.get(`/transactions/${id}/items`),
+            ]);
+            const orderFounded: OrderEntity = order.data;
+            await getEmployeeById(orderFounded.funcionario_id, setCurrentEmployee);
+
             setDataOrder(orderFounded);
+            setOrderItems(items.data);
         } catch (err) {
             console.error(err);
         } finally {
             setIsLoadingUnique(false);
-        }
-    }
-
-    async function onSubmit(
-        id: string | undefined,
-        data: OrderCreate | undefined
-    ) {
-        try {
-            const convertData = {
-                order_id: id,
-                data_items: data?.data_items.map((item: ItemOrderCreate) => ({
-                    produto_id: item.product_id,
-                    quantity: item.quantity,
-                })),
-            };
-
-            await http.post('/orders/add-items', convertData);
-        } catch (error) {
-            console.error(error);
         }
     }
 
@@ -91,11 +100,11 @@ export function useOrder() {
                     ...prevOrderData,
                     data_items: prevOrderData.data_items
                         .map((item) =>
-                            item.product_id === productId && item.quantity > 0
-                                ? { ...item, quantity: item.quantity - 1 }
+                            item.produto_id === productId && item.quantidade > 0
+                                ? { ...item, quantidade: item.quantidade - 1 }
                                 : item
                         )
-                        .filter((item) => item.quantity > 0),
+                        .filter((item) => item.quantidade > 0),
                 }
         );
     }
@@ -109,19 +118,20 @@ export function useOrder() {
         setDataSelectedProducts((prevOrderData: OrderCreate | undefined) => {
             if (!prevOrderData) return prevOrderData;
 
-            const newItems = prevOrderData.data_items.map((item) => {
-                if (item.product_id === productId) {
-                    return { ...item, quantity: item.quantity + 1 };
+            const newItems: ItemOrderCreate[] = prevOrderData.data_items.map((item: ItemOrderCreate) => {
+                if (item.produto_id === productId) {
+                    return { ...item, quantidade: item.quantidade + 1 };
                 }
+
                 return item;
             });
 
-            if (!newItems.find((item) => item.product_id === productId)) {
+            if (!newItems.find((item: ItemOrderCreate) => item.produto_id === productId)) {
                 newItems.push({
-                    product_id: productId,
-                    product_name: name,
-                    quantity: 1,
-                    value: value,
+                    produto_id: productId,
+                    produto_nome: name,
+                    quantidade: 1,
+                    valor_unitario: value,
                 });
             }
 
@@ -141,8 +151,9 @@ export function useOrder() {
         getOrderById,
         dataCreateOrder,
         setDataCreateOrder,
-        onSubmit,
         handleMinusQuantity,
         handlePlusQuantity,
+        orderItems,
+        currentEmployee
     };
 }
