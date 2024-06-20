@@ -1,10 +1,10 @@
 export type ProductEntity = {
     id: string;
-    name: string;
-    code: number;
-    value: number;
-    category: string;
-    stock: number;
-    active: boolean;
+    nome: string;
+    codigo: number;
+    valor: number;
+    valorOriginal: number;
+    categorias: string[];
+    estoque: number;
+    ativo: boolean;
 };
-
