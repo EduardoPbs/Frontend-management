@@ -1,5 +1,5 @@
 import { ChakraProvider } from '@chakra-ui/react';
-import { Routes, Route, BrowserRouter } from 'react-router-dom';
+import { Routes, Route, BrowserRouter, Navigate } from 'react-router-dom';
 import {
     Home,
     Login,
@@ -18,10 +18,11 @@ import {
 } from './Pages';
 
 function AppRoutes() {
-    return (
+        return (
         <ChakraProvider>
             <BrowserRouter>
                 <Routes>
+                    <Route path='*' element={<Navigate to='/login' replace={true} />}/>
                     <Route path='/' element={<Home />} />
                     <Route path='/login' element={<Login />} />
 
@@ -30,7 +31,7 @@ function AppRoutes() {
                     <Route path='/products/edit/:id' element={<ProductForm />} />
 
                     <Route path='/orders' element={<Orders />} />
-                    <Route path='/orders/new/:id' element={<OrderForm />} />
+                    <Route path='/orders/new' element={<OrderForm />} />
                     <Route path='/orders/:id' element={<OrderDetail />} />
 
                     <Route path='/employees' element={<Employees />} />
