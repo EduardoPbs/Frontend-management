@@ -26,6 +26,11 @@ http.interceptors.response.use(
     },
     function (err: AxiosError) {
         console.error(err);
+        const token = sessionStorage.getItem("token");
+        if(!token) {
+            window.location.href = '/login'
+        }
+
         if (err.response?.status === 403) {
             window.location.href = '/login';
             sessionStorage.removeItem('token');
