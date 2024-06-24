@@ -30,7 +30,7 @@ export function Header({ title }: HeaderProps) {
                             <Link label='Vendas' to='/orders' />
                             <Link label='Funcionários' to='/employees' />
                             <Link label='Caixa' to='/cash-register' />
-                            <Link label='Promoções' to='/promos' />
+                            <Link label='Promoções' to='/promotions' />
                         </NavLink>
                     </NavigationMenuList>
                 </NavigationMenu>

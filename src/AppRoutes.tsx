@@ -8,8 +8,9 @@ import {
     Purchases,
     OrderForm,
     Employees,
-    ProductForm,
+    Promotions,
     OrderDetail,
+    ProductForm,
     PurchaseForm,
     CashRegister,
     EmployeeForm,
@@ -44,6 +45,8 @@ function AppRoutes() {
                     <Route path='/purchases/:id' element={<PurchaseDetail />} />
 
                     <Route path='/cash-register' element={<CashRegister />} />
+
+                    <Route path='/promotions' element={<Promotions />} />
                 </Routes>
             </BrowserRouter>
         </ChakraProvider>

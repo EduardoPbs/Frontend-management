@@ -5,6 +5,7 @@ import { Products } from './Products';
 import { Purchases } from './Purchases';
 import { Employees } from './Employees';
 import { OrderForm } from './Orders/OrderForm';
+import { Promotions } from './Promotions/index';
 import { ProductForm } from './Products/ProductForm';
 import { OrderDetail } from './Orders/OrderDetail';
 import { PurchaseForm } from './Purchases/PurchaseForm';
@@ -21,6 +22,7 @@ export {
     Purchases,
     Employees,
     OrderForm,
+    Promotions,
     ProductForm,
     OrderDetail,
     PurchaseForm,

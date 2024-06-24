@@ -85,7 +85,7 @@ export function DrawerModal() {
                             className='bg-primary-white text-black hover:text-white'
                             icon={PercentCircle}
                             label='Promoções'
-                            to='#'
+                            to='/promotions'
                         />
                         <IconButton
                             className='bg-primary-white text-black hover:text-white'
