@@ -164,7 +164,7 @@ export function CashRegister() {
                     <p className='text-lg font-semibold uppercase'>
                         {currentCaixa.fechamento === null ? 'Aberto em:' : 'Fechado em:'}{' '}
                         <span className='text-2xl font-bold text-primary-red'>
-                            {toFullLocaleDate(currentCaixa?.abertura || currentCaixa?.fechamento || '')}
+                            {toFullLocaleDate(currentCaixa.fechamento === null ? currentCaixa.abertura : currentCaixa.fechamento)}
                         </span>
                     </p>
                     <p className='text-lg font-semibold'>
