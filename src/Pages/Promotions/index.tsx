@@ -1,10 +1,8 @@
 import { IconButton } from "@/components/IconButton";
-import { PromotionAll } from "@/Pages/Promotions/promotion-all";
 import { PageContainer } from "@/components/PageContainer";
 import { BadgePlus, Settings2 } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { PromotionActive } from "@/Pages/Promotions/promotion-active";
-import { PromotionFinish } from "@/Pages/Promotions/promotion-finish";
+import { PromotionActive, PromotionAll, PromotionFinish } from "@/Pages/Promotions/tabs";
 
 export function Promotions() {
 
@@ -12,7 +10,7 @@ export function Promotions() {
         <PageContainer title="Promoções">
             <div className='flex items-center gap-2 select-none'>
                 <IconButton
-                    to='/new'
+                    to='new'
                     label='Criar'
                     className='w-fit'
                     icon={BadgePlus}

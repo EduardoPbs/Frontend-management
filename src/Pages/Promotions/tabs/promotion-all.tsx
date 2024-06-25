@@ -11,8 +11,6 @@ export function PromotionAll() {
     const { allPromotions } = usePromotion();
     const navigate = useNavigate();
 
-    console.log('Promotions: ', allPromotions);
-
     return (
         <TabsContent value="all">
             <ScrollArea className="w-auto h-[525px] ">

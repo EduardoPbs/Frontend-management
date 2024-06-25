@@ -19,7 +19,7 @@ export const LgInput: React.FC<LgInputProps> = ({
     control,
     placeholder,
     type = 'text',
-    autoComplete = '',
+    autoComplete = ''
 }: any) => {
     return (
         <Controller

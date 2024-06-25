@@ -37,9 +37,7 @@ export function useProduct() {
     const toast = useToast();
     const navigate = useNavigate();
 
-    async function getAllProducts(name?: string): Promise<void> {
-        console.log(`triggered on: ${name?.toUpperCase()}`);
-        console.log(`Status: ${status}`);
+    async function getAllProducts(): Promise<void> {
         try {
             const response = await http.get('/commodities');
             if (response.data) {
@@ -183,7 +181,7 @@ export function useProduct() {
     });
 
     useEffect(() => {
-        getAllProducts('hook');
+        getAllProducts();
     }, [status]);
 
     return {
