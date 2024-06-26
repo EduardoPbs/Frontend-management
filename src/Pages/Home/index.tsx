@@ -5,6 +5,7 @@ import { useProduct } from '../../hooks/useProduct';
 import { OrderTable } from '../../components/TableOrder';
 import { useNavigate } from 'react-router';
 import { ProductTable } from '../../components/TableProducts';
+import { ProductEntity } from '@/types/product';
 import { PageContainer } from '../../components/PageContainer';
 import { AlertCircle, ArrowRightCircle } from 'lucide-react';
 
@@ -35,42 +36,45 @@ export function Home() {
                             <Content className='w-full border-border-gray'>
                                 <Title variant='h3'>
                                     Notificações{' '}
-                                    <span className='text-sm opacity-50 capitalize'>| Produtos com baixo estoque</span>
+                                    <span className='text-sm opacity-50 capitalize'>| Produtos com baixo estoque:{" "}
+                                    </span>
+                                    <span>{allProducts?.products
+                                        .filter((p: ProductEntity) => p.estoque <= 10).length}</span>
                                 </Title>
 
                                 <div className='flex flex-col gap-2 max-h-[100px] overflow-hidden overflow-y-scroll rounded-round-default'>
                                     {allProducts.products && allProducts?.products
-                                        .filter((p: any) => p.stock <= 10)
-                                        .map((prod: any, index: number) => (
+                                        .filter((p: ProductEntity) => p.estoque <= 10)
+                                        .map((prod: ProductEntity, index: number) => (
                                             <p
                                                 key={index}
                                                 className='flex items-center justify-between gap-4 border-2 border-gray-400/60 rounded-round-default px-4 py-2 font-semibold hover:border-primary-hover-red hover:bg-primary-white/50 hover:cursor-default hover:shadow-md duration-150'
                                             >
                                                 <span className='flex items-center gap-2'>
                                                     <AlertCircle className='text-warning-red' />
-                                                    <span className='w-[200px]'>{prod.name}</span>
+                                                    <span className='w-[200px]'>{prod.nome}</span>
                                                 </span>
                                                 <span>
                                                     Estoque:{' '}
                                                     <span
                                                         className={
-                                                            prod.stock > 5
+                                                            prod.estoque > 5
                                                                 ? 'text-custom-red'
                                                                 : 'text-primary-hover-red'
                                                         }
                                                     >
-                                                        {prod.stock}
+                                                        {prod.estoque}
                                                     </span>
                                                 </span>
                                                 <span>
                                                     Status:{' '}
                                                     <span
-                                                        className={prod.active
+                                                        className={prod.ativo
                                                             ? 'text-agreed-green'
                                                             : 'text-primary-hover-red'
                                                         }
                                                     >
-                                                        {prod.active ? 'Online' : 'Offline'}
+                                                        {prod.ativo ? 'Online' : 'Offline'}
                                                     </span>
                                                 </span>
 
