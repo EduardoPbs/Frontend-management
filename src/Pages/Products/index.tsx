@@ -19,6 +19,7 @@ export function Products() {
 
     useEffect(() => {
         getAllProducts();
+        document.title = 'Management | Produtos';
     }, [status]);
 
     if (loading)

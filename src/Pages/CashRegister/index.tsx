@@ -36,6 +36,7 @@ export function CashRegister() {
 
     useEffect(() => {
         setCurrentCaixa(currentCashier);
+        document.title = 'Management | Caixa';
     }, [handleCaixa, currentCashier]);
 
     return (
