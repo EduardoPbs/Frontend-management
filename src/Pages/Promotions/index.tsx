@@ -32,7 +32,7 @@ export function Promotions() {
                     <TabsList className='bg-zinc-300 select-none size-fit'>
                         <TabsTrigger value="all">Todos</TabsTrigger>
                         <TabsTrigger value="active">Ativos</TabsTrigger>
-                        <TabsTrigger value="finished">Finalizados</TabsTrigger>
+                        <TabsTrigger value="disable">Desativados</TabsTrigger>
                     </TabsList>
                     <PromotionAll />
                     <PromotionActive />

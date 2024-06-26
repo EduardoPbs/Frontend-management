@@ -1,6 +1,7 @@
 import { http } from "@/service";
 import { PromotionEntity } from "@/types/promotion";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
 import { z } from "zod";
 
 interface CreatePromotion {
@@ -15,6 +16,7 @@ export function usePromotion() {
     const [disabledPromotions, setDisabledPromotions] = useState<PromotionEntity[]>([]);
     const [productPromotions, setProductPromotions] = useState<PromotionEntity[]>([]);
     const [loadingUnique, setIsLoaginUnique] = useState<boolean>(true);
+    const navigate = useNavigate();
 
     async function getAllPromotions(): Promise<void> {
         try {
@@ -59,8 +61,11 @@ export function usePromotion() {
             fim: data.fim
         };
         try {
-            const response = await http.post(`/promotions/create/${productId}`, createPromotionData);
-            return response.data;
+            await http.post(`/promotions/create/${productId}`, createPromotionData)
+                .then((res) => {
+                    navigate(-1);
+                    return res.data;
+                });
         } catch (error) {
             console.error(error);
         }

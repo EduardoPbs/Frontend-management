@@ -13,7 +13,7 @@ export function PromotionFinish() {
     const navigate = useNavigate();
 
     return (
-        <TabsContent value="finished">
+        <TabsContent value="disable">
             {disabledPromotions.length > 0 ? <ScrollArea className="w-auto h-[525px] ">
                 <div className='flex gap-4 w-full h-full flex-wrap p-2'>
                     {disabledPromotions.map((promotion: PromotionEntity, index: number) => {
