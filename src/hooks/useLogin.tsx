@@ -28,7 +28,6 @@ export function useLogin() {
                         adm: tokenPayload.adm,
                         exp: tokenPayload.exp
                     };
-                    console.log(user);
                     sessionStorage.setItem('token', JwtToken);
                     sessionStorage.setItem('user', JSON.stringify(user));
                 })

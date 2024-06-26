@@ -69,6 +69,15 @@ export function useOrder() {
         }
     }
 
+    async function getOrderByEmployeeId(employeeId: string, setOrdersData: (data: OrderEntity[]) => void) {
+        try {
+            const response = await http.get<OrderEntity[]>(`/transactions/employee/${employeeId}`);
+            setOrdersData(response.data);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     async function getOrderById(
         id: string,
         setDataOrder: (data: OrderEntity) => void
@@ -154,6 +163,7 @@ export function useOrder() {
         handleMinusQuantity,
         handlePlusQuantity,
         orderItems,
-        currentEmployee
+        currentEmployee,
+        getOrderByEmployeeId
     };
 }
