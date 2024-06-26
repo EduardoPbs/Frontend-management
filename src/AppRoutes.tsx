@@ -18,13 +18,14 @@ import {
     PurchaseDetail,
 } from './Pages';
 import { PromotionForm } from '@/Pages/Promotions/PromotionForm';
+import { PromotionDetail } from '@/Pages/Promotions/PromotionDetail';
 
 function AppRoutes() {
-        return (
+    return (
         <ChakraProvider>
             <BrowserRouter>
                 <Routes>
-                    <Route path='*' element={<Navigate to='/login' replace={true} />}/>
+                    <Route path='*' element={<Navigate to='/login' replace={true} />} />
                     <Route path='/' element={<Home />} />
                     <Route path='/login' element={<Login />} />
 
@@ -49,6 +50,7 @@ function AppRoutes() {
 
                     <Route path='/promotions' element={<Promotions />} />
                     <Route path='/promotions/new' element={<PromotionForm />} />
+                    <Route path='/promotions/:id' element={<PromotionDetail />} />
                 </Routes>
             </BrowserRouter>
         </ChakraProvider>

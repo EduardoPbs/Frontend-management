@@ -14,6 +14,7 @@ export function usePromotion() {
     const [activePromotions, setActivePromotions] = useState<PromotionEntity[]>([]);
     const [disabledPromotions, setDisabledPromotions] = useState<PromotionEntity[]>([]);
     const [productPromotions, setProductPromotions] = useState<PromotionEntity[]>([]);
+    const [loadingUnique, setIsLoaginUnique] = useState<boolean>(true);
 
     async function getAllPromotions(): Promise<void> {
         try {
@@ -32,6 +33,20 @@ export function usePromotion() {
             setProductPromotions(response.data);
         } catch (error) {
             console.error(error);
+        }
+    }
+
+    async function getPromotionById(
+        promotionId: string,
+        setPromotionData: (data: PromotionEntity) => void
+    ): Promise<void> {
+        try {
+            const response = await http.get<PromotionEntity>(`/promotions/${promotionId}`);
+            setPromotionData(response.data);
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setIsLoaginUnique(false);
         }
     }
 
@@ -70,7 +85,6 @@ export function usePromotion() {
     }
 
     async function onSubmit(event: any) {
-        console.log('OnSubmit: ', event);
         try {
             createPromotion(event.product, {
                 porcentagem_desconto: Number(event.discount),
@@ -106,6 +120,8 @@ export function usePromotion() {
         enablePromotion,
         disablePromotion,
         onSubmit,
-        PromotionFormSchema
+        PromotionFormSchema,
+        getPromotionById,
+        loadingUnique
     };
 }
