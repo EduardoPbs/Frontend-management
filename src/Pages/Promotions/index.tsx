@@ -3,8 +3,13 @@ import { PageContainer } from "@/components/PageContainer";
 import { BadgePlus, Settings2 } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PromotionActive, PromotionAll, PromotionFinish } from "@/Pages/Promotions/tabs";
+import { useEffect } from "react";
 
 export function Promotions() {
+
+    useEffect(() => {
+        document.title = 'Management | Promoções';
+    }, []);
 
     return (
         <PageContainer title="Promoções">
