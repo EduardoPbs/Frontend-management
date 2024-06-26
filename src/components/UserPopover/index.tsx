@@ -8,6 +8,7 @@ import cloverF from '../../assets/cloverFlare.jpg';
 
 export function UserPopover() {
     const { logOut } = useLogin();
+    const user = JSON.parse(sessionStorage.getItem('user') || "");
 
     return (
         <div className='flex items-center gap-1.5 select-none'>
@@ -38,7 +39,7 @@ export function UserPopover() {
                     </div>
                 </PopoverContent>
             </Popover>
-            <a className='hover:cursor-pointer font-semibold'>Clover Flare</a>
+            <a className='hover:cursor-pointer font-semibold'>{user?.name || ''}</a>
         </div>
     );
 }

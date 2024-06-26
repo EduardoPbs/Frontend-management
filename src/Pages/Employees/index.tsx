@@ -13,6 +13,7 @@ import { Table, TableHead, TableHeader, TableBody, TableRow, TableCell } from '@
 
 export function Employees() {
     const { dataEmployees } = useEmployee();
+    const user = JSON.parse(sessionStorage.getItem('user') || '');
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -55,7 +56,7 @@ export function Employees() {
                                     className={table_row_hover}
                                 >
                                     <TableCell>{employee.id.slice(0, 8)}</TableCell>
-                                    <TableCell>{employee.nome}</TableCell>
+                                    <TableCell className={user.id === employee.id ? 'flex items-center gap-3' : ''}>{employee.nome} <span className={user.id === employee.id ? 'visible font-bold text-sm text-white bg-agreed-green/65 px-1.5 py-[2px] rounded-md' : 'hidden'}>Logado</span></TableCell>
                                     <TableCell>{employee.cpf}</TableCell>
                                     <TableCell className='flex items-center gap-2'>
                                         <Button

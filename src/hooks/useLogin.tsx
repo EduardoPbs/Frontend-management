@@ -21,7 +21,16 @@ export function useLogin() {
                 .post('/auth/login', credentials)
                 .then((res) => {
                     const JwtToken = res.data.token;
+                    const tokenPayload = JSON.parse(atob(JwtToken.split('.')[1]));
+                    const user = {
+                        id: tokenPayload.funcionarioId,
+                        name: tokenPayload.username,
+                        adm: tokenPayload.adm,
+                        exp: tokenPayload.exp
+                    };
+                    console.log(user);
                     sessionStorage.setItem('token', JwtToken);
+                    sessionStorage.setItem('user', JSON.stringify(user));
                 })
                 .then(() => navigate('/'));
         } catch (error) {
@@ -40,6 +49,7 @@ export function useLogin() {
 
     function logOut() {
         sessionStorage.removeItem('token');
+        sessionStorage.removeItem('user');
         navigate('/login');
     }
 
