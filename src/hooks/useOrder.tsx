@@ -34,6 +34,10 @@ export function useOrder() {
                     orders: response.data,
                     total: response.data.length,
                 });
+                sessionStorage.setItem('orders', JSON.stringify({
+                    orders: response.data,
+                    total: response.data.length,
+                }));
             }
         } catch (error) {
             console.error(error);
@@ -69,12 +73,47 @@ export function useOrder() {
         }
     }
 
-    async function getOrderByEmployeeId(employeeId: string, setOrdersData: (data: OrderEntity[]) => void) {
+    async function getOrderByEmployeeId(employeeId: string, setOrdersData: (data: any) => void) {
         try {
             const response = await http.get<OrderEntity[]>(`/transactions/employee/${employeeId}`);
             setOrdersData(response.data);
         } catch (error) {
             console.log(error);
+        }
+    }
+
+    async function getOrderByMonth(month: number, setOrderData: (data: OrderData) => void) {
+        if (month === 0) {
+            setOrderData(JSON.parse(sessionStorage.getItem('orders') || ''));
+            return;
+        }
+        try {
+            const response = await http.get<OrderEntity[]>(`/transactions/month/${month}`);
+            const ordersFiltered = response.data.filter((order: OrderEntity) => order.tipo === "VENDA");
+            setOrderData({
+                orders: ordersFiltered,
+                total: ordersFiltered.length
+            });
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    async function getOrderByDate(month: number, day: number, setOrderData: (data: OrderData) => void) {
+        if (day === 0) {
+            setOrderData(JSON.parse(sessionStorage.getItem('orders') || ''));
+            return;
+        }
+
+        try {
+            const response = await http.get<OrderEntity[]>(`/transactions/date/${month}/${day}`);
+            const ordersFiltered = response.data.filter((order: OrderEntity) => order.tipo === "VENDA");
+            setOrderData({
+                orders: ordersFiltered,
+                total: ordersFiltered.length
+            });
+        } catch (error) {
+            console.error(error);
         }
     }
 
@@ -154,6 +193,7 @@ export function useOrder() {
 
     return {
         dataOrders,
+        setDataOrders,
         isLoading,
         isLoadingUnique,
         createOrder,
@@ -164,6 +204,8 @@ export function useOrder() {
         handlePlusQuantity,
         orderItems,
         currentEmployee,
-        getOrderByEmployeeId
+        getOrderByEmployeeId,
+        getOrderByMonth,
+        getOrderByDate
     };
 }

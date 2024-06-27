@@ -1,30 +1,33 @@
 import { Title } from '../../components/Title';
 import { Button } from '@/components/ui/button';
+import { months } from '@/utils/months';
 import { Content } from '@/components/Content';
 import { useOrder } from '../../hooks/useOrder';
 import { LgSpinner } from '../../components/LgSpinner';
-import { useEffect, useState } from 'react';
 import { PlusCircle } from 'lucide-react';
 import { IconButton } from '../../components/IconButton';
 import { useNavigate } from 'react-router';
 import { OrderEntity } from '../../types/order';
+import { useEmployee } from '@/hooks/useEmployee';
 import { PageContainer } from '../../components/PageContainer';
+import { EmployeeEntity } from '@/types/employee';
 import { table_row_hover } from '../../constants/styles';
 import { toFullLocaleDate } from '../../utils/toFullLocaleDate';
+import { useEffect, useState } from 'react';
 import { Table, TableHeader, TableHead, TableBody, TableRow, TableCell } from '@/components/ui/table';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useEmployee } from '@/hooks/useEmployee';
-import { EmployeeEntity } from '@/types/employee';
 
 export function Orders() {
     const [selectedEmployee, setSelectedEmployee] = useState<string>();
-    const { dataOrders, isLoading } = useOrder();
+    const [monthSelected, setMonthSelected] = useState<number>(0);
+    const { dataOrders, isLoading, getOrderByMonth, setDataOrders, getOrderByDate } = useOrder();
     const { dataEmployees } = useEmployee();
 
     const navigate = useNavigate();
 
     useEffect(() => {
         document.title = 'Management | Vendas';
+        console.log('orders', dataOrders);
     }, []);
 
     if (isLoading) return <LgSpinner />;
@@ -48,7 +51,7 @@ export function Orders() {
                     <SelectTrigger className='w-[180px] font-semibold'>
                         <SelectValue placeholder="Funcionário" />
                     </SelectTrigger>
-                    <SelectContent className='max-h-[200px] font-semibold'>
+                    <SelectContent className='max-h-[250px] font-semibold'>
                         <SelectItem value='false'>
                             Tudo
                         </SelectItem>
@@ -59,6 +62,56 @@ export function Orders() {
                                 </SelectItem>
                             );
                         })}
+                    </SelectContent>
+                </Select>
+
+                <Select
+                    onValueChange={(event: any) => {
+                        const month = JSON.parse(event).id;
+                        setMonthSelected(month);
+                        getOrderByMonth(month, setDataOrders);
+                    }}
+                >
+                    <SelectTrigger className='w-[180px] font-semibold'>
+                        <SelectValue placeholder="Mês" />
+                    </SelectTrigger>
+                    <SelectContent className='max-h-[300px] font-semibold'>
+                        <SelectItem value={JSON.stringify({ id: 0, month: 'none' })}>
+                            Tudo
+                        </SelectItem>
+                        {months.map((month: { id: number; month: string; }, index: number) => {
+                            return (
+                                <SelectItem key={index} value={JSON.stringify(month)} className='capitalize'>
+                                    {month.month}
+                                </SelectItem>
+                            );
+                        })}
+                    </SelectContent>
+                </Select>
+
+                <Select
+                    disabled={!monthSelected || monthSelected === 0}
+                    onValueChange={(event: any) => {
+                        let day = JSON.parse(event);
+                        getOrderByDate(monthSelected, day, setDataOrders);
+                    }}
+                >
+                    <SelectTrigger className='w-[180px] font-semibold'>
+                        <SelectValue placeholder="Dia" />
+                    </SelectTrigger>
+                    <SelectContent className='max-h-[250px] font-semibold'>
+                        <SelectItem value={JSON.stringify(0)}>
+                            Tudo
+                        </SelectItem>
+                        <div className='grid grid-cols-3'>
+                            {Array.from({ length: 31 }, (_, i) => i + 1).map((day: number) => {
+                                return (
+                                    <SelectItem key={day} value={JSON.stringify(day)} className='capitalize flex-1'>
+                                        {day}
+                                    </SelectItem>
+                                );
+                            })}
+                        </div>
                     </SelectContent>
                 </Select>
             </div>
