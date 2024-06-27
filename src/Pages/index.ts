@@ -11,8 +11,10 @@ import { OrderDetail } from './Orders/OrderDetail';
 import { PurchaseForm } from './Purchases/PurchaseForm';
 import { EmployeeForm } from './Employees/EmployeeForm';
 import { CashRegister } from './CashRegister';
+import { PromotionForm } from '@/Pages/Promotions/PromotionForm';
 import { EmployeeDetail } from './Employees/EmployeeDetail';
 import { PurchaseDetail } from './Purchases/PurchaseDetail';
+import { PromotionDetail } from '@/Pages/Promotions/PromotionDetail';
 
 export {
     Home,
@@ -30,4 +32,6 @@ export {
     CashRegister,
     EmployeeDetail,
     PurchaseDetail,
+    PromotionForm,
+    PromotionDetail
 };

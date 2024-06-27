@@ -14,11 +14,11 @@ import {
     PurchaseForm,
     CashRegister,
     EmployeeForm,
+    PromotionForm,
     EmployeeDetail,
     PurchaseDetail,
+    PromotionDetail
 } from './Pages';
-import { PromotionForm } from '@/Pages/Promotions/PromotionForm';
-import { PromotionDetail } from '@/Pages/Promotions/PromotionDetail';
 
 function AppRoutes() {
     return (
