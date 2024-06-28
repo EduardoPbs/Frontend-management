@@ -1,6 +1,5 @@
 import { Button } from '@/components/ui/button';
 import { useOrder } from '@/hooks/useOrder';
-import { RowDetail } from '../../components/RowDetail';
 import { CellDetail } from '../../components/CellDetail';
 import { IconButton } from '../../components/IconButton';
 import { useProduct } from '@/hooks/useProduct';
@@ -10,11 +9,12 @@ import { useEmployee } from '@/hooks/useEmployee';
 import { ProductEntity } from '../../types/product';
 import { PageContainer } from '../../components/PageContainer';
 import { EmployeeEntity } from '@/types';
+import { ItemOrderCreate } from '@/types';
+import { RowProductsPurchase } from '@/Pages/Purchases/RowProductsPurchse';
 import { useEffect, useState } from 'react';
-import { ItemOrderCreate, OrderCreate } from '@/types';
-import { custom_red, primary_red, primary_hover_red } from '../../constants/styles';
+import { primary_red, primary_hover_red } from '../../constants/styles';
+import { ArchiveRestore, ArrowLeftCircle, X } from 'lucide-react';
 import { Box, Card, Input, CardBody, useToast, CardHeader } from '@chakra-ui/react';
-import { PlusCircle, MinusCircle, ArchiveRestore, ArrowLeftCircle, X } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import {
     AlertDialog,
@@ -26,183 +26,24 @@ import {
     AlertDialogDescription,
 } from '@/components/ui/alert-dialog';
 
-function RowProductsPurchase({
-    name,
-    code,
-    value,
-    quantity,
-    productId,
-    selectedProducts,
-    setSelectedProducts,
-}: {
-    name: string;
-    code: number;
-    value: number;
-    quantity: number;
-    productId: string;
-    selectedProducts: ItemOrderCreate[] | undefined;
-    setSelectedProducts: any;
-}) {
-    const currQuantity =
-        selectedProducts?.find((p) => p.produto_id === productId)?.quantidade ||
-        0;
-
-    function handleMinusQuantity() {
-        setSelectedProducts(
-            (prevPurchaseData: OrderCreate) =>
-                prevPurchaseData && {
-                    ...prevPurchaseData,
-                    data_items: prevPurchaseData.data_items
-                        .map((item: ItemOrderCreate) =>
-                            item.produto_id === productId && item.quantidade > 0
-                                ? { ...item, quantidade: item.quantidade - 1 }
-                                : item
-                        )
-                        .filter((item: ItemOrderCreate) => item.quantidade > 0),
-                }
-        );
-    }
-
-    function handleMinus10() {
-        setSelectedProducts(
-            (prevPurchaseData: OrderCreate) =>
-                prevPurchaseData && {
-                    ...prevPurchaseData,
-                    data_items: prevPurchaseData.data_items
-                        .map((item: ItemOrderCreate) =>
-                            item.produto_id === productId && item.quantidade > 0
-                                ? { ...item, quantidade: item.quantidade - 10 }
-                                : item
-                        )
-                        .filter((item: ItemOrderCreate) => item.quantidade > 0),
-                }
-        );
-    }
-
-    function handlePlusQuantity() {
-        setSelectedProducts((prevPurchaseData: OrderCreate | undefined) => {
-            if (!prevPurchaseData) return prevPurchaseData;
-            const newItems = prevPurchaseData?.data_items.map((item: ItemOrderCreate) => {
-                if (item.produto_id === productId) {
-                    return { ...item, quantidade: item.quantidade + 1 };
-                }
-                return item;
-            });
-
-            if (!newItems.find((item: ItemOrderCreate) => item.produto_id === productId)) {
-                newItems.push({
-                    produto_id: productId,
-                    produto_nome: name,
-                    quantidade: 1,
-                    valor_unitario: value,
-                });
-            }
-
-            return { ...prevPurchaseData, data_items: newItems };
-        });
-    }
-
-    function handlePlus10() {
-        setSelectedProducts((prevPurchaseData: OrderCreate | undefined) => {
-            if (!prevPurchaseData) return prevPurchaseData;
-            const newItems = prevPurchaseData?.data_items.map((item: ItemOrderCreate) => {
-                if (item.produto_id === productId) {
-                    return { ...item, quantidade: item.quantidade + 10 };
-                }
-                return item;
-            });
-
-            if (!newItems.find((item: ItemOrderCreate) => item.produto_id === productId)) {
-                newItems.push({
-                    produto_id: productId,
-                    produto_nome: name,
-                    quantidade: 10,
-                    valor_unitario: value,
-                });
-            }
-
-            return { ...prevPurchaseData, data_items: newItems };
-        });
-    }
-
-    return (
-        <RowDetail>
-            <CellDetail name='Código' content={code} />
-            <CellDetail name='Produto' content={name} />
-            <CellDetail name='No estoque' content={quantity} />
-            <Box className='flex items-center gap-2'>
-                <Button
-                    className='hover:bg-primary-hover-red'
-                    onClick={handleMinus10}
-                >
-                    -10
-                </Button>
-                <MinusCircle
-                    className={`size-6 ${currQuantity <= 0
-                        ? 'text-zinc-400 hover:cursor-default'
-                        : 'hover:text-primary-red hover:cursor-pointer'
-                        } duration-150`}
-                    onClick={handleMinusQuantity}
-                />
-                <span className='text-2xl text-primary-red font-bold text-center w-[42px]'>
-                    {currQuantity}
-                </span>
-                <PlusCircle
-                    className='size-6 hover:cursor-pointer hover:text-primary-red duration-150'
-                    onClick={() => {
-                        handlePlusQuantity();
-                    }}
-                />
-                <Button
-                    className='hover:bg-primary-hover-red'
-                    onClick={() => {
-                        handlePlus10();
-                    }}
-                >
-                    +10
-                </Button>
-            </Box>
-        </RowDetail>
-    );
-}
-
 export function PurchaseForm() {
     const [searchInput, setSearchInput] = useState<string>('');
     const [selectedEmployee, setSelectedEmployee] = useState<{ id: string, nome: string; }>({ id: '', nome: '' });
     const { dataCreateOrder, setDataCreateOrder, createOrder } = useOrder();
     const { dataEmployees } = useEmployee();
-    const { allProducts } = useProduct();
+    const { activeProducts } = useProduct();
     const navigate = useNavigate();
     const toast = useToast();
 
-    const filterItems: ProductEntity[] = allProducts.products.filter(
-        (product: ProductEntity) =>
-            product.nome.toLowerCase().includes(searchInput.toLowerCase()) ||
-            String(product.codigo).includes(searchInput)
-    );
-
-    const mapProductToComponent = (product: ProductEntity, index: number) => (
-        <RowProductsPurchase
-            key={index}
-            name={product.nome}
-            code={product.codigo}
-            value={product.valor}
-            quantity={product.estoque}
-            productId={product.id}
-            selectedProducts={dataCreateOrder?.data_items}
-            setSelectedProducts={setDataCreateOrder}
-        />
-    );
-
-    const filteredProducts: any = (
-        filterItems.length > 1 ? filterItems : allProducts.products
-    ).map(mapProductToComponent);
+    const filterItems: ProductEntity[] = activeProducts.products.filter((product: ProductEntity) => {
+        return product.nome.toLowerCase().match(searchInput.toLowerCase());
+    });
 
     const rowStyle = 'flex-row items-center w-fit gap-2';
 
     useEffect(() => {
         setDataCreateOrder({ order_id: '', data_items: [] });
-    }, []);
+    }, [searchInput]);
 
     return (
         <PageContainer title='Nova Compra'>
@@ -218,15 +59,13 @@ export function PurchaseForm() {
                     <Input
                         width={250}
                         borderColor={primary_hover_red}
-                        _hover={{
-                            borderColor: custom_red,
-                        }}
                         focusBorderColor={primary_red}
                         placeholder='Pesquisar produto...'
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                             setSearchInput(e.target.value)
                         }
                     />
+
                     <Select
                         onValueChange={(event) => {
                             const employeeData: { id: string; nome: string; } = JSON.parse(event);
@@ -379,25 +218,6 @@ export function PurchaseForm() {
                                 className={rowStyle}
                                 style='text-2xl'
                             />
-                            {/* <CellDetail
-                                name='Total'
-                                content={
-                                    purchaseData?.data_items
-                                        .reduce(
-                                            (acc, currVal: any) =>
-                                                currVal.quantity *
-                                                    currVal.value +
-                                                acc,
-                                            0
-                                        )
-                                        .toLocaleString('pt-BR', {
-                                            style: 'currency',
-                                            currency: 'BRL',
-                                        }) || 0
-                                }
-                                className={rowStyle}
-                                style='text-2xl'
-                            /> */}
                             <Button
                                 className='hover:bg-primary-hover-red'
                                 onClick={() =>
@@ -413,7 +233,29 @@ export function PurchaseForm() {
 
                     <CardBody className='flex flex-col gap-2 m-2 text-primary-black rounded-md border-2 border-border-gray overflow-hidden overflow-y-scroll scrollbar-hide'>
                         <Box className='flex flex-col gap-2'>
-                            {filteredProducts}
+                            {filterItems ? filterItems.map((product: ProductEntity, index: number) => (
+                                <RowProductsPurchase
+                                    key={index}
+                                    name={product.nome}
+                                    code={product.codigo}
+                                    value={product.valor}
+                                    quantity={product.estoque}
+                                    productId={product.id}
+                                    selectedProducts={dataCreateOrder?.data_items}
+                                    setSelectedProducts={setDataCreateOrder}
+                                />
+                            )) : activeProducts.products.map((product: ProductEntity, index: number) => (
+                                <RowProductsPurchase
+                                    key={index}
+                                    name={product.nome}
+                                    code={product.codigo}
+                                    value={product.valor}
+                                    quantity={product.estoque}
+                                    productId={product.id}
+                                    selectedProducts={dataCreateOrder?.data_items}
+                                    setSelectedProducts={setDataCreateOrder}
+                                />
+                            ))}
                         </Box>
                     </CardBody>
                 </Card>
