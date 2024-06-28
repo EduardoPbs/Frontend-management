@@ -7,10 +7,12 @@ import { useNavigate } from 'react-router';
 import { ProductTable } from '../../components/TableProducts';
 import { ProductEntity } from '@/types';
 import { PageContainer } from '../../components/PageContainer';
+import { useCashRegister } from '@/hooks/useCashRegister';
 import { AlertCircle, ArrowRightCircle } from 'lucide-react';
 
 export function Home() {
     const { loading, allProducts } = useProduct();
+    const { } = useCashRegister();
     const navigate = useNavigate();
 
     if (loading) return <LgSpinner />;

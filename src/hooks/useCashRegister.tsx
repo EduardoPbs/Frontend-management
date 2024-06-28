@@ -46,6 +46,7 @@ export function useCashRegister() {
             ]);
             const total = allCashierMovements.data.reduce((acc: number, currVal: Movimentacao) => acc += currVal.valor, 0);
 
+            sessionStorage.setItem('cash_status', JSON.stringify({ open: currentCashier.data.fechamento === null ? true : false }));
             setCurrentCashier(currentCashier.data);
             setHistoryCashier(allCashier.data);
             setAllMovements(allCashierMovements.data);
@@ -68,6 +69,7 @@ export function useCashRegister() {
         try {
             await http.put('/cashier/open', { valor_abertura });
             getCurrentCaixa(setCurrentCaixa);
+            sessionStorage.setItem('cash_status', JSON.stringify({ open: true }));
         } catch (error) {
             console.error(error);
         }
@@ -77,6 +79,7 @@ export function useCashRegister() {
         try {
             await http.put('/cashier/close');
             getCurrentCaixa(setCurrentCaixa);
+            sessionStorage.setItem('cash_status', JSON.stringify({ open: false }));
         } catch (error) {
             console.error(error);
         }

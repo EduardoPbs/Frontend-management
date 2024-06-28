@@ -2,9 +2,10 @@ import { Title } from '../../components/Title';
 import { Button } from '@/components/ui/button';
 import { months } from '@/utils/months';
 import { Content } from '@/components/Content';
+import { useToast } from '@chakra-ui/react';
 import { useOrder } from '../../hooks/useOrder';
 import { LgSpinner } from '../../components/LgSpinner';
-import { PlusCircle } from 'lucide-react';
+import { ChevronRight, PlusCircle } from 'lucide-react';
 import { IconButton } from '../../components/IconButton';
 import { useNavigate } from 'react-router';
 import { OrderEntity } from '../../types/order';
@@ -23,7 +24,10 @@ export function Orders() {
     const { dataOrders, isLoading, getOrderByMonth, setDataOrders, getOrderByDate } = useOrder();
     const { dataEmployees } = useEmployee();
 
+    const cash_status: boolean = JSON.parse(sessionStorage.getItem('cash_status') || "").open || false;
+
     const navigate = useNavigate();
+    const toast = useToast();
 
     useEffect(() => {
         document.title = 'Management | Vendas';
@@ -37,8 +41,31 @@ export function Orders() {
             <div className='flex items-center gap-8'>
                 <IconButton
                     label='Nova venda'
-                    className='w-fit'
-                    to='new'
+                    className={`w-fit ${!cash_status ? 'opacity-50 hover:bg-primary-black cursor-no-drop' : ''}`}
+                    to={cash_status ? 'new' : '#'}
+                    onClick={() => {
+                        if (!cash_status) {
+                            toast({
+                                title: 'Caixa Fechado.',
+                                description: <div className='flex flex-col items-end justify-center gap-2'>
+                                    <p>Abra um caixa para realizar uma venda!</p>
+                                    <Button
+                                        className='flex items-center hover:bg-primary-white hover:text-primary-hover-red'
+                                        onClick={() => {
+                                            navigate('/cash-register');
+                                            toast.closeAll();
+                                        }}
+                                    >
+                                        <span className='mb-1'>Ir para caixa</span> <ChevronRight />
+                                    </Button>
+                                </div>,
+                                position: 'top-right',
+                                status: 'error',
+                                isClosable: true,
+
+                            });
+                        }
+                    }}
                     icon={PlusCircle}
                 />
 
