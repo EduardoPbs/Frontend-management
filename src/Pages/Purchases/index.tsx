@@ -25,6 +25,27 @@ export function Purchases() {
 
     const navigate = useNavigate();
 
+    function handleStatusFilter(status: string) {
+        const data: { purchases: OrderEntity[]; total: number; } =
+            JSON.parse(sessionStorage.getItem('purchases') || "");
+
+        if (data === null) return;
+
+        if (status === "all") {
+            setPurchaseData(data);
+            return;
+        };
+
+        const filteredPurchases = data.purchases
+            .filter((purchase: OrderEntity) => purchase.status.toLowerCase() === status.toLowerCase());
+
+        setPurchaseData({
+            purchases: filteredPurchases,
+            total: filteredPurchases?.length
+        });
+
+    }
+
     useEffect(() => {
         document.title = 'Management | Compras';
     }, []);
@@ -116,6 +137,27 @@ export function Purchases() {
                                 );
                             })}
                         </div>
+                    </SelectContent>
+                </Select>
+
+                <Select
+                    onValueChange={(event: string) => {
+                        handleStatusFilter(event);
+                    }}
+                >
+                    <SelectTrigger className='w-[180px] font-semibold'>
+                        <SelectValue placeholder="Status" />
+                    </SelectTrigger>
+                    <SelectContent className='max-h-[250px] font-semibold'>
+                        <SelectItem value="all">
+                            Tudo
+                        </SelectItem>
+                        <SelectItem value='FINALIZADO' className='capitalize flex-1'>
+                            Finalizados
+                        </SelectItem>
+                        <SelectItem value='PENDENTE' className='capitalize flex-1'>
+                            Pendentes
+                        </SelectItem>
                     </SelectContent>
                 </Select>
             </div>

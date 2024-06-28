@@ -16,7 +16,6 @@ export function UserPopover() {
         if (sessionStorage.getItem('user') !== null) {
             setUser(JSON.parse(sessionStorage.getItem('user') || ""));
         }
-        console.log(user);
     }, []);
 
     return (
