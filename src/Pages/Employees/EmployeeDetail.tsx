@@ -3,7 +3,7 @@ import { Content } from '@/components/Content';
 import { useOrder } from '@/hooks/useOrder';
 import { useParams } from 'react-router';
 import { IconButton } from '../../components/IconButton';
-import { OrderEntity } from '@/types/order';
+import { OrderEntity } from '@/types';
 import { useEmployee } from '../../hooks/useEmployee';
 import { PageContainer } from '../../components/PageContainer';
 import { EmployeeEntity } from '../../types/employee';

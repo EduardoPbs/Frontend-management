@@ -1,14 +1,23 @@
+import cloverF from '../../assets/cloverFlare.jpg';
 import { Avatar } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { useLogin } from '../../hooks/useLogin';
+import { UserData } from '@/types';
 import { AvatarImage } from '@radix-ui/react-avatar';
+import { useEffect, useState } from 'react';
 import { ArrowUpRightIcon, LogOut } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import cloverF from '../../assets/cloverFlare.jpg';
 
 export function UserPopover() {
+    const [user, setUser] = useState<UserData>();
     const { logOut } = useLogin();
-    const user = JSON.parse(sessionStorage.getItem('user') || "");
+
+    useEffect(() => {
+        if (sessionStorage.getItem('user') !== null) {
+            setUser(JSON.parse(sessionStorage.getItem('user') || ""));
+        }
+        console.log(user);
+    }, []);
 
     return (
         <div className='flex items-center gap-1.5 select-none'>

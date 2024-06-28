@@ -10,7 +10,7 @@ import { useNavigate } from 'react-router';
 import { OrderEntity } from '../../types/order';
 import { useEmployee } from '@/hooks/useEmployee';
 import { PageContainer } from '../../components/PageContainer';
-import { EmployeeEntity } from '@/types/employee';
+import { EmployeeEntity } from '@/types';
 import { table_row_hover } from '../../constants/styles';
 import { toFullLocaleDate } from '../../utils/toFullLocaleDate';
 import { useEffect, useState } from 'react';

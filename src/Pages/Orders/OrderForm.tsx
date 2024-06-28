@@ -7,7 +7,7 @@ import { IconButton } from '../../components/IconButton';
 import { useEmployee } from '@/hooks/useEmployee';
 import { PageContainer } from '../../components/PageContainer';
 import { ProductEntity } from '../../types/product';
-import { EmployeeEntity } from '@/types/employee';
+import { EmployeeEntity } from '@/types';
 import { RowProductsOrder } from './RowProductsOrder';
 import { ItemOrderCreate } from '../../types/order';
 import { useEffect, useState } from 'react';

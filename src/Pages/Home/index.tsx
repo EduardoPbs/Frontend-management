@@ -5,7 +5,7 @@ import { useProduct } from '../../hooks/useProduct';
 import { OrderTable } from '../../components/TableOrder';
 import { useNavigate } from 'react-router';
 import { ProductTable } from '../../components/TableProducts';
-import { ProductEntity } from '@/types/product';
+import { ProductEntity } from '@/types';
 import { PageContainer } from '../../components/PageContainer';
 import { AlertCircle, ArrowRightCircle } from 'lucide-react';
 

@@ -2,7 +2,7 @@ import { Spinner } from '@chakra-ui/react';
 import { MenuIcon } from 'lucide-react';
 import { useProduct } from '../../hooks/useProduct';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { ProductEntity } from '@/types/product';
+import { ProductEntity } from '@/types';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 

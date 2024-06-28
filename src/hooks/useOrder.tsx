@@ -1,6 +1,6 @@
 import { http } from '../service';
 import { useEmployee } from '@/hooks/useEmployee';
-import { EmployeeEntity } from '@/types/employee';
+import { EmployeeEntity } from '@/types';
 import { useEffect, useState } from 'react';
 import { ItemOrderCreate, OrderCreate, OrderEntity } from '../types/order';
 
