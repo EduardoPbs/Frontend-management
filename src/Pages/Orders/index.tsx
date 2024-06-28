@@ -5,7 +5,7 @@ import { Content } from '@/components/Content';
 import { useToast } from '@chakra-ui/react';
 import { useOrder } from '../../hooks/useOrder';
 import { LgSpinner } from '../../components/LgSpinner';
-import { ChevronRight, PlusCircle } from 'lucide-react';
+import { ArrowUpRightFromCircle, ChevronRight, PlusCircle } from 'lucide-react';
 import { IconButton } from '../../components/IconButton';
 import { useNavigate } from 'react-router';
 import { OrderEntity } from '../../types/order';
@@ -48,15 +48,16 @@ export function Orders() {
                             toast({
                                 title: 'Caixa Fechado.',
                                 description: <div className='flex flex-col items-end justify-center gap-2'>
-                                    <p>Abra um caixa para realizar uma venda!</p>
+                                    <p>Abra o caixa para realizar uma venda!</p>
                                     <Button
-                                        className='flex items-center hover:bg-primary-white hover:text-primary-hover-red'
+                                        className='flex items-center gap-1 hover:bg-primary-white hover:text-primary-hover-red'
                                         onClick={() => {
                                             navigate('/cash-register');
                                             toast.closeAll();
                                         }}
                                     >
-                                        <span className='mb-1'>Ir para caixa</span> <ChevronRight />
+                                        <span className='mb-0.5'>Ir para Caixa</span> 
+                                        <ArrowUpRightFromCircle className='size-3' />
                                     </Button>
                                 </div>,
                                 position: 'top-right',

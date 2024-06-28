@@ -1,12 +1,17 @@
 import cloverF from '../../assets/cloverFlare.jpg';
-import { Avatar } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
 import { useLogin } from '../../hooks/useLogin';
 import { UserData } from '@/types';
-import { AvatarImage } from '@radix-ui/react-avatar';
 import { useEffect, useState } from 'react';
-import { ArrowUpRightIcon, LogOut } from 'lucide-react';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Button } from "@/components/ui/button";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarImage } from '@/components/ui/avatar';
 
 export function UserPopover() {
     const [user, setUser] = useState<UserData>();
@@ -19,35 +24,36 @@ export function UserPopover() {
     }, []);
 
     return (
-        <div className='flex items-center gap-1.5 select-none'>
-            <Popover>
-                <PopoverTrigger>
-                    <Avatar className='hover:cursor-pointer size-8 rounded-lg'>
-                        <AvatarImage src={cloverF ?? ''} alt='Clover Flare' />
-                    </Avatar>
-                </PopoverTrigger>
-                <PopoverContent className='relative mt-2'>
-                    <div className='absolute top-0 right-[116px] -mt-2 rotate-45 size-4 bg-slate-100' />
-                    <div className='flex flex-col justify-center gap-2'>
-                        <Button
-                            className='flex items-center gap-2 hover:bg-primary-hover-red'
-                        >
-                            Gerenciar
-                            <ArrowUpRightIcon className='size-5' />
-                        </Button>
-                        <Button
-                            className='flex items-center gap-2 hover:bg-primary-hover-red'
-                            onClick={() => {
-                                logOut();
-                            }}
-                        >
-                            Sair
-                            <LogOut className='size-5' />
-                        </Button>
-                    </div>
-                </PopoverContent>
-            </Popover>
-            <a className='hover:cursor-pointer font-semibold'>{user?.name || ''}</a>
-        </div>
+        <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+                <div className='flex items-center gap-2 text-sm text-black font-semibold hover:cursor-pointer'>
+                    <Button variant="secondary" size="icon" className="rounded-full">
+                        <Avatar className='border-2 border-primary-red select-none'>
+                            <AvatarImage src={cloverF ?? ''} alt='Clover Flare' />
+                        </Avatar>
+                        <span className="sr-only">Toggle user menu</span>
+                    </Button>
+                    <p className='text-primary-white'>{user?.name}</p>
+                </div>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+                <DropdownMenuLabel className='cursor-pointer'>
+                    Minha Conta
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem className='cursor-pointer'>
+                    <a href="/settings">Configurações</a>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                    <a href="#">Suporte</a>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild className='cursor-pointer'>
+                    <Button onClick={logOut} variant='ghost' className='w-full'>
+                        Sair
+                    </Button>
+                </DropdownMenuItem>
+            </DropdownMenuContent>
+        </DropdownMenu>
     );
 }
