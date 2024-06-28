@@ -1,15 +1,11 @@
 import { z } from 'zod';
+import { Button } from '@chakra-ui/react';
 import { LgInput } from '../../components/LgInput';
 import { useForm } from 'react-hook-form';
 import { useLogin } from '../../hooks/useLogin';
 import { useEffect } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Box, Button, Heading } from '@chakra-ui/react';
-import {
-    primary_red,
-    primary_white,
-    primary_hover_red,
-} from '../../constants/styles';
+import { primary_black, primary_hover_red, primary_white } from '@/constants/styles';
 
 export function Login() {
     const { loading, onSubmit } = useLogin();
@@ -36,50 +32,48 @@ export function Login() {
     }, []);
 
     return (
-        <section className='flex flex-col justify-center gap-4 px-4 py-6 bg-primary-white h-screen text-white selection:bg-primary-red selection:text-white'>
-            <Box className='flex items-center justify-center w-full h-full'>
-                <Box className='flex flex-col justify-between w-[500px] gap-4 bg-slate-950 rounded-round-default px-8 py-6 shadow-lg shadow-border-gray'>
-                    <Heading color={primary_white} size='md'>
-                        LogIn
-                    </Heading>
-                    <form
-                        onSubmit={handleSubmit(onSubmit)}
-                        className='flex flex-col gap-4 w-full font-semibold select-none '
+        <section className="w-full lg:grid lg:min-h-[600px] lg:grid-cols-2 xl:min-h-full">
+            <div className="hidden min-h-screen bg-primary-black lg:block" />
+
+            <div className="flex items-start justify-center py-52">
+                <form className="border-2 py-4 px-6 rounded-md  mx-auto grid w-[400px] gap-3" onSubmit={handleSubmit(onSubmit)}>
+                    <div className="grid gap-2 text-center">
+                        <h1 className="text-3xl font-bold">LogIn</h1>
+                    </div>
+                    <LgInput
+                        label='Usuário'
+                        type='email'
+                        name='email'
+                        placeholder='example@email.com'
+                        errors={errors.email}
+                        control={control}
+                        autoComplete='disabled'
+                    />
+                    <LgInput
+                        label='Senha'
+                        type='password'
+                        name='password'
+                        placeholder='******'
+                        errors={errors.password}
+                        control={control}
+                        autoComplete='disabled'
+                    />
+                    <Button
+                        rounded={6}
+                        _hover={{
+                            bg: primary_hover_red,
+                        }}
+                        color={primary_white}
+                        backgroundColor={primary_black}
+                        isLoading={loading}
+                        loadingText='Carregando...'
+                        borderRadius={4}
+                        type='submit'
                     >
-                        <LgInput
-                            label='Usuário'
-                            type='email'
-                            name='email'
-                            placeholder='example@email.com'
-                            errors={errors.email}
-                            control={control}
-                            autoComplete='disabled'
-                        />
-                        <LgInput
-                            label='Senha'
-                            type='password'
-                            name='password'
-                            placeholder='******'
-                            errors={errors.password}
-                            control={control}
-                            autoComplete='disabled'
-                        />
-                        <Button
-                            rounded={6}
-                            _hover={{
-                                bg: primary_hover_red,
-                            }}
-                            color={primary_white}
-                            backgroundColor={primary_red}
-                            isLoading={loading}
-                            loadingText='Carregando...'
-                            type='submit'
-                        >
-                            Entrar
-                        </Button>
-                    </form>
-                </Box>
-            </Box>
-        </section>
+                        Entrar
+                    </Button>
+                </form>
+            </div >
+        </section >
     );
 }
