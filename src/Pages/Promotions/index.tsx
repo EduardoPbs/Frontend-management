@@ -30,9 +30,9 @@ export function Promotions() {
             <Tabs defaultValue="all" className="flex flex-col justify-center gap-2">
                 <div className="flex flex-col gap-2 justify-start h-screen">
                     <TabsList className='bg-zinc-300 select-none size-fit'>
-                        <TabsTrigger value="all">Todos</TabsTrigger>
-                        <TabsTrigger value="active">Ativos</TabsTrigger>
-                        <TabsTrigger value="disable">Desativados</TabsTrigger>
+                        <TabsTrigger className='font-semibold' value="all">Todos</TabsTrigger>
+                        <TabsTrigger className='font-semibold' value="active">Andamento</TabsTrigger>
+                        <TabsTrigger className='font-semibold' value="disable">Finalizadas</TabsTrigger>
                     </TabsList>
                     <PromotionAll />
                     <PromotionActive />

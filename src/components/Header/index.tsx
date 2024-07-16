@@ -13,7 +13,7 @@ export function Header({ title }: HeaderProps) {
 
     return (
         <header className="sticky top-0 flex h-16 items-center gap-4 border-b bg-background py-6 px-4 md:px-6 bg-primary-black">
-            <nav className="hidden select-none flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6">
+            <nav className="hidden select-none flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6 font">
                 <div className='flex items-center uppercase gap-2 font-bold w-[225px]'>
                     <Package2 className="size-8" />
                     <h2>{title}</h2>

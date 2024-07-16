@@ -97,6 +97,9 @@ module.exports = {
                 'accordion-up': 'accordion-up 0.2s ease-out',
             },
         },
+        fontFamily: {
+            'quicksand': ['Quicksand', '"Open Sans"']
+        }
     },
     plugins: [require('tailwindcss-animate')],
 };

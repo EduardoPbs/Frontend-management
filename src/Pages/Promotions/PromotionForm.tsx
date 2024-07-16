@@ -121,11 +121,11 @@ export function PromotionForm() {
 
             <span className='font-semibold text-sm'>
                 <span className='font-bold'>Obs.:{' '}</span>
-                Promoções com data <span className='font-bold'>NÃO ESCOLHIDA</span> serão iniciadas imediatamente, com duração de dois(2) dias e oito(8) <br />
-                horas a partir da hora de criação da promoção. <br/>
-                <span className="font-bold opacity-90">
-                    Exemplo: <br/>
-                    &nbsp; Criação em: 16/07/2024 - 11:00. <br/>
+                Promoções com data <span className='font-bold text-red-600'>NÃO ESCOLHIDA</span> serão iniciadas imediatamente, com duração de dois(2) dias e oito(8) <br />
+                horas a partir da hora de criação da promoção. <br />
+                <span className="font-bold opacity-80">
+                    Exemplo: <br />
+                    &nbsp; Criação em: 16/07/2024 - 11:00. <br />
                     &nbsp; Finalizar em: 18/07/2024 - 19:00.
                 </span>
             </span>
