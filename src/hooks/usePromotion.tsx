@@ -1,8 +1,9 @@
-import { http } from "@/service";
-import { PromotionEntity } from "@/types/promotion";
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router";
 import { z } from "zod";
+import { http } from "@/service";
+import { useNavigate } from "react-router";
+import { PromotionEntity } from "@/types/promotion";
+import { addDays, addHours } from "date-fns";
+import { useEffect, useState } from "react";
 
 interface CreatePromotion {
     porcentagem_desconto: number;
@@ -53,8 +54,6 @@ export function usePromotion() {
     }
 
     async function createPromotion(productId: string, data: CreatePromotion): Promise<void | any> {
-        console.log("PRODUCT ID: ", productId);
-        console.log(data);
         const createPromotionData: CreatePromotion = {
             porcentagem_desconto: data.porcentagem_desconto,
             inicio: data.inicio,
@@ -89,12 +88,26 @@ export function usePromotion() {
         }
     }
 
-    async function onSubmit(event: any) {
+    async function onSubmit(productId: string, discount: number | string, date: any) {
+        const initialDate: Date = !date?.from
+            ? new Date(new Date().getTime())
+            : new Date(new Date(date.from).getTime() || '');
+
+        initialDate.setHours(new Date().getHours() - 3);
+        initialDate.setMinutes(new Date().getMinutes());
+
+        const finalizeDate: Date = !date?.to
+            ? addDays(addHours(new Date(new Date().getTime()), 8), 2)
+            : new Date(date?.to || '');
+
+        finalizeDate.setHours(new Date().getHours() + 8);
+        finalizeDate.setMinutes(new Date().getMinutes());
+
         try {
-            createPromotion(event.product, {
-                porcentagem_desconto: Number(event.discount),
-                inicio: event.date?.from,
-                fim: event.date?.to
+            createPromotion(productId, {
+                porcentagem_desconto: Number(discount),
+                inicio: initialDate.toISOString(),
+                fim: finalizeDate.toISOString()
             });
         } catch (error) {
             console.error(error);
@@ -104,8 +117,8 @@ export function usePromotion() {
     const PromotionFormSchema = z.object({
         product: z.string({ required_error: "Escolha um produto." }),
         date: z.object({
-            from: z.date({ required_error: "Escolha uma data válida." }),
-            to: z.date({ required_error: "Escolha uma data válida." }),
+            from: z.any(),
+            to: z.any()
         }),
         discount: z.string({ required_error: "Escolha um valor válido." })
             .min(1, { message: "O valor mínimo deve ser pelo menos 1." })

@@ -1,6 +1,8 @@
 import { cn } from "@/lib/utils";
+import { Input } from "@/components/ui/input";
+import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
-import { LgInput } from "@/components/LgInput";
+import { useForm } from "react-hook-form";
 import { Calendar } from "@/components/ui/calendar";
 import { useState } from "react";
 import { DateRange } from "react-day-picker";
@@ -10,30 +12,30 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { usePromotion } from "@/hooks/usePromotion";
 import { ProductEntity } from "@/types/product";
 import { PageContainer } from "@/components/PageContainer";
-import { addDays, format } from "date-fns";
 import { ArrowLeftCircle } from "lucide-react";
-import { Controller, useForm } from "react-hook-form";
 import { Calendar as CalendarIcon } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useToast } from "@chakra-ui/react";
 
 export function PromotionForm() {
-    const [selectedProduct] = useState<string>();
-    const [date, setDate] = useState<DateRange | undefined>({ from: new Date(), to: addDays(new Date(), 2) });
+    const [selectedProduct, setSelectedProduct] = useState<string>();
+    const [discountValue, setDiscountValue] = useState<string | number>(1);
+    const [date, setDate] = useState<DateRange | undefined>();
     const { allProducts } = useProduct();
     const { PromotionFormSchema, onSubmit } = usePromotion();
     const {
-        control,
         formState: { errors },
-        handleSubmit
     } = useForm({
         resolver: zodResolver(PromotionFormSchema),
         defaultValues: {
             product: selectedProduct || '',
-            date: { from: new Date, to: addDays(new Date(), 2) },
+            date: { from: date?.from, to: date?.to },
             discount: '1'
         },
     });
+
+    const toast = useToast();
 
     return (
         <PageContainer title="Criar">
@@ -47,82 +49,86 @@ export function PromotionForm() {
                 <form className='flex items-center justify-between flex-wrap gap-2'>
                     <div className='flex flex-col justify-center flex-1'>
                         <p className='font-semibold'>Produto:</p>
-                        <Controller
-                            name="product"
-                            control={control}
-                            render={({ field }) => (
-                                <>
-                                    <Select
-                                        {...field}
-                                        onValueChange={val => field.onChange(val)}
-                                        value={selectedProduct}
-                                    >
-                                        <SelectTrigger className="w-full">
-                                            <SelectValue placeholder="Selecione um produto" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectGroup>
-                                                <SelectLabel>Produtos</SelectLabel>
-                                                {allProducts.products.map((product: ProductEntity, index: number) => (
-                                                    <SelectItem key={index} value={product.id}>
-                                                        {product.nome}
-                                                    </SelectItem>
-                                                ))}
-                                            </SelectGroup>
-                                        </SelectContent>
-                                    </Select>
-                                    {errors.product && (
-                                        <p className='text-red-500'>{String(errors.product.message)}</p>
-                                    )}
-                                </>
-
+                        <>
+                            <Select
+                                value={selectedProduct}
+                                onValueChange={e => setSelectedProduct(e)}
+                            >
+                                <SelectTrigger className="w-full">
+                                    <SelectValue placeholder="Selecione um produto" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectGroup>
+                                        <SelectLabel>Produtos</SelectLabel>
+                                        {allProducts.products.map((product: ProductEntity, index: number) => (
+                                            <SelectItem key={index} value={product.id}>
+                                                {product.nome}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectGroup>
+                                </SelectContent>
+                            </Select>
+                            {errors.product && (
+                                <p className='text-red-500'>{String(errors.product.message)}</p>
                             )}
-                        />
+                        </>
                     </div>
 
                     <div className='flex flex-col justify-center'>
                         <p className='font-semibold'>Período:</p>
-                        <Controller
-                            name="date"
-                            control={control}
-                            render={({ field }) => {
-                                return (
-                                    <>
-                                        <DatePickerWithRange
-                                            {...field}
-                                            date={date}
-                                            setDate={setDate}
-                                            className="flex-1"
-                                        />
-                                        {errors.date && (
-                                            <p className='text-red-500'>{String(errors.date.message)}</p>
-                                        )}
-                                    </>
-                                );
-                            }}
-                        />
+                        <>
+                            <DatePickerWithRange
+                                date={date}
+                                setDate={setDate}
+                                className="flex-1"
+                            />
+                            {errors.date && (
+                                <p className='text-red-500'>{String(errors.date.message)}</p>
+                            )}
+                        </>
                     </div>
 
                     <div className='flex flex-col justify-center flex-1'>
                         <p className='font-semibold truncate'>Desconto em porcentagem (%):</p>
-                        <LgInput
-                            name="discount"
-                            control={control}
-                            errors={errors.discount}
-                            type="number"
-                            autoComplete="disabled"
-                            placeholder="5"
+                        <Input
+                            value={discountValue}
+                            onChange={e => setDiscountValue(e.target.value)}
                         />
                     </div>
                 </form>
                 <Button
                     type="submit"
                     className='min-w-fit w-[250px] self-end hover:bg-primary-hover-red'
-                    onClick={handleSubmit(onSubmit)}
+                    onClick={() => {
+                        if (!selectedProduct) {
+                            toast({
+                                title: 'Falha ao cadastrar promoção.',
+                                description: 'Um produto precisa ser selecionado!',
+                                position: 'top-right',
+                                status: 'error',
+                                isClosable: true,
+                            });
+
+                            return;
+                        }
+
+                        onSubmit(selectedProduct, discountValue, date);
+                    }}
                 >
                     Registrar
                 </Button>
             </div>
+
+            <span className='font-semibold text-sm'>
+                <span className='font-bold'>Obs.:{' '}</span>
+                Promoções com data <span className='font-bold'>NÃO ESCOLHIDA</span> serão iniciadas imediatamente, com duração de dois(2) dias e oito(8) <br />
+                horas a partir da hora de criação da promoção. <br/>
+                <span className="font-bold opacity-90">
+                    Exemplo: <br/>
+                    &nbsp; Criação em: 16/07/2024 - 11:00. <br/>
+                    &nbsp; Finalizar em: 18/07/2024 - 19:00.
+                </span>
+            </span>
         </PageContainer>
     );
 }
@@ -144,8 +150,8 @@ function DatePickerWithRange({ className, date, setDate }: { className?: string;
                         {date?.from ? (
                             date.to ? (
                                 <>
-                                    {format(date.from, "LLL dd, y")} -{" "}
-                                    {format(date.to, "LLL dd, y")}
+                                    {format(date.from, "LLL, dd")} -{" "}
+                                    {format(date.to, "LLL, dd, y")}
                                 </>
                             ) : (
                                 format(date.from, "LLL dd, y")
