@@ -100,20 +100,26 @@ export function useOrder() {
     }
 
     async function getOrderByDate(month: number, day: number, setOrderData: (data: OrderData) => void) {
-        if (day === 0) {
+        if (month === 0 && day === 0) {
             setOrderData(JSON.parse(sessionStorage.getItem('orders') || ''));
-            return;
-        }
-
-        try {
-            const response = await http.get<OrderEntity[]>(`/transactions/date/${month}/${day}`);
+        } else if (month !== 0 && day === 0) {
+            const response = await http.get<OrderEntity[]>(`/transactions/month/${month}`);
             const ordersFiltered = response.data.filter((order: OrderEntity) => order.tipo === "VENDA");
             setOrderData({
                 orders: ordersFiltered,
                 total: ordersFiltered.length
             });
-        } catch (error) {
-            console.error(error);
+        } else {
+            try {
+                const response = await http.get<OrderEntity[]>(`/transactions/date/${month}/${day}`);
+                const ordersFiltered = response.data.filter((order: OrderEntity) => order.tipo === "VENDA");
+                setOrderData({
+                    orders: ordersFiltered,
+                    total: ordersFiltered.length
+                });
+            } catch (error) {
+                console.error(error);
+            }
         }
     }
 

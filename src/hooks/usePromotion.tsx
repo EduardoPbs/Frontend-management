@@ -25,6 +25,8 @@ export function usePromotion() {
             setAllPromotions(response.data);
             setActivePromotions(response.data.filter((promotion: PromotionEntity) => promotion.ativo));
             setDisabledPromotions(response.data.filter((promotion: PromotionEntity) => !promotion.ativo));
+
+            sessionStorage.setItem('promotions', JSON.stringify(response.data));
         } catch (error) {
             console.error(error);
         }

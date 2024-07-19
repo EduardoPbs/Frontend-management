@@ -47,20 +47,26 @@ export function usePurchase() {
     }
 
     async function getPurchasesByDate(month: number, day: number, setPurchaseData: (data: PurchaseData) => void) {
-        if (day === 0) {
+        if (month === 0 && day === 0) { 
             setPurchaseData(JSON.parse(sessionStorage.getItem('purchases') || ''));
-            return;
-        }
-
-        try {
-            const response = await http.get<OrderEntity[]>(`/transactions/date/${month}/${day}`);
+        } else if (month !== 0 && day === 0) {
+            const response = await http.get<OrderEntity[]>(`/transactions/month/${month}`);
             const purchasesFiltered = response.data.filter((purchase: OrderEntity) => purchase.tipo === "COMPRA");
             setPurchaseData({
                 purchases: purchasesFiltered,
                 total: purchasesFiltered.length
             });
-        } catch (error) {
-            console.error(error);
+        } else {
+            try {
+                const response = await http.get<OrderEntity[]>(`/transactions/date/${month}/${day}`);
+                const purchasesFiltered = response.data.filter((purchase: OrderEntity) => purchase.tipo === "COMPRA");
+                setPurchaseData({
+                    purchases: purchasesFiltered,
+                    total: purchasesFiltered.length
+                });
+            } catch (error) {
+                console.error(error);
+            }
         }
     }
 

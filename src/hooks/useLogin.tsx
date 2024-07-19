@@ -49,6 +49,10 @@ export function useLogin() {
     function logOut() {
         sessionStorage.removeItem('token');
         sessionStorage.removeItem('user');
+        sessionStorage.removeItem('orders');
+        sessionStorage.removeItem('promotions');
+        sessionStorage.removeItem('purchases');
+        sessionStorage.removeItem('cash_status');
         navigate('/login');
     }
 
