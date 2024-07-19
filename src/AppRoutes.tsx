@@ -10,6 +10,7 @@ import {
     Employees,
     Promotions,
     OrderDetail,
+    CashHistory,
     ProductForm,
     PurchaseForm,
     CashRegister,
@@ -17,7 +18,7 @@ import {
     PromotionForm,
     EmployeeDetail,
     PurchaseDetail,
-    PromotionDetail
+    PromotionDetail,
 } from './Pages';
 
 function AppRoutes() {
@@ -47,6 +48,7 @@ function AppRoutes() {
                     <Route path='/purchases/:id' element={<PurchaseDetail />} />
 
                     <Route path='/cash-register' element={<CashRegister />} />
+                    <Route path='/cash-register/history' element={<CashHistory />} />
 
                     <Route path='/promotions' element={<Promotions />} />
                     <Route path='/promotions/new' element={<PromotionForm />} />

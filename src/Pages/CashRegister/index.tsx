@@ -25,18 +25,20 @@ export function CashRegister() {
     const [handleCaixa, setHandleCaixa] = useState<boolean>(false);
     const [initialValue, setInitialValue] = useState<number>(0);
     const [currentCaixa, setCurrentCaixa] = useState<Caixa>({
+        id: '',
         abertura: '',
         fechamento: null,
         valor_abertura: 0,
         valor_atual: 0,
         valor_fechamento: 0
     });
-    const { currentCashier, allMovements, closeCurrentCaixa, openCashier, total } = useCashRegister();
+    const { currentCashier, allMovements, setAllMovements, closeCurrentCaixa, openCashier, getMovementsByMonth } = useCashRegister();
     const toast = useToast();
 
     useEffect(() => {
         setCurrentCaixa(currentCashier);
         document.title = 'Management | Caixa';
+        getMovementsByMonth(new Date().getMonth() + 1, setAllMovements);
     }, [handleCaixa, currentCashier]);
 
     return (
@@ -190,8 +192,12 @@ export function CashRegister() {
             </Content>
             <Content className='w-full overflow-auto'>
                 <div className='flex items-center justify-between'>
-                    <h3 className='uppercase font-bold'>Movimentações - Tudo</h3>
-                    <p className='text-xl font-semibold'>Total: {Number(total).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</p>
+                    <h3 className='uppercase font-bold'>Movimentações - {toFullLocaleDate(new Date().toISOString()).slice(0, 10).slice(3, 10)}</h3>
+                    <p className='text-xl font-semibold'>
+                        Total:
+                        {Number(allMovements.reduce((acc: number, currVal: Movimentacao) => currVal.valor + acc, 0))
+                            .toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+                    </p>
                 </div>
                 <Table>
                     <TableHeader>

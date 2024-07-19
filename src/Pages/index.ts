@@ -8,6 +8,7 @@ import { OrderForm } from './Orders/OrderForm';
 import { Promotions } from './Promotions/index';
 import { ProductForm } from './Products/ProductForm';
 import { OrderDetail } from './Orders/OrderDetail';
+import { CashHistory } from '@/Pages/CashRegister/CashHistory';
 import { PurchaseForm } from './Purchases/PurchaseForm';
 import { EmployeeForm } from './Employees/EmployeeForm';
 import { CashRegister } from './CashRegister';
@@ -27,11 +28,12 @@ export {
     Promotions,
     ProductForm,
     OrderDetail,
+    CashHistory,
     PurchaseForm,
     EmployeeForm,
     CashRegister,
     EmployeeDetail,
     PurchaseDetail,
     PromotionForm,
-    PromotionDetail
+    PromotionDetail,
 };
