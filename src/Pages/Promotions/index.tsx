@@ -4,8 +4,10 @@ import { BadgePlus, Settings2 } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PromotionActive, PromotionAll, PromotionFinish } from "@/Pages/Promotions/tabs";
 import { useEffect } from "react";
+import { usePromotion } from "@/hooks/usePromotion";
 
 export function Promotions() {
+    const { } = usePromotion();
 
     useEffect(() => {
         document.title = 'Management | Promoções';

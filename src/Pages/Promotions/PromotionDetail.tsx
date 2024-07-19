@@ -75,8 +75,8 @@ export function PromotionDetail() {
                             <p className='uppercase text-md'>Produto:</p>
                             <div className='flex flex-col justify-center pl-4'>
                                 <span>Nome: <span className='text-xl'>{promotion?.produto.nome}</span></span>
-                                <span>Valor original: <span className='text-xl'>{promotion?.produto.valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span></span>
-                                <span>Valor c/ desconto: <span className='text-xl'>{promotion?.produto.valorOriginal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span></span>
+                                <span>Valor original: <span className='text-xl'>{promotion?.produto.valorOriginal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span></span>
+                                <span>Valor c/ desconto: <span className='text-xl'>{promotion?.produto.valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span></span>
                                 <span>Em estoque: <span className='text-xl'>{promotion?.produto.estoque}</span></span>
                                 <span>Status: <span className={`${promotion?.produto.ativo ? 'text-agreed-green' : 'text-custom-red'}`}>
                                     {promotion?.produto.ativo ? "Ativo" : "Desativado"}

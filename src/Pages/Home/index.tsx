@@ -9,10 +9,12 @@ import { ProductEntity } from '@/types';
 import { PageContainer } from '../../components/PageContainer';
 import { useCashRegister } from '@/hooks/useCashRegister';
 import { AlertCircle, ArrowRightCircle } from 'lucide-react';
+import { usePromotion } from '@/hooks/usePromotion';
 
 export function Home() {
     const { loading, allProducts } = useProduct();
     const { } = useCashRegister();
+    const { } = usePromotion();
     const navigate = useNavigate();
 
     if (loading) return <LgSpinner />;
