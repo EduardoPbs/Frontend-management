@@ -6,6 +6,7 @@ import { useLogin } from '../../hooks/useLogin';
 import { useEffect } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { primary_black, primary_hover_red, primary_white } from '@/constants/styles';
+import LogicLogo from '../../assets/logic_flare_dark.png';
 
 export function Login() {
     const { loading, onSubmit } = useLogin();
@@ -33,7 +34,16 @@ export function Login() {
 
     return (
         <section className="w-full lg:grid lg:min-h-[600px] lg:grid-cols-2 xl:min-h-full">
-            <div className="hidden min-h-screen bg-primary-black lg:block" />
+            <div className="hidden min-h-screen bg-[#000000] lg:block">
+                <div className="flex items-center justify-center w-full h-full">
+                    <img
+                        className='select-none w-[400px]'
+                        src={LogicLogo}
+                        draggable={false}
+                        alt="Logic Flare Since 2023"
+                    />
+                </div>
+            </div>
 
             <div className="flex items-start justify-center py-52">
                 <form className="border-2 py-4 px-6 rounded-md  mx-auto grid w-[400px] gap-3" onSubmit={handleSubmit(onSubmit)}>
