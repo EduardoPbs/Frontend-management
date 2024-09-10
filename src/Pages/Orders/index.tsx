@@ -5,7 +5,6 @@ import { Content } from '@/components/Content';
 import { useToast } from '@chakra-ui/react';
 import { useOrder } from '../../hooks/useOrder';
 import { LgSpinner } from '../../components/LgSpinner';
-import { ArrowUpRightFromCircle, ChevronRight, PlusCircle } from 'lucide-react';
 import { IconButton } from '../../components/IconButton';
 import { useNavigate } from 'react-router';
 import { OrderEntity } from '../../types/order';
@@ -15,6 +14,7 @@ import { EmployeeEntity } from '@/types';
 import { table_row_hover } from '../../constants/styles';
 import { toFullLocaleDate } from '../../utils/toFullLocaleDate';
 import { useEffect, useState } from 'react';
+import { ArrowUpRightFromCircle, PlusCircle } from 'lucide-react';
 import { Table, TableHeader, TableHead, TableBody, TableRow, TableCell } from '@/components/ui/table';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
@@ -56,7 +56,7 @@ export function Orders() {
                                             toast.closeAll();
                                         }}
                                     >
-                                        <span className='mb-0.5'>Ir para Caixa</span> 
+                                        <span className='mb-0.5'>Ir para Caixa</span>
                                         <ArrowUpRightFromCircle className='size-3' />
                                     </Button>
                                 </div>,
@@ -160,6 +160,7 @@ export function Orders() {
                         <TableRow className='bg-primary-black/15 hover:bg-primary-black/15'>
                             <TableHead className='text-primary-black uppercase'>Cód. Pedido</TableHead>
                             <TableHead className='text-primary-black uppercase'>Qtde. itens</TableHead>
+                            <TableHead className='text-primary-black uppercase'>Forma Pgto.</TableHead>
                             <TableHead className='text-primary-black uppercase'>Data</TableHead>
                             <TableHead className='text-primary-black uppercase'>Total</TableHead>
                             <TableHead className='text-primary-black uppercase'>Ações</TableHead>
@@ -173,11 +174,10 @@ export function Orders() {
                                         key={order.id}
                                         className={table_row_hover}
                                     >
-                                        <TableCell>{order.id.slice(0, 8)}</TableCell>
+                                        <TableCell>{order.codigo === null ? order.id.slice(0, 8) : String(order.codigo).slice(0, 8)}</TableCell>
                                         <TableCell>{order.quantidade_itens}</TableCell>
-                                        <TableCell>
-                                            {toFullLocaleDate(order.criado_em)}
-                                        </TableCell>
+                                        <TableCell>{String(order.forma_pagamento)}</TableCell>
+                                        <TableCell>{toFullLocaleDate(order.criado_em)}</TableCell>
                                         <TableCell>
                                             {Number(
                                                 order.total
@@ -203,11 +203,10 @@ export function Orders() {
                                             key={order.id}
                                             className={table_row_hover}
                                         >
-                                            <TableCell>{order.id.slice(0, 8)}</TableCell>
+                                            <TableCell>{order.codigo === null ? order.id.slice(0, 8) : String(order.codigo).slice(0, 8)}</TableCell>
                                             <TableCell>{order.quantidade_itens}</TableCell>
-                                            <TableCell>
-                                                {toFullLocaleDate(order.criado_em)}
-                                            </TableCell>
+                                            <TableCell>{String(order.forma_pagamento)}</TableCell>
+                                            <TableCell>{toFullLocaleDate(order.criado_em)}</TableCell>
                                             <TableCell>
                                                 {Number(
                                                     order.total
