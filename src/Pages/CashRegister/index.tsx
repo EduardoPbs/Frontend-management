@@ -45,7 +45,7 @@ export function CashRegister() {
         <PageContainer title='Caixa'>
             <div className='flex items-center gap-2 select-none'>
                 <IconButton
-                    to={-1}
+                    to='movements'
                     label='Movimentações'
                     className='w-fit'
                     icon={ArchiveRestore}
@@ -194,7 +194,7 @@ export function CashRegister() {
                 <div className='flex items-center justify-between'>
                     <h3 className='uppercase font-bold'>Movimentações - {toFullLocaleDate(new Date().toISOString()).slice(0, 10).slice(3, 10)}</h3>
                     <p className='text-xl font-semibold'>
-                        Total:
+                        Total este mês:{" "}
                         {Number(allMovements.reduce((acc: number, currVal: Movimentacao) => currVal.valor + acc, 0))
                             .toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
                     </p>
@@ -203,6 +203,7 @@ export function CashRegister() {
                     <TableHeader>
                         <TableRow className='bg-primary-black/15 hover:bg-primary-black/1'>
                             <TableHead className='text-primary-black uppercase'>Data</TableHead>
+                            <TableHead className='text-primary-black uppercase'>Tipo</TableHead>
                             <TableHead className='text-primary-black uppercase'>Valor</TableHead>
                         </TableRow>
                     </TableHeader>
@@ -218,6 +219,7 @@ export function CashRegister() {
                                         <TableCell>
                                             {toFullLocaleDate(movimentacao.criado_em)}
                                         </TableCell>
+                                        <TableCell>{movimentacao.tipo_transacao || '--'}</TableCell>
                                         <TableCell>
                                             {Number(movimentacao.valor).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
                                         </TableCell>
