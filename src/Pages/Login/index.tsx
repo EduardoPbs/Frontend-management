@@ -22,7 +22,7 @@ export function Login() {
     } = useForm({
         resolver: zodResolver(loginFormSchema),
         defaultValues: {
-            email: 'depois@gmail.com',
+            email: 'eduardo@hotmail.com',
             password: '123',
         },
     });
