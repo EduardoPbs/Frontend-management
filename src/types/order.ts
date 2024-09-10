@@ -5,10 +5,12 @@ export type OrderEntity = {
     status: string;
     tipo: string;
     quantidade_itens: number;
+    forma_pagamento: string;
     criado_em: string;
     id: string;
     agenda: string | null;
     total: number;
+    codigo: number;
 };
 
 export type ItemEntity = {
