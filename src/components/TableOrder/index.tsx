@@ -38,7 +38,6 @@ export function OrderTable() {
             <TableBody>
                 {dataOrders ?
                     dataOrders.orders
-                        .slice(0, 8)
                         .map((order: OrderEntity) => {
                             return (
                                 <TableRow
@@ -46,17 +45,17 @@ export function OrderTable() {
                                     className={table_row_hover}
                                 >
                                     <TableCell>
-                                        {String(order.id).slice(0, 8)}
+                                        {order.codigo !== null ? String(order.codigo) : String(order.id).slice(0, 8)}
                                     </TableCell>
                                     <TableCell>
-                                        {order.total}
+                                        {order.quantidade_itens}
                                     </TableCell>
                                     <TableCell>
                                         {Number(order.total).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
                                     </TableCell>
                                 </TableRow>
                             );
-                        })
+                        }).reverse().slice(0, 8)
                     : []}
             </TableBody>
         </Table>
