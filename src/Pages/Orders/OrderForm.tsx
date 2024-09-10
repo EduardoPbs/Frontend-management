@@ -133,7 +133,13 @@ export function OrderForm() {
                                     <h2>
                                         Funcionário: {' '}
                                         <span className='uppercase text-primary-red'>
-                                            {selectedEmployee.nome || 'selecione um funcionário'}
+                                            {selectedEmployee.nome || 'Não selecionado'}
+                                        </span>
+                                    </h2>
+                                    <h2>
+                                        Forma de pagamento: {' '}
+                                        <span className='uppercase text-primary-red'>
+                                            {paymentType.replace('_', ' ') || 'Não selecionado'}
                                         </span>
                                     </h2>
                                     <AlertDialogCancel><X /></AlertDialogCancel>
@@ -199,6 +205,17 @@ export function OrderForm() {
                                             toast({
                                                 title: 'Aviso!',
                                                 description: 'Você deve escolher um funcionário.',
+                                                position: 'top-right',
+                                                status: 'info',
+                                                isClosable: true,
+                                            });
+                                            return;
+                                        }
+
+                                        if (paymentType === undefined || paymentType === '') {
+                                            toast({
+                                                title: 'Aviso!',
+                                                description: 'Você deve escolher uma forma de pagamento.',
                                                 position: 'top-right',
                                                 status: 'info',
                                                 isClosable: true,

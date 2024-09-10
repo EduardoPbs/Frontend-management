@@ -2,7 +2,7 @@ import { http } from '../../service';
 import { Title } from '../../components/Title';
 import { Button } from '@/components/ui/button';
 import { useOrder } from '@/hooks/useOrder';
-import { useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import { RowDetail } from '../../components/RowDetail';
 import { IconButton } from '../../components/IconButton';
 import { CellDetail } from '../../components/CellDetail';
@@ -17,6 +17,7 @@ export function PurchaseDetail() {
     const { getOrderById, orderItems, currentEmployee } = useOrder();
     const [purchaseData, setPurchaseData] = useState<OrderEntity>();
     const { id } = useParams();
+    const navigate = useNavigate();
     const toast = useToast();
 
     async function handleStatus(status: string, id: string) {
@@ -153,7 +154,7 @@ export function PurchaseDetail() {
                                             <Tooltip label='Detalhes do produto'>
                                                 <ArrowRightCircle
                                                     className='size-8 hover:cursor-pointer hover:text-custom-red duration-150'
-                                                // onClick={() => navigate(`/products/${item.product.id}`)}
+                                                    onClick={() => navigate('/products')}
                                                 />
                                             </Tooltip>
                                         </RowDetail>

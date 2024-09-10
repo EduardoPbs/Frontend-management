@@ -124,7 +124,7 @@ export function OrderDetail() {
                                                     className='size-8 hover:cursor-pointer hover:text-custom-red duration-150'
                                                     onClick={() =>
                                                         navigate(
-                                                            `/products/${item.produto_id}`
+                                                            '/products'
                                                         )
                                                     }
                                                 />
