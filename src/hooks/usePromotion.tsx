@@ -90,6 +90,15 @@ export function usePromotion() {
         }
     }
 
+    async function deletePromotion(promotionId: string): Promise<void> {
+        try {
+            const response = await http.delete(`/promotions/${promotionId}`);
+            return response.data;
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
     async function onSubmit(productId: string, discount: number | string, date: any) {
         const initialDate: Date = !date?.from
             ? new Date(new Date().getTime())
@@ -142,6 +151,7 @@ export function usePromotion() {
         onSubmit,
         PromotionFormSchema,
         getPromotionById,
-        loadingUnique
+        loadingUnique,
+        deletePromotion
     };
 }

@@ -1,7 +1,7 @@
 import { Title } from "@/components/Title";
 import { Button } from "@/components/ui/button";
 import { Content } from "@/components/Content";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { IconButton } from "@/components/IconButton";
 import { usePromotion } from "@/hooks/usePromotion";
 import { PageContainer } from "@/components/PageContainer";
@@ -66,7 +66,7 @@ export function PromotionDetail() {
                                 onTrueText="Marcar como FINALIZADO"
                                 onFalseText="Marcar como ATIVO"
                             />
-                            <DeletePromotionButton />
+                            <DeletePromotionButton id={promotion?.id || ''} />
                         </div>
                     </CardHeader>
                     <CardContent className="flex items-center justify-between font-bold">
@@ -96,7 +96,10 @@ export function PromotionDetail() {
     );
 }
 
-function DeletePromotionButton() {
+function DeletePromotionButton({ id }: { id: string; }) {
+    const { deletePromotion } = usePromotion();
+    const navigate = useNavigate();
+
     return (
         <AlertDialog>
             <AlertDialogTrigger asChild>
@@ -117,14 +120,15 @@ function DeletePromotionButton() {
                         A {' '}
                         <span className='text-primary-red uppercase'>
                             promoção atual
-                        </span> será excluída permanente. Continuar?</span>
+                        </span> será excluída permanentemente. Continuar?</span>
                 </AlertDialogDescription>
                 <AlertDialogFooter>
                     <AlertDialogAction asChild>
                         <Button
                             className='hover:bg-primary-hover-red'
                             onClick={() => {
-                                console.log('Delete!');
+                                navigate(-1);
+                                deletePromotion(id);
                             }}
                         >
                             Excluir promoção
