@@ -6,6 +6,7 @@ import {
     Orders,
     Products,
     Purchases,
+    Movements,
     OrderForm,
     Employees,
     Promotions,
@@ -53,6 +54,8 @@ function AppRoutes() {
                     <Route path='/promotions' element={<Promotions />} />
                     <Route path='/promotions/new' element={<PromotionForm />} />
                     <Route path='/promotions/:id' element={<PromotionDetail />} />
+
+                    <Route path='/cash-register/movements' element={<Movements />} />
                 </Routes>
             </BrowserRouter>
         </ChakraProvider>

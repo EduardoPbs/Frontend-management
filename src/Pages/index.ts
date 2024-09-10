@@ -3,6 +3,7 @@ import { Login } from './Login';
 import { Orders } from './Orders';
 import { Products } from './Products';
 import { Purchases } from './Purchases';
+import { Movements } from './CashRegister/movements';
 import { Employees } from './Employees';
 import { OrderForm } from './Orders/OrderForm';
 import { Promotions } from './Promotions/index';
@@ -23,6 +24,7 @@ export {
     Orders,
     Products,
     Purchases,
+    Movements,
     Employees,
     OrderForm,
     Promotions,
