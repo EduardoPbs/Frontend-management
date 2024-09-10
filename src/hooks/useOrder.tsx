@@ -46,12 +46,12 @@ export function useOrder() {
         }
     }
 
-    async function createOrder(employeeId: string, itens: ItemOrderCreate[], purchase: boolean = false): Promise<void | string> {
+    async function createOrder(employeeId: string, payment_form: string, itens: ItemOrderCreate[], purchase: boolean = false): Promise<void | string> {
         if (purchase) {
             try {
                 const response = await http.post('/transactions/procurements', {
                     itens: itens,
-                    funcionario_id: employeeId,
+                    funcionario_id: employeeId
                 });
 
                 return response.data;
@@ -63,6 +63,7 @@ export function useOrder() {
                 await http.post('/transactions/sales', {
                     itens: itens,
                     funcionario_id: employeeId,
+                    forma_pagamento: payment_form
                 }).then((response) => {
                     const saleId: string = response.data.slice(30, 66);
                     http.put(`/transactions/finalize/${saleId}`);
@@ -144,6 +145,8 @@ export function useOrder() {
         }
     }
 
+
+
     function handleMinusQuantity(
         setDataSelectedProducts: any,
         productId: string
@@ -212,6 +215,6 @@ export function useOrder() {
         currentEmployee,
         getOrderByEmployeeId,
         getOrderByMonth,
-        getOrderByDate
+        getOrderByDate,
     };
 }
