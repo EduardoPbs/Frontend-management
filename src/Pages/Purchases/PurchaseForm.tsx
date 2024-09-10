@@ -178,7 +178,7 @@ export function PurchaseForm() {
                                             return;
                                         }
 
-                                        createOrder(selectedEmployee.id, dataCreateOrder.data_items, true)
+                                        createOrder(selectedEmployee.id, '', dataCreateOrder.data_items, true)
                                             .then((response) => {
                                                 toast({
                                                     title: 'Sucesso!',
