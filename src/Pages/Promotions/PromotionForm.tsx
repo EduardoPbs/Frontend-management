@@ -17,6 +17,7 @@ import { Calendar as CalendarIcon } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@chakra-ui/react";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
 export function PromotionForm() {
     const [selectedProduct, setSelectedProduct] = useState<string>();
@@ -60,11 +61,14 @@ export function PromotionForm() {
                                 <SelectContent>
                                     <SelectGroup>
                                         <SelectLabel>Produtos</SelectLabel>
-                                        {allProducts.products.map((product: ProductEntity, index: number) => (
-                                            <SelectItem key={index} value={product.id}>
-                                                {product.nome}
-                                            </SelectItem>
-                                        ))}
+                                        {allProducts.products.map((product: ProductEntity, index: number) => {
+                                            if (product.estoque > 5)
+                                                return (
+                                                    <SelectItem key={index} value={product.id}>
+                                                        {product.nome}
+                                                    </SelectItem>
+                                                );
+                                        })}
                                     </SelectGroup>
                                 </SelectContent>
                             </Select>
@@ -112,6 +116,18 @@ export function PromotionForm() {
                             return;
                         }
 
+                        if (Number(discountValue) <= 0 || Number(discountValue) > 95) {
+                            toast({
+                                title: 'Falha ao cadastrar promoção.',
+                                description: 'Valor de desconto inválido!',
+                                position: 'top-right',
+                                status: 'error',
+                                isClosable: true,
+                            });
+
+                            return;
+                        }
+
                         onSubmit(selectedProduct, discountValue, date);
                     }}
                 >
@@ -119,16 +135,38 @@ export function PromotionForm() {
                 </Button>
             </div>
 
-            <span className='font-semibold text-sm'>
-                <span className='font-bold'>Obs.:{' '}</span>
-                Promoções com data <span className='font-bold text-red-600'>NÃO ESCOLHIDA</span> serão iniciadas imediatamente, com duração de dois(2) dias e oito(8) <br />
-                horas a partir da hora de criação da promoção. <br />
-                <span className="font-bold opacity-80">
-                    Exemplo: <br />
-                    &nbsp; Criação em: 16/07/2024 - 11:00. <br />
-                    &nbsp; Finalizar em: 18/07/2024 - 19:00.
-                </span>
-            </span>
+            <Card className='w-fit'>
+                <CardHeader>
+                    Info
+                </CardHeader>
+                <CardContent>
+                    <span className='font-semibold text-sm'>
+                        &bull; Promoções com data <span className='font-bold text-red-600'>NÃO ESCOLHIDA</span> serão iniciadas imediatamente, com duração de dois(2) dias e oito(8) <br />
+                        &nbsp; horas a partir da hora de criação da promoção, podendo ser desativadas a qualquer momento.
+                        <span className="font-bold opacity-80">
+                            {" "}Ex.: <br />
+                            &nbsp; &nbsp; Criação em: 16/07/2024 - 11:00. <br />
+                            &nbsp; &nbsp; Finalizar em: 18/07/2024 - 19:00.
+                        </span>
+                    </span>
+                    <br />
+                    <span className='font-semibold text-sm'>
+                        &bull; Promoções com datas vencidas serão excluídas automaticamente após a próxima verificação do sistema.
+                    </span>
+                    <br />
+                    <span className='font-semibold text-sm'>
+                        &bull; Produtos com estoque abaixo de <span className='text-lg font-bold'>5</span> não serão listados para promoções.
+                    </span>
+                    <br />
+                    <span className='font-semibold text-sm'>
+                        &bull; Desconto em porcentagem deve estar entre <span className='text-lg font-bold'>1</span> e <span className='text-lg font-bold'>95</span>.
+                    </span>
+                    <br />
+                    <span className='font-semibold text-sm'>
+                        &bull; Promoções criadas com início e término no mesmo dia, terão duração padrão de <span className='text-lg font-bold'>11</span> horas.
+                    </span>
+                </CardContent>
+            </Card>
         </PageContainer>
     );
 }
