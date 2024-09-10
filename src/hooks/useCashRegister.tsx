@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 
 export type Movimentacao = {
     criado_em: string;
+    tipo_transacao: string;
     valor: number;
 };
 
@@ -168,7 +169,7 @@ export function useCashRegister() {
             }
         } else {
             try {
-                const response = await http.get<Movimentacao[]>(`/cashier/movements/data/${month}-${day}`);
+                const response = await http.get<Movimentacao[]>(`/cashier/movements/date/${month}-${day}`);
                 setMovements(response.data);
             } catch (err) {
                 console.error(err);
