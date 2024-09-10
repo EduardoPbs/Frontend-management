@@ -25,13 +25,16 @@ import {
     AlertDialogContent,
     AlertDialogDescription,
 } from '@/components/ui/alert-dialog';
+import { UsePaymentType } from '@/hooks/usePaymentType';
 
 export function OrderForm() {
     const { activeProducts } = useProduct();
     const { dataCreateOrder, setDataCreateOrder, createOrder } = useOrder();
+    const { paymentTypes } = UsePaymentType();
     const { dataEmployees } = useEmployee();
     const [searchInput, setSearchInput] = useState<string>('');
     const [selectedEmployee, setSelectedEmployee] = useState<{ id: string, nome: string; }>({ id: '', nome: '' });
+    const [paymentType, setPaymentType] = useState<string>('');
     const navigate = useNavigate();
     const { id } = useParams();
     const toast = useToast();
@@ -90,6 +93,26 @@ export function OrderForm() {
                                 return (
                                     <SelectItem key={index} value={JSON.stringify({ id: employee.id, nome: employee.nome })}>
                                         {employee.nome}
+                                    </SelectItem>
+                                );
+                            })}
+                        </SelectContent>
+                    </Select>
+
+                    <Select
+                        onValueChange={(event) => {
+                            console.log(event);
+                            setPaymentType(event);
+                        }}
+                    >
+                        <SelectTrigger className='w-[180px] font-semibold'>
+                            <SelectValue placeholder="Pagamento" />
+                        </SelectTrigger>
+                        <SelectContent className='max-h-[200px] font-semibold'>
+                            {paymentTypes.map((payment_type: string, index: number) => {
+                                return (
+                                    <SelectItem key={index} value={payment_type}>
+                                        {payment_type.replace('_', ' ')}
                                     </SelectItem>
                                 );
                             })}
@@ -182,7 +205,7 @@ export function OrderForm() {
                                             });
                                             return;
                                         }
-                                        createOrder(selectedEmployee.id, dataCreateOrder.data_items);
+                                        createOrder(selectedEmployee.id, paymentType, dataCreateOrder.data_items);
                                         navigate('/');
                                     }}
                                 >
