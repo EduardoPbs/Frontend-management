@@ -22,6 +22,8 @@ import {
     useDisclosure,
     ModalCloseButton,
 } from '@chakra-ui/react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Content } from '@/components/Content';
 
 export function ProductForm() {
     const [selectedCategory, setSelectedCategory] = useState<string>('');
@@ -50,6 +52,7 @@ export function ProductForm() {
     });
 
     function handleSelectChange(event: any) {
+        console.log(event)
         setSelectedCategory(event.target.value);
     };
 
@@ -106,157 +109,169 @@ export function ProductForm() {
                 className='w-fit'
                 icon={ArrowLeftCircle}
             />
-
-            <form
-                onSubmit={handleSubmit(onSubmit)}
-                className='flex flex-col gap-4 w-full'
-            >
-                <div className='flex items-center w-full gap-4'>
-                    <LgInput
-                        label='Código'
-                        type='number'
-                        name='codigo'
-                        placeholder='0001'
-                        errors={errors.codigo}
-                        control={control}
-                        autoComplete='disabled'
-                    />
-                    <LgInput
-                        label='Nome'
-                        name='nome'
-                        placeholder='Batata'
-                        errors={errors.nome}
-                        control={control}
-                        autoComplete='disabled'
-                    />
-                </div>
-
-                <div className='flex items-center w-full gap-4'>
-                    <LgInput
-                        label='Estoque'
-                        name='estoque'
-                        placeholder='5'
-                        errors={errors.estoque}
-                        control={control}
-                        autoComplete='disabled'
-                    />
-                    <LgInput
-                        label='Valor'
-                        type='number'
-                        name='valor'
-                        placeholder='1.25'
-                        errors={errors.valor}
-                        control={control}
-                        autoComplete='disabled'
-                    />
-                    <>
-                        <div className='relative'>
-                            <Button
-                                type='button'
-                                className='w-full mt-6 hover:bg-primary-hover-red'
-                                onClick={onOpen}
+            <Content className='w-full flex items-center overflow-auto'>
+                <Card className="bg-white dark:bg-gray-900 w-[600px]">
+                    <div className="max-w-2xl p-4 py-1 mx-auto">
+                        <CardHeader className="mb-4 text-xl font-bold text-gray-900 dark:text-white">
+                            <CardTitle>
+                                Novo Produto
+                            </CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <form
+                                onSubmit={handleSubmit(onSubmit)}
+                                className='flex flex-col gap-4 w-full'
                             >
-                                Selecionar categorias
-                            </Button>
-                            <div className='absolute cursor-default flex justify-center items-center -right-1 top-4 bg-primary-white size-6 rounded-full border-2 border-primary-red'>
-                                <p className='text-primary-red font-bold pb-1'>
-                                    {selectedCategories.length}
-                                </p>
-                            </div>
-                        </div>
+                                <div className='flex items-center w-full gap-4'>
+                                    <LgInput
+                                        label='Código'
+                                        type='number'
+                                        name='codigo'
+                                        placeholder='0001'
+                                        errors={errors.codigo}
+                                        control={control}
+                                        autoComplete='disabled'
+                                    />
+                                    <LgInput
+                                        label='Nome'
+                                        name='nome'
+                                        placeholder='Batata'
+                                        errors={errors.nome}
+                                        control={control}
+                                        autoComplete='disabled'
+                                    />
+                                </div>
 
-                        <Modal isOpen={isOpen} onClose={onClose}>
-                            <ModalOverlay />
-                            <ModalContent>
-                                <ModalHeader>Categorias</ModalHeader>
-                                <ModalCloseButton />
-                                <ModalBody>
-                                    <div>
-                                        <Controller
-                                            name='categorias'
-                                            control={control}
-                                            render={({ field }) => {
-                                                return (
-                                                    <div className='flex-col justify-center w-full'>
-                                                        <Select
-                                                            {...field}
-                                                            focusBorderColor={primary_red}
-                                                            placeholder='Selecione uma categoria'
-                                                            value={selectedCategory}
-                                                            onChange={handleSelectChange}
-                                                        >
-                                                            {categories.map(
-                                                                (category: string, index: number) => {
-                                                                    return (
-                                                                        <option
-                                                                            key={index}
-                                                                            value={category.toUpperCase()}
-                                                                            className='text-black capitalize'
-                                                                        >
-                                                                            {category.toLowerCase().replace('_', ' ')}
-                                                                        </option>
-                                                                    );
-                                                                }
-                                                            )}
-                                                        </Select>
-                                                    </div>
-                                                );
-                                            }}
-                                        />
-                                        {errors && (
-                                            <p className='text-red-500'>{errors.categorias?.message}</p>
-                                        )}
-                                    </div>
-                                </ModalBody>
-                                <ModalFooter>
-                                    <div className='flex items-center w-full justify-between'>
-                                        <div className='flex flex-col justify-center gap-2 w-1/2 capitalize'>
-                                            {selectedCategories.length > 0 ?
-                                                selectedCategories.map((category, index: number) => {
-                                                    return (
-                                                        <p
-                                                            key={index}
-                                                            className='w-full bg-primary-white hover:bg-primary-black/5 border-2 border-primary-black/50 rounded-md p-2 duration-150'
-                                                        >
-                                                            <span className='flex items-center justify-between gap-3 text-black font-semibold'>
-                                                                {category.toLowerCase().replace('_', ' ')}
-                                                                <X
-                                                                    className='cursor-pointer hover:scale-95 hover:text-primary-red duration-100'
-                                                                    onClick={() => {
-                                                                        setSelectedCategories(selectedCategories.filter(c => c != category));
-                                                                    }}
-                                                                />
-                                                            </span>
-                                                        </p>
-                                                    );
-                                                }) : <></>}
+                                <div className='flex items-center w-full gap-4'>
+                                    <LgInput
+                                        label='Estoque'
+                                        name='estoque'
+                                        placeholder='5'
+                                        errors={errors.estoque}
+                                        control={control}
+                                        autoComplete='disabled'
+                                    />
+                                    <LgInput
+                                        label='Valor'
+                                        type='number'
+                                        name='valor'
+                                        placeholder='1.25'
+                                        errors={errors.valor}
+                                        control={control}
+                                        autoComplete='disabled'
+                                    />
+                                    <>
+                                        <div className='relative'>
+                                            <Button
+                                                type='button'
+                                                className='w-full mt-6 hover:bg-primary-hover-red'
+                                                onClick={onOpen}
+                                            >
+                                                Selecionar categorias
+                                            </Button>
+                                            <div className='absolute cursor-default flex justify-center items-center -right-1 top-4 bg-primary-white size-6 rounded-full border-2 border-primary-red'>
+                                                <p className='text-primary-red font-bold pb-1'>
+                                                    {selectedCategories.length}
+                                                </p>
+                                            </div>
                                         </div>
-                                        <Button
-                                            className='hover:bg-primary-hover-red'
-                                            // borderRadius={round_default}
-                                            // backgroundColor={primary_red}
-                                            // color={primary_white}
-                                            // _hover={{
-                                            //     bg: primary_hover_red,
-                                            //     color: primary_white,
-                                            // }}
-                                            onClick={handleClick}
-                                        >
-                                            Adicionar
-                                        </Button>
-                                    </div>
-                                </ModalFooter>
-                            </ModalContent>
-                        </Modal>
-                    </>
-                </div>
-                <Button
-                    className='hover:bg-primary-hover-red'
-                    type='submit'
-                >
-                    {id ? 'Atualizar' : 'Cadastrar'}
-                </Button>
-            </form>
+
+                                        <Modal isOpen={isOpen} onClose={onClose}>
+                                            <ModalOverlay />
+                                            <ModalContent>
+                                                <ModalHeader>Categorias</ModalHeader>
+                                                <ModalCloseButton />
+                                                <ModalBody>
+                                                    <div>
+                                                        <Controller
+                                                            name='categorias'
+                                                            control={control}
+                                                            render={({ field }) => {
+                                                                return (
+                                                                    <div className='flex-col justify-center w-full'>
+                                                                        <Select
+                                                                            {...field}
+                                                                            focusBorderColor={primary_red}
+                                                                            placeholder='Selecione uma categoria'
+                                                                            value={selectedCategory}
+                                                                            onChange={handleSelectChange}
+                                                                        >
+                                                                            {categories.map(
+                                                                                (category: string, index: number) => {
+                                                                                    return (
+                                                                                        <option
+                                                                                            key={index}
+                                                                                            value={category.toUpperCase()}
+                                                                                            className='text-black capitalize'
+                                                                                        >
+                                                                                            {category.toLowerCase().replace('_', ' ')}
+                                                                                        </option>
+                                                                                    );
+                                                                                }
+                                                                            )}
+                                                                        </Select>
+                                                                    </div>
+                                                                );
+                                                            }}
+                                                        />
+                                                        {errors && (
+                                                            <p className='text-red-500'>{errors.categorias?.message}</p>
+                                                        )}
+                                                    </div>
+                                                </ModalBody>
+                                                <ModalFooter>
+                                                    <div className='flex items-center w-full justify-between'>
+                                                        <div className='flex flex-col justify-center gap-2 w-1/2 capitalize'>
+                                                            {selectedCategories.length > 0 ?
+                                                                selectedCategories.map((category, index: number) => {
+                                                                    return (
+                                                                        <p
+                                                                            key={index}
+                                                                            className='w-full bg-primary-white hover:bg-primary-black/5 border-2 border-primary-black/50 rounded-md p-2 duration-150'
+                                                                        >
+                                                                            <span className='flex items-center justify-between gap-3 text-black font-semibold'>
+                                                                                {category.toLowerCase().replace('_', ' ')}
+                                                                                <X
+                                                                                    className='cursor-pointer hover:scale-95 hover:text-primary-red duration-100'
+                                                                                    onClick={() => {
+                                                                                        setSelectedCategories(selectedCategories.filter(c => c != category));
+                                                                                    }}
+                                                                                />
+                                                                            </span>
+                                                                        </p>
+                                                                    );
+                                                                }) : <></>}
+                                                        </div>
+                                                        <Button
+                                                            className='hover:bg-primary-hover-red'
+                                                            // borderRadius={round_default}
+                                                            // backgroundColor={primary_red}
+                                                            // color={primary_white}
+                                                            // _hover={{
+                                                            //     bg: primary_hover_red,
+                                                            //     color: primary_white,
+                                                            // }}
+                                                            onClick={handleClick}
+                                                        >
+                                                            Adicionar
+                                                        </Button>
+                                                    </div>
+                                                </ModalFooter>
+                                            </ModalContent>
+                                        </Modal>
+                                    </>
+                                </div>
+                                <Button
+                                    className='hover:bg-primary-hover-red'
+                                    type='submit'
+                                >
+                                    {id ? 'Atualizar' : 'Cadastrar'}
+                                </Button>
+                            </form>
+                        </CardContent>
+                    </div>
+                </Card>
+            </Content>
         </PageContainer >
     );
 };
