@@ -22,12 +22,12 @@ export function Employees() {
 
     return (
         <PageContainer title='Funcionários'>
-            <IconButton
+            {user.adm ? <IconButton
                 to='new'
                 label='Novo Funcionário'
                 className='w-fit'
                 icon={PlusCircle}
-            />
+            /> : <p>Apenas administradores podem cadastrar, editar ou excluir funcionários.</p>}
 
             <div className='flex items-center justify-between'>
                 <Title variant='h3'>
@@ -60,7 +60,10 @@ export function Employees() {
                                     <TableCell>{employee.cpf}</TableCell>
                                     <TableCell className='flex items-center gap-2'>
                                         <Button
-                                            className='w-full hover:bg-primary-hover-red'
+                                            className={
+                                                Number(employee.id) === 0 || (user.id !== employee.id && !user.adm)
+                                                    ? 'hidden'
+                                                    : 'w-full hover:bg-primary-hover-red'}
                                             onClick={() => { navigate(`edit/${employee.id}`); }}
                                         >
                                             Editar

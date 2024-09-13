@@ -80,6 +80,7 @@ export function PurchaseForm() {
                         </SelectTrigger>
                         <SelectContent className='max-h-[200px] font-semibold'>
                             {dataEmployees.map((employee: EmployeeEntity, index: number) => {
+                                if (Number(employee.id) === 0) return;
                                 return (
                                     <SelectItem key={index} value={JSON.stringify({ id: employee.id, nome: employee.nome })}>
                                         {employee.nome}

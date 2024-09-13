@@ -70,7 +70,7 @@ export function useProduct() {
                 .then(() =>
                     toast({
                         title: 'Sucesso',
-                        colorScheme: 'cyan',
+                        colorScheme: 'green',
                         description: `O produto foi atualizado.`,
                         status: 'success',
                         position: 'top-right',
@@ -110,7 +110,7 @@ export function useProduct() {
                 .then(() =>
                     toast({
                         title: 'Sucesso',
-                        colorScheme: 'cyan',
+                        colorScheme: 'green',
                         description: `O produto foi cadastrado.`,
                         status: 'success',
                         position: 'top-right',
@@ -119,8 +119,19 @@ export function useProduct() {
                     })
                 )
                 .then(() => navigate(-1));
-        } catch (err) {
-            console.error(err);
+        } catch (err: any) {
+            const errMessage = err.response.data.message === undefined
+                ? err.response?.data?.errors[0]?.defaultMessage
+                : 'O produto deve estar em pelo menos 1 categoria.';
+            toast({
+                title: 'Erro.',
+                colorScheme: 'red',
+                description: errMessage,
+                status: 'warning',
+                position: 'top-right',
+                isClosable: true,
+                duration: 2000,
+            });
         }
     }
 
@@ -140,6 +151,7 @@ export function useProduct() {
         } catch (error: any) {
             toast({
                 title: 'Erro',
+                colorScheme: 'red',
                 description: `Falha ao cadastrar o produto: ${error.response?.data?.message}`,
                 status: 'error',
                 position: 'top-right',

@@ -3,6 +3,7 @@ export type EmployeeEntity = {
     nome: string;
     cpf: string;
     endereco: Endereco;
+    usuario: User
 };
 
 type Endereco = {
@@ -11,3 +12,9 @@ type Endereco = {
     number: string;
     complemento: string;
 };
+
+type User = {
+    email: string;
+    password: string;
+    is_admin?: boolean;
+}

@@ -90,6 +90,7 @@ export function OrderForm() {
                         </SelectTrigger>
                         <SelectContent className='max-h-[200px] font-semibold'>
                             {dataEmployees.map((employee: EmployeeEntity, index: number) => {
+                                if (Number(employee.id) === 0) return;
                                 return (
                                     <SelectItem key={index} value={JSON.stringify({ id: employee.id, nome: employee.nome })}>
                                         {employee.nome}
@@ -204,9 +205,10 @@ export function OrderForm() {
                                         if (selectedEmployee.id === undefined || selectedEmployee.id === '') {
                                             toast({
                                                 title: 'Aviso!',
+                                                colorScheme: 'red',
                                                 description: 'Você deve escolher um funcionário.',
                                                 position: 'top-right',
-                                                status: 'info',
+                                                status: 'warning',
                                                 isClosable: true,
                                             });
                                             return;
@@ -215,9 +217,10 @@ export function OrderForm() {
                                         if (paymentType === undefined || paymentType === '') {
                                             toast({
                                                 title: 'Aviso!',
+                                                colorScheme: 'red',
                                                 description: 'Você deve escolher uma forma de pagamento.',
                                                 position: 'top-right',
-                                                status: 'info',
+                                                status: 'warning',
                                                 isClosable: true,
                                             });
                                             return;
@@ -266,34 +269,34 @@ export function OrderForm() {
                             </Button>
                         </Box>
                     </CardHeader>
-
-                    <CardBody className='flex flex-col gap-2 m-2 text-primary-black rounded-md border-2 border-border-gray overflow-hidden overflow-y-scroll scrollbar-hide'>
-                        <Box className='flex flex-col gap-2'>
-                            {filterItems ? filterItems.map((product: ProductEntity, index: number) => (
-                                <RowProductsOrder
-                                    key={index}
-                                    name={product.nome}
-                                    code={product.codigo}
-                                    value={product.valor}
-                                    quantity={product.estoque}
-                                    productId={product.id}
-                                    selectedProducts={dataCreateOrder?.data_items}
-                                    setSelectedProducts={setDataCreateOrder}
-                                />
-                            )) : activeProducts.products.map((product: ProductEntity, index: number) => (
-                                <RowProductsOrder
-                                    key={index}
-                                    name={product.nome}
-                                    code={product.codigo}
-                                    value={product.valor}
-                                    quantity={product.estoque}
-                                    productId={product.id}
-                                    selectedProducts={dataCreateOrder?.data_items}
-                                    setSelectedProducts={setDataCreateOrder}
-                                />
-                            ))}
-                        </Box>
-                    </CardBody>
+                        <CardBody className='flex flex-col gap-2 m-2 text-primary-black rounded-md border-2 border-border-gray overflow-hidden overflow-y-scroll scrollbar-hide'>
+                            {/* <Box className='flex flex-col gap-2'> */}
+                            <Box className='grid grid-cols-2 gap-2'>
+                                {filterItems ? filterItems.map((product: ProductEntity, index: number) => (
+                                    <RowProductsOrder
+                                        key={index}
+                                        name={product.nome}
+                                        code={product.codigo}
+                                        value={product.valor}
+                                        quantity={product.estoque}
+                                        productId={product.id}
+                                        selectedProducts={dataCreateOrder?.data_items}
+                                        setSelectedProducts={setDataCreateOrder}
+                                    />
+                                )) : activeProducts.products.map((product: ProductEntity, index: number) => (
+                                    <RowProductsOrder
+                                        key={index}
+                                        name={product.nome}
+                                        code={product.codigo}
+                                        value={product.valor}
+                                        quantity={product.estoque}
+                                        productId={product.id}
+                                        selectedProducts={dataCreateOrder?.data_items}
+                                        setSelectedProducts={setDataCreateOrder}
+                                    />
+                                ))}
+                            </Box>
+                        </CardBody>
                 </Card>
             </Box>
         </PageContainer >

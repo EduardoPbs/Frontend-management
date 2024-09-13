@@ -3,6 +3,7 @@ import { useEmployee } from '@/hooks/useEmployee';
 import { EmployeeEntity } from '@/types';
 import { useEffect, useState } from 'react';
 import { ItemOrderCreate, OrderCreate, OrderEntity } from '../types/order';
+import { useToast } from '@chakra-ui/react';
 
 interface OrderData {
     orders: OrderEntity[];
@@ -24,6 +25,8 @@ export function useOrder() {
     const [currentEmployee, setCurrentEmployee] = useState<EmployeeEntity>();
 
     const { getEmployeeById } = useEmployee();
+
+    const toast = useToast();
 
     async function getOrdersData() {
         setIsLoading(true);
@@ -60,6 +63,7 @@ export function useOrder() {
             }
         } else {
             try {
+                console.log("PAGAMENTO: ", payment_form);
                 await http.post('/transactions/sales', {
                     itens: itens,
                     funcionario_id: employeeId,
@@ -67,9 +71,28 @@ export function useOrder() {
                 }).then((response) => {
                     const saleId: string = response.data.slice(30, 66);
                     http.put(`/transactions/finalize/${saleId}`);
+                }).then(() => {
+                    toast({
+                        title: 'Sucesso!',
+                        colorScheme: 'green',
+                        description: `Venda registrada com sucesso.`,
+                        status: 'success',
+                        position: 'top-right',
+                        isClosable: true,
+                        duration: 2000,
+                    });
                 });
             } catch (error) {
                 console.error(error);
+                toast({
+                    title: 'Erro!',
+                    colorScheme: 'red',
+                    description: `Algo deu errado. A venda não foi registrada.`,
+                    status: 'warning',
+                    position: 'top-right',
+                    isClosable: true,
+                    duration: 2000,
+                });
             }
         }
     }
@@ -144,8 +167,6 @@ export function useOrder() {
             setIsLoadingUnique(false);
         }
     }
-
-
 
     function handleMinusQuantity(
         setDataSelectedProducts: any,

@@ -18,7 +18,6 @@ interface IRowProductsOrder {
 export function RowProductsOrder(props: IRowProductsOrder) {
     const {
         name,
-        code,
         value,
         quantity,
         productId,
@@ -34,48 +33,48 @@ export function RowProductsOrder(props: IRowProductsOrder) {
     const toast = useToast();
 
     return (
-        <RowDetail>
-            <CellDetail name='Código' content={code} />
-            <CellDetail name='Produto' content={name} />
-            <CellDetail
-                name='Valor/unidade'
-                content={Number(value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
-            />
-            <CellDetail name='Em estoque' content={quantity} />
+            <RowDetail quantity={quantity}>
+                <CellDetail className='w-fit' name='Produto' content={name} />
+                <CellDetail className='w-fit'
+                    name='Valor/unidade'
+                    content={Number(value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+                />
+                <CellDetail className='w-fit' name='Em estoque' content={quantity} />
 
-            <Box className='flex items-center gap-2'>
-                <MinusCircle
-                    className='size-6 hover:cursor-pointer hover:text-custom-red duration-150'
-                    onClick={() =>
-                        handleMinusQuantity(setSelectedProducts, productId)
-                    }
-                />
-                <span className='text-2xl text-primary-red font-bold text-center w-[42px]'>
-                    {currQuantity}
-                </span>
-                <PlusCircle
-                    className='size-6 hover:cursor-pointer hover:text-custom-red duration-150'
-                    onClick={() => {
-                        if (quantity === 0 || quantity <= currQuantity) {
-                            toast({
-                                title: 'Aviso!',
-                                description: 'Produto sem estoque suficiente.',
-                                status: 'info',
-                                position: 'top-right',
-                                duration: 1500,
-                                isClosable: true,
-                            });
-                        } else {
-                            handlePlusQuantity(
-                                setSelectedProducts,
-                                productId,
-                                name,
-                                value
-                            );
+                <Box className='flex items-center gap-2'>
+                    <MinusCircle
+                        className={`${quantity < 1 && 'hover:cursor-default hover:text-black'} size-6 cursor-pointer hover:text-custom-red duration-150`}
+                        onClick={() =>
+                            handleMinusQuantity(setSelectedProducts, productId)
                         }
-                    }}
-                />
-            </Box>
-        </RowDetail>
+                    />
+                    <span className='text-2xl text-primary-red font-bold text-center w-[42px]'>
+                        {currQuantity}
+                    </span>
+                    <PlusCircle
+                        className={`${quantity < 1 && 'hover:cursor-default hover:text-black'} size-6 cursor-pointer hover:text-custom-red duration-150`}
+                        onClick={() => {
+                            if (quantity === 0 || quantity <= currQuantity) {
+                                toast({
+                                    title: 'Aviso!',
+                                    colorScheme: 'red',
+                                    description: 'Produto sem estoque suficiente.',
+                                    status: 'warning',
+                                    position: 'top-right',
+                                    duration: 1500,
+                                    isClosable: true,
+                                });
+                            } else {
+                                handlePlusQuantity(
+                                    setSelectedProducts,
+                                    productId,
+                                    name,
+                                    value
+                                );
+                            }
+                        }}
+                    />
+                </Box>
+            </RowDetail>
     );
 }

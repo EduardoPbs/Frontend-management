@@ -21,10 +21,12 @@ export function useLogin() {
                 .post('/auth/login', credentials)
                 .then((res) => {
                     const JwtToken = res.data.token;
+                    // JSON.parse(Buffer.from(JwtToken.split('.')[1], 'base64').toString());
                     const tokenPayload = JSON.parse(atob(JwtToken.split('.')[1]));
                     const user = {
                         id: tokenPayload.funcionarioId,
                         name: tokenPayload.username,
+                        email: tokenPayload.sub,
                         adm: tokenPayload.adm,
                         exp: tokenPayload.exp
                     };
