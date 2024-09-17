@@ -12,9 +12,11 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
+import { useNavigate } from 'react-router';
 
 export function UserPopover() {
     const [user, setUser] = useState<UserData>();
+    const navigate = useNavigate();
     const { logOut } = useLogin();
 
     useEffect(() => {
@@ -41,11 +43,25 @@ export function UserPopover() {
                     Minha Conta
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem className='cursor-pointer'>
-                    <a href="/settings">Configurações</a>
+                <DropdownMenuItem>
+                    <Button
+                        variant='ghost'
+                        onClick={() => {
+                            navigate("/settings");
+                        }}
+                    >
+                        Configurações
+                    </Button>
                 </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                    <a href="#">Suporte</a>
+                <DropdownMenuItem>
+                    <Button
+                        variant='ghost'
+                        onClick={() => {
+                            navigate('');
+                        }}
+                    >
+                        Suporte
+                    </Button>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild className='cursor-pointer'>
