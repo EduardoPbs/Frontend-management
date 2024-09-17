@@ -133,13 +133,13 @@ export function OrderForm() {
                                 <div className='flex items-center w-full justify-between'>
                                     <h2>
                                         Funcionário: {' '}
-                                        <span className='uppercase text-primary-red'>
+                                        <span className='text-nowrap uppercase text-primary-red'>
                                             {selectedEmployee.nome || 'Não selecionado'}
                                         </span>
                                     </h2>
                                     <h2>
-                                        Forma de pagamento: {' '}
-                                        <span className='uppercase text-primary-red'>
+                                        Forma Pgto.: {' '}
+                                        <span className='text-nowrap uppercase text-primary-red'>
                                             {paymentType.replace('_', ' ') || 'Não selecionado'}
                                         </span>
                                     </h2>
