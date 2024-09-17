@@ -24,7 +24,7 @@ export function Home() {
             <Content className='w-full border-border-gray rounded-round-default bg-light-gray/30 shadow-sm'>
                 <Title variant='h2'>
                     Estatísticas Recentes {''}
-                    <span className='text-lg opacity-50 capitalize'>| Últimos vendas feitas / Estoque de produtos</span>
+                    <span className='text-lg opacity-50 capitalize'>| Últimas vendas feitas / Estoque de produtos</span>
                 </Title>
                 <div className='grid grid-rows-2 grid-flow-col gap-4 min-h-[540px] h-[540px] font-semibold'>
                     <Content className='row-span-3 w-full h-full border-primary-black/20 rounded-round-default shadow-md'>

@@ -21,6 +21,7 @@ import {
     PurchaseDetail,
     PromotionDetail,
 } from './Pages';
+import { Settings } from '@/Pages/Settings';
 
 function AppRoutes() {
     return (
@@ -56,6 +57,8 @@ function AppRoutes() {
                     <Route path='/promotions/:id' element={<PromotionDetail />} />
 
                     <Route path='/cash-register/movements' element={<Movements />} />
+
+                    <Route path='/settings' element={<Settings />}/>
                 </Routes>
             </BrowserRouter>
         </ChakraProvider>
