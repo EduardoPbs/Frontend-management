@@ -1,232 +1,68 @@
-import { http } from '../../service';
-import { RowDetail } from '../../components/RowDetail';
+import { Button } from '@/components/ui/button';
+import { useOrder } from '../../hooks/useOrder';
 import { CellDetail } from '../../components/CellDetail';
+import { useProduct } from '../../hooks/useProduct';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { IconButton } from '../../components/IconButton';
+import { useEmployee } from '@/hooks/useEmployee';
 import { PageContainer } from '../../components/PageContainer';
 import { ProductEntity } from '../../types/product';
+import { EmployeeEntity } from '@/types';
+import { RowProductsOrder } from './RowProductsOrder';
+import { ItemOrderCreate } from '../../types/order';
+import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
-import { useEffect, useRef, useState } from 'react';
-import { ItemOrderCreate, OrderCreate } from '../../types/order';
+import { ArchiveRestore, ArrowLeftCircle, X } from 'lucide-react';
+import { primary_red, primary_hover_red } from '../../constants/styles';
+import { Box, Card, Input, CardBody, CardHeader, useToast } from '@chakra-ui/react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import {
-    primary_red,
-    primary_white,
-    primary_hover_red,
-    round_default,
-    light_gray,
-} from '../../constants/styles';
-import {
-    PlusCircle,
-    MinusCircle,
-    ArchiveRestore,
-    ArrowLeftCircle,
-} from 'lucide-react';
-import {
-    Box,
-    Card,
-    Input,
-    Modal,
-    Button,
-    CardBody,
-    useToast,
-    ModalBody,
-    CardHeader,
-    ModalHeader,
-    ModalFooter,
-    ModalOverlay,
-    ModalContent,
-    useDisclosure,
-    ModalCloseButton,
-} from '@chakra-ui/react';
-
-function RowProductsOrder({
-    name,
-    code,
-    value,
-    quantity,
-    productId,
-    selectedProducts,
-    setSelectedProducts,
-}: {
-    name: string;
-    code: number;
-    value: number;
-    quantity: number;
-    productId: string;
-    selectedProducts: ItemOrderCreate[] | undefined;
-    setSelectedProducts: any;
-}) {
-    const toast = useToast();
-
-    const currQuantity =
-        selectedProducts?.find((p) => p.product_id === productId)?.quantity ||
-        0;
-
-    function handleMinusQuantity() {
-        setSelectedProducts(
-            (prevOrderData: OrderCreate) =>
-                prevOrderData && {
-                    ...prevOrderData,
-                    data_items: prevOrderData.data_items
-                        .map((item) =>
-                            item.product_id === productId && item.quantity > 0
-                                ? { ...item, quantity: item.quantity - 1 }
-                                : item
-                        )
-                        .filter((item) => item.quantity > 0),
-                }
-        );
-    }
-
-    function handlePlusQuantity() {
-        setSelectedProducts((prevOrderData: OrderCreate | undefined) => {
-            if (!prevOrderData) return prevOrderData;
-
-            const newItems = prevOrderData.data_items.map((item) => {
-                if (item.product_id === productId) {
-                    return { ...item, quantity: item.quantity + 1 };
-                }
-                return item;
-            });
-
-            if (!newItems.find((item) => item.product_id === productId)) {
-                newItems.push({
-                    product_id: productId,
-                    product_name: name,
-                    quantity: 1,
-                    value: value,
-                });
-            }
-
-            return { ...prevOrderData, data_items: newItems };
-        });
-    }
-
-    return (
-        <RowDetail>
-            <CellDetail name='Código' content={code} />
-            <CellDetail name='Produto' content={name} />
-            <CellDetail
-                name='Valor/unidade'
-                content={Number(value).toLocaleString('pt-BR', {
-                    style: 'currency',
-                    currency: 'BRL',
-                })}
-            />
-            <CellDetail name='Em estoque' content={quantity} />
-
-            <Box className='flex items-center gap-2'>
-                <MinusCircle
-                    className='size-6 hover:cursor-pointer hover:text-custom-red duration-150'
-                    onClick={handleMinusQuantity}
-                />
-                <span className='text-2xl text-primary-red font-bold text-center w-[42px]'>
-                    {currQuantity}
-                </span>
-                <PlusCircle
-                    className='size-6 hover:cursor-pointer hover:text-custom-red duration-150'
-                    onClick={() => {
-                        if (quantity === 0 || quantity <= currQuantity) {
-                            toast({
-                                title: 'Alerta!',
-                                description: 'Produto sem estoque suficiente.',
-                                status: 'warning',
-                                position: 'top-right',
-                                duration: 1500,
-                                isClosable: true,
-                            });
-                        } else {
-                            handlePlusQuantity();
-                        }
-                    }}
-                />
-            </Box>
-        </RowDetail>
-    );
-}
+    AlertDialog,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogCancel,
+    AlertDialogTrigger,
+    AlertDialogContent,
+    AlertDialogDescription,
+} from '@/components/ui/alert-dialog';
+import { UsePaymentType } from '@/hooks/usePaymentType';
 
 export function OrderForm() {
-    const [products, setProducts] = useState<ProductEntity[]>([]);
+    const { activeProducts } = useProduct();
+    const { dataCreateOrder, setDataCreateOrder, createOrder } = useOrder();
+    const { paymentTypes } = UsePaymentType();
+    const { dataEmployees } = useEmployee();
     const [searchInput, setSearchInput] = useState<string>('');
-    const [orderData, setOrderData] = useState<OrderCreate>();
+    const [selectedEmployee, setSelectedEmployee] = useState<{ id: string, nome: string; }>({ id: '', nome: '' });
+    const [paymentType, setPaymentType] = useState<string>('');
     const navigate = useNavigate();
     const { id } = useParams();
+    const toast = useToast();
 
-    const { isOpen, onOpen, onClose } = useDisclosure();
-    const initialRef = useRef(null);
-    const finalRef = useRef(null);
-
-    async function getAllProducts() {
-        try {
-            const response = await http.get('products');
-            setProducts(response.data);
-        } catch (error) {
-            console.error(error);
-        }
-    }
-
-    const filterItems: ProductEntity[] = products.filter(
-        (product: ProductEntity) =>
-            product.name.toLowerCase().includes(searchInput.toLowerCase()) ||
-            String(product.code).includes(searchInput)
-    );
-
-    const mapProductToComponent = (product: ProductEntity, index: number) => (
-        <RowProductsOrder
-            key={index}
-            name={product.name}
-            code={product.code}
-            value={product.value}
-            quantity={product.stock}
-            productId={product.id}
-            selectedProducts={orderData?.data_items}
-            setSelectedProducts={setOrderData}
-        />
-    );
-
-    const filteredProducts: any = (
-        filterItems.length > 1 ? filterItems : products
-    ).map(mapProductToComponent);
-
-    async function onSubmit(data: OrderCreate | undefined) {
-        try {
-            const convertData = {
-                order_id: id,
-                data_items: data?.data_items.map((item: ItemOrderCreate) => ({
-                    produto_id: item.product_id,
-                    quantity: item.quantity,
-                })),
-            };
-
-            await http.post('/orders/add-items', convertData);
-        } catch (error) {
-            console.error(error);
-        }
-    }
+    const filterItems: ProductEntity[] = activeProducts.products.filter((product: ProductEntity) => {
+        return product.nome.toLowerCase().match(searchInput.toLowerCase());
+    });
 
     const rowStyle = 'flex-row items-center w-fit gap-2';
 
     useEffect(() => {
         if (id !== undefined) {
-            setOrderData({
+            setDataCreateOrder({
                 order_id: id,
                 data_items: [],
             });
         }
-        getAllProducts();
-    }, []);
+    }, [searchInput]);
 
     return (
         <PageContainer title='Nova Venda'>
-            <Box className='flex items-center gap-4 w-full justify-between'>
+            <div className='flex items-center gap-4 w-full justify-between'>
                 <div className='flex items-center gap-12'>
                     <IconButton
                         to={-1}
                         label='Voltar'
                         className='w-fit'
                         icon={ArrowLeftCircle}
-                        bgColor={primary_red}
-                        textColor={primary_white}
-                        bgHoverColor={primary_hover_red}
                     />
 
                     <Input
@@ -238,173 +74,193 @@ export function OrderForm() {
                             setSearchInput(e.target.value)
                         }
                     />
+
+                    <Select
+                        onValueChange={(event) => {
+                            console.log(event);
+                            const employeeData: { id: string; nome: string; } = JSON.parse(event);
+                            setSelectedEmployee({
+                                id: employeeData.id,
+                                nome: employeeData.nome
+                            });
+                        }}
+                    >
+                        <SelectTrigger className='w-[180px] font-semibold'>
+                            <SelectValue placeholder="Funcionário" />
+                        </SelectTrigger>
+                        <SelectContent className='max-h-[200px] font-semibold'>
+                            {dataEmployees.map((employee: EmployeeEntity, index: number) => {
+                                if (Number(employee.id) === 0) return;
+                                return (
+                                    <SelectItem key={index} value={JSON.stringify({ id: employee.id, nome: employee.nome })}>
+                                        {employee.nome}
+                                    </SelectItem>
+                                );
+                            })}
+                        </SelectContent>
+                    </Select>
+
+                    <Select
+                        onValueChange={(event) => {
+                            console.log(event);
+                            setPaymentType(event);
+                        }}
+                    >
+                        <SelectTrigger className='w-[180px] font-semibold'>
+                            <SelectValue placeholder="Pagamento" />
+                        </SelectTrigger>
+                        <SelectContent className='max-h-[200px] font-semibold'>
+                            {paymentTypes.map((payment_type: string, index: number) => {
+                                return (
+                                    <SelectItem key={index} value={payment_type}>
+                                        {payment_type.replace('_', ' ')}
+                                    </SelectItem>
+                                );
+                            })}
+                        </SelectContent>
+                    </Select>
                 </div>
-                <Box className='flex items-center'>
-                    <Button
-                        className='capitalize flex items-center gap-2'
-                        width={200}
-                        borderRadius={round_default}
-                        backgroundColor={primary_red}
-                        color={primary_white}
-                        _hover={{
-                            bg: primary_hover_red,
-                            color: primary_white,
-                        }}
-                        onClick={() => {
-                            onOpen();
-                        }}
-                    >
-                        Finalizar
-                        <ArchiveRestore />
-                    </Button>
-                    <Modal
-                        initialFocusRef={initialRef}
-                        finalFocusRef={finalRef}
-                        isOpen={isOpen}
-                        onClose={onClose}
-                        motionPreset='slideInTop'
-                    >
-                        <ModalOverlay />
-                        <ModalContent>
-                            <ModalHeader>
-                                Resumo - {orderData?.order_id.slice(0, 8)}
-                            </ModalHeader>
-                            <ModalCloseButton />
-                            <ModalBody>
-                                <CellDetail
-                                    name='Itens'
-                                    className='w-full'
-                                    style='flex flex-col justify-center gap-2'
-                                    content={
-                                        orderData?.data_items.map(
-                                            (item, index: number) => (
-                                                <span
-                                                    key={index}
-                                                    className='flex items-center text-[17.5px] justify-between bg-primary-red w-full font-semibold px-4 text-primary-white rounded-round-default hover:bg-primary-hover-red duration-150 hover:cursor-default'
-                                                >
-                                                    <span className=''>
-                                                        <span className='text-sm'>
-                                                            {item?.product_name}{' '}
-                                                            -{' '}
-                                                        </span>
-                                                        <span className=''>
-                                                            {item.quantity} x{' '}
-                                                        </span>
-                                                        <span className=''>
-                                                            R$
-                                                            {item.value
-                                                                .toFixed(2)
-                                                                .replace(
-                                                                    '.',
-                                                                    ','
-                                                                )}
-                                                        </span>
+                <AlertDialog>
+                    <AlertDialogTrigger asChild disabled={dataCreateOrder.data_items.length < 1}>
+                        <Button className='capitalize flex items-center gap-2 hover:bg-primary-hover-red'>
+                            Finalizar
+                            <ArchiveRestore />
+                        </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                        <AlertDialogHeader>
+                            <div className='flex flex-col items-start w-full justify-center text-xl font-semibold border-b-2 pb-4'>
+                                <div className='flex items-center w-full justify-between'>
+                                    <h2>
+                                        Funcionário: {' '}
+                                        <span className='text-nowrap uppercase text-primary-red'>
+                                            {selectedEmployee.nome || 'Não selecionado'}
+                                        </span>
+                                    </h2>
+                                    <h2>
+                                        Forma Pgto.: {' '}
+                                        <span className='text-nowrap uppercase text-primary-red'>
+                                            {paymentType.replace('_', ' ') || 'Não selecionado'}
+                                        </span>
+                                    </h2>
+                                    <AlertDialogCancel><X /></AlertDialogCancel>
+                                </div>
+                                <h3 className=''>Resumo:</h3>
+                            </div>
+                        </AlertDialogHeader>
+                        <ScrollArea>
+                            <AlertDialogDescription className='max-h-[300px]'>
+                                <span className='flex flex-col w-full gap-2 items-center'>
+                                    {dataCreateOrder?.data_items.map(
+                                        (item, index: number) => (
+                                            <span
+                                                key={index}
+                                                className='flex flex-col items-start gap-3 justify-center py-4 bg-primary-white w-full min-h-[65px] font-semibold px-4 text-primary-black rounded-sm hover:bg-zinc-200 duration-150 hover:cursor-default border-red-400 border-l-4'
+                                            >
+                                                <span className='text-lg font-semibold w-full border-b-2 border-primary-black uppercase'>
+                                                    {item.quantidade}
+                                                    <span className='text-md lowercase'>x{' '}</span>
+                                                    {item?.produto_nome}
+                                                </span>
+                                                <span className='flex items-center justify-between gap-2 w-full'>
+                                                    <span className='text-xl'>
+                                                        R$ {' '}
+                                                        {item.valor_unitario.toFixed(2).replace('.', ',')}
                                                     </span>
-                                                    <span className='flex items-center justify-between gap-2 max-w-[160px] bg-fuchsia-300/10'>
+                                                    <span className='flex items-center justify-between gap-2 text-2xl max-w-[160px] bg-fuchsia-300/10'>
                                                         <span>= </span>
-                                                        {Number(
-                                                            item.quantity *
-                                                                item.value
-                                                        ).toLocaleString(
-                                                            'pt-BR',
-                                                            {
-                                                                style: 'currency',
-                                                                currency: 'BRL',
-                                                            }
-                                                        )}
+                                                        {Number(item.quantidade * item.valor_unitario)
+                                                            .toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
                                                     </span>
                                                 </span>
-                                            )
-                                        ) || ''
+                                            </span>
+                                        )
+                                    ) || ''
                                     }
-                                />
-                            </ModalBody>
-                            <ModalFooter
-                                className='flex items-center bg-zinc-100 gap-2'
-                                borderRadius={5}
-                            >
-                                <Box className='flex items-center gap-2 justify-between w-full'>
-                                    <p className='text-lg capitalize font-semibold'>
-                                        Total:{' '}
-                                        <span className='text-xl font-bold text-end'>
-                                            {orderData?.data_items
-                                                .reduce(
-                                                    (acc, currVal) =>
-                                                        currVal.quantity *
-                                                            currVal.value +
-                                                        acc,
-                                                    0
-                                                )
-                                                .toLocaleString('pt-BR', {
-                                                    style: 'currency',
-                                                    currency: 'BRL',
-                                                })}
-                                        </span>
-                                    </p>
+                                </span>
+                            </AlertDialogDescription>
+                        </ScrollArea>
+                        <AlertDialogFooter>
+                            <div className='flex items-center justify-between bg-zinc-200 gap-2 w-full rounded-md p-2'>
+                                <p className='text-lg capitalize font-semibold'>
+                                    Total:{' '}
+                                    <span className='text-xl font-bold text-end'>
+                                        {dataCreateOrder?.data_items
+                                            .reduce(
+                                                (acc, currVal) =>
+                                                    currVal.quantidade *
+                                                    currVal.valor_unitario +
+                                                    acc,
+                                                0
+                                            )
+                                            .toLocaleString('pt-BR', {
+                                                style: 'currency',
+                                                currency: 'BRL',
+                                            })}
+                                    </span>
+                                </p>
+                                <Button
+                                    className='hover:bg-primary-hover-red'
+                                    onClick={() => {
+                                        if (selectedEmployee.id === undefined || selectedEmployee.id === '') {
+                                            toast({
+                                                title: 'Aviso!',
+                                                colorScheme: 'red',
+                                                description: 'Você deve escolher um funcionário.',
+                                                position: 'top-right',
+                                                status: 'warning',
+                                                isClosable: true,
+                                            });
+                                            return;
+                                        }
 
-                                    <Button
-                                        borderRadius={round_default}
-                                        backgroundColor={primary_red}
-                                        color={primary_white}
-                                        _hover={{
-                                            bg: primary_hover_red,
-                                            color: primary_white,
-                                        }}
-                                        onClick={() => {
-                                            onSubmit(orderData);
-                                            onClose();
-                                            navigate('/');
-                                        }}
-                                    >
-                                        Cadastrar
-                                    </Button>
-                                </Box>
-                            </ModalFooter>
-                        </ModalContent>
-                    </Modal>
-                </Box>
-            </Box>
+                                        if (paymentType === undefined || paymentType === '') {
+                                            toast({
+                                                title: 'Aviso!',
+                                                colorScheme: 'red',
+                                                description: 'Você deve escolher uma forma de pagamento.',
+                                                position: 'top-right',
+                                                status: 'warning',
+                                                isClosable: true,
+                                            });
+                                            return;
+                                        }
+                                        createOrder(selectedEmployee.id, paymentType, dataCreateOrder.data_items);
+                                        navigate('/');
+                                    }}
+                                >
+                                    Cadastrar
+                                </Button>
+                            </div>
+                        </AlertDialogFooter>
+                    </AlertDialogContent>
+                </AlertDialog>
+            </div>
 
             <Box className='flex border-4 border-border-gray rounded-round-default'>
-                <Card className='w-full h-[500px]' background={light_gray}>
+                <Card className='w-full h-[500px]'>
                     <CardHeader className='flex flex-col justify-center text-2xl font-semibold text-primary-black'>
                         <Box className='flex items-center justify-between w-full h-[55px] bg-zinc-100/15 rounded-round-default px-1'>
                             <CellDetail
                                 name='Itens'
-                                content={
-                                    orderData?.data_items.reduce(
-                                        (acc, currVal) =>
-                                            currVal.quantity + acc,
-                                        0
-                                    ) || 0
-                                }
+                                content={dataCreateOrder?.data_items.reduce((acc, currVal) => currVal.quantidade + acc, 0) || 0}
                                 className={rowStyle}
                                 style='text-2xl'
                             />
                             <CellDetail
                                 name='Total'
-                                content={
-                                    orderData?.data_items
-                                        .reduce(
-                                            (acc, currVal) =>
-                                                currVal.quantity *
-                                                    currVal.value +
-                                                acc,
-                                            0
-                                        )
-                                        .toLocaleString('pt-BR', {
-                                            style: 'currency',
-                                            currency: 'BRL',
-                                        }) || 0
+                                content={dataCreateOrder?.data_items
+                                    .reduce((acc: number, currVal: ItemOrderCreate) => currVal.quantidade * currVal.valor_unitario + acc, 0)
+                                    .toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) || 0
                                 }
                                 className={rowStyle}
                                 style='text-2xl'
                             />
                             <Button
-                                height={8}
-                                colorScheme='red'
+                                disabled={dataCreateOrder.data_items.length < 1}
+                                className='hover:bg-primary-hover-red'
                                 onClick={() =>
-                                    setOrderData((prev: any) => {
+                                    setDataCreateOrder((prev: any) => {
                                         return { ...prev, data_items: [] };
                                     })
                                 }
@@ -413,14 +269,36 @@ export function OrderForm() {
                             </Button>
                         </Box>
                     </CardHeader>
-
-                    <CardBody className='flex flex-col gap-2 m-2 text-primary-black rounded-md border-2 border-border-gray overflow-hidden overflow-y-scroll scrollbar-hide'>
-                        <Box className='flex flex-col gap-2'>
-                            {filteredProducts}
-                        </Box>
-                    </CardBody>
+                        <CardBody className='flex flex-col gap-2 m-2 text-primary-black rounded-md border-2 border-border-gray overflow-hidden overflow-y-scroll scrollbar-hide'>
+                            {/* <Box className='flex flex-col gap-2'> */}
+                            <Box className='grid grid-cols-2 gap-2'>
+                                {filterItems ? filterItems.map((product: ProductEntity, index: number) => (
+                                    <RowProductsOrder
+                                        key={index}
+                                        name={product.nome}
+                                        code={product.codigo}
+                                        value={product.valor}
+                                        quantity={product.estoque}
+                                        productId={product.id}
+                                        selectedProducts={dataCreateOrder?.data_items}
+                                        setSelectedProducts={setDataCreateOrder}
+                                    />
+                                )) : activeProducts.products.map((product: ProductEntity, index: number) => (
+                                    <RowProductsOrder
+                                        key={index}
+                                        name={product.nome}
+                                        code={product.codigo}
+                                        value={product.valor}
+                                        quantity={product.estoque}
+                                        productId={product.id}
+                                        selectedProducts={dataCreateOrder?.data_items}
+                                        setSelectedProducts={setDataCreateOrder}
+                                    />
+                                ))}
+                            </Box>
+                        </CardBody>
                 </Card>
             </Box>
-        </PageContainer>
+        </PageContainer >
     );
 }

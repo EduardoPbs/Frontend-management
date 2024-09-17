@@ -1,271 +1,235 @@
-import { http } from '../../service';
 import { Title } from '../../components/Title';
-import { CustomTh } from '../../components/CustomTh';
+import { Button } from '@/components/ui/button';
+import { months } from '@/utils/months';
+import { Content } from '@/components/Content';
+import { useToast } from '@chakra-ui/react';
+import { useOrder } from '../../hooks/useOrder';
 import { LgSpinner } from '../../components/LgSpinner';
-import { PlusCircle } from 'lucide-react';
 import { IconButton } from '../../components/IconButton';
 import { useNavigate } from 'react-router';
 import { OrderEntity } from '../../types/order';
+import { useEmployee } from '@/hooks/useEmployee';
 import { PageContainer } from '../../components/PageContainer';
-import { EmployeeEntity } from '../../types/employee';
+import { EmployeeEntity } from '@/types';
+import { table_row_hover } from '../../constants/styles';
 import { toFullLocaleDate } from '../../utils/toFullLocaleDate';
-import { Controller, useForm } from 'react-hook-form';
-import { useEffect, useRef, useState } from 'react';
-import {
-    custom_red,
-    primary_red,
-    round_default,
-    primary_white,
-    table_row_hover,
-    primary_hover_red,
-} from '../../constants/styles';
-import {
-    Td,
-    Tr,
-    Box,
-    Tbody,
-    Modal,
-    Table,
-    Thead,
-    Button,
-    Select,
-    ModalBody,
-    FormLabel,
-    ModalHeader,
-    ModalFooter,
-    FormControl,
-    ModalContent,
-    ModalOverlay,
-    useDisclosure,
-    TableContainer,
-    ModalCloseButton,
-} from '@chakra-ui/react';
-
-type OrderData = {
-    orders: OrderEntity[];
-    total: number;
-};
+import { useEffect, useState } from 'react';
+import { ArrowUpRightFromCircle, PlusCircle } from 'lucide-react';
+import { Table, TableHeader, TableHead, TableBody, TableRow, TableCell } from '@/components/ui/table';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 export function Orders() {
-    const [isLoading, setIsLoading] = useState<boolean>(true);
-    const [employees, setEmployees] = useState<EmployeeEntity[]>([]);
-    const [selectedEmployee, setSelectedEmployee] = useState<string>('');
-    const [dataOrders, setDataOrders] = useState<OrderData>({
-        orders: [],
-        total: 0,
-    });
+    const [selectedEmployee, setSelectedEmployee] = useState<string>();
+    const [monthSelected, setMonthSelected] = useState<number>(0);
+    const { dataOrders, isLoading, getOrderByMonth, setDataOrders, getOrderByDate } = useOrder();
+    const { dataEmployees } = useEmployee();
+
+    const cash_status: boolean = JSON.parse(sessionStorage.getItem('cash_status') || "").open || false;
 
     const navigate = useNavigate();
-    const initialRef = useRef(null);
-    const finalRef = useRef(null);
-    const { control } = useForm();
-    const { isOpen, onOpen, onClose } = useDisclosure();
-
-    async function createOrder(id: string) {
-        if (!selectedEmployee) alert('Escolha um funcionário.');
-
-        try {
-            const response = await http.post('/orders', {
-                employee_id: id,
-            });
-            navigate(`new/${response.data}`);
-        } catch (error) {
-            console.error(error);
-        }
-    }
-
-    async function getDataOrders() {
-        try {
-            const response = await http.get<any>('/orders');
-            if (!response.data) return;
-            setDataOrders({
-                orders: response.data,
-                total: response.data.length,
-            });
-        } catch (err) {
-            console.error(err);
-        } finally {
-            setIsLoading(false);
-        }
-    }
-
-    async function getEmployees() {
-        try {
-            const response = await http.get<EmployeeEntity[]>('/employees/all');
-            if (!response.data) return;
-            setEmployees(response.data);
-        } catch (error) {
-            console.error(error);
-        }
-    }
+    const toast = useToast();
 
     useEffect(() => {
         document.title = 'Management | Vendas';
-        getDataOrders();
-        getEmployees();
+        console.log('orders', dataOrders);
     }, []);
 
     if (isLoading) return <LgSpinner />;
 
     return (
         <PageContainer title='Vendas'>
-            <Box className='flex items-center'>
+            <div className='flex items-center gap-8'>
                 <IconButton
                     label='Nova venda'
-                    className='w-fit'
-                    onClick={onOpen}
-                    icon={PlusCircle}
-                    bgColor={primary_red}
-                    textColor={primary_white}
-                    bgHoverColor={primary_hover_red}
-                />
-                <Modal
-                    initialFocusRef={initialRef}
-                    finalFocusRef={finalRef}
-                    isOpen={isOpen}
-                    onClose={onClose}
-                    motionPreset='slideInTop'
-                >
-                    <ModalOverlay />
-                    <ModalContent>
-                        <ModalHeader>Quem está vendendo?</ModalHeader>
-                        <ModalCloseButton />
-                        <ModalBody pb={6}>
-                            <Controller
-                                name='employee_id'
-                                control={control}
-                                render={({ field }) => (
-                                    <FormControl>
-                                        <FormLabel>Funcionário:</FormLabel>
-                                        <Select
-                                            {...field}
-                                            id='employee_id'
-                                            focusBorderColor={custom_red}
-                                            placeholder='Selecione um funcionário'
-                                            onChange={(e) =>
-                                                setSelectedEmployee(
-                                                    e.target.value
-                                                )
-                                            }
-                                        >
-                                            {employees &&
-                                                employees?.map(
-                                                    (
-                                                        employee: EmployeeEntity,
-                                                        index: number
-                                                    ) => {
-                                                        return (
-                                                            <option
-                                                                key={index}
-                                                                value={
-                                                                    employee?.id
-                                                                }
-                                                            >
-                                                                {employee?.name}
-                                                            </option>
-                                                        );
-                                                    }
-                                                )}
-                                        </Select>
-                                    </FormControl>
-                                )}
-                            />
-                        </ModalBody>
+                    className={`w-fit ${!cash_status ? 'opacity-50 hover:bg-primary-black cursor-no-drop' : ''}`}
+                    to={cash_status ? 'new' : '#'}
+                    onClick={() => {
+                        if (!cash_status) {
+                            toast({
+                                title: 'Caixa Fechado.',
+                                description: <div className='flex flex-col items-end justify-center gap-2'>
+                                    <p>Abra o caixa para realizar uma venda!</p>
+                                    <Button
+                                        className='flex items-center gap-1 hover:bg-primary-white hover:text-primary-hover-red'
+                                        onClick={() => {
+                                            navigate('/cash-register');
+                                            toast.closeAll();
+                                        }}
+                                    >
+                                        <span className='mb-0.5'>Ir para Caixa</span>
+                                        <ArrowUpRightFromCircle className='size-3' />
+                                    </Button>
+                                </div>,
+                                position: 'top-right',
+                                status: 'error',
+                                isClosable: true,
 
-                        <ModalFooter className='flex items-center gap-2'>
-                            <Button colorScheme='gray' onClick={onClose}>
-                                Cancelar
-                            </Button>
-                            <Button
-                                borderRadius={round_default}
-                                backgroundColor={primary_red}
-                                color={primary_white}
-                                _hover={{
-                                    bg: primary_hover_red,
-                                    color: primary_white,
-                                }}
-                                onClick={() => {
-                                    createOrder(selectedEmployee);
-                                }}
-                            >
-                                Cadastrar
-                            </Button>
-                        </ModalFooter>
-                    </ModalContent>
-                </Modal>
-            </Box>
+                            });
+                        }
+                    }}
+                    icon={PlusCircle}
+                />
+
+                <Select
+                    onValueChange={(event) => {
+                        const employeeData: { id: string; nome: string; } = JSON.parse(event);
+                        setSelectedEmployee(employeeData.id);
+                    }}
+                >
+                    <SelectTrigger className='w-[180px] font-semibold'>
+                        <SelectValue placeholder="Funcionário" />
+                    </SelectTrigger>
+                    <SelectContent className='max-h-[250px] font-semibold'>
+                        <SelectItem value='false'>
+                            Tudo
+                        </SelectItem>
+                        {dataEmployees.map((employee: EmployeeEntity, index: number) => {
+                            return (
+                                <SelectItem key={index} value={JSON.stringify({ id: employee.id, nome: employee.nome })}>
+                                    {employee.nome}
+                                </SelectItem>
+                            );
+                        })}
+                    </SelectContent>
+                </Select>
+
+                <Select
+                    onValueChange={(event: any) => {
+                        const month = JSON.parse(event).id;
+                        setMonthSelected(month);
+                        getOrderByMonth(month, setDataOrders);
+                    }}
+                >
+                    <SelectTrigger className='w-[180px] font-semibold'>
+                        <SelectValue placeholder="Mês" />
+                    </SelectTrigger>
+                    <SelectContent className='max-h-[300px] font-semibold'>
+                        <SelectItem value={JSON.stringify({ id: 0, month: 'none' })}>
+                            Tudo
+                        </SelectItem>
+                        {months.map((month: { id: number; month: string; }, index: number) => {
+                            return (
+                                <SelectItem key={index} value={JSON.stringify(month)} className='capitalize'>
+                                    {month.month}
+                                </SelectItem>
+                            );
+                        })}
+                    </SelectContent>
+                </Select>
+
+                <Select
+                    disabled={!monthSelected || monthSelected === 0}
+                    onValueChange={(event: any) => {
+                        let day = JSON.parse(event);
+                        getOrderByDate(monthSelected, day, setDataOrders);
+                    }}
+                >
+                    <SelectTrigger className='w-[180px] font-semibold'>
+                        <SelectValue placeholder="Dia" />
+                    </SelectTrigger>
+                    <SelectContent className='max-h-[250px] font-semibold'>
+                        <SelectItem value={JSON.stringify(0)}>
+                            Tudo
+                        </SelectItem>
+                        <div className='grid grid-cols-3'>
+                            {Array.from({ length: 31 }, (_, i) => i + 1).map((day: number) => {
+                                return (
+                                    <SelectItem key={day} value={JSON.stringify(day)} className='capitalize flex-1'>
+                                        {day}
+                                    </SelectItem>
+                                );
+                            })}
+                        </div>
+                    </SelectContent>
+                </Select>
+            </div>
 
             <div className='flex items-center justify-between'>
-                <Title variant='h3'>Resumo - Pedidos</Title>
-
                 <Title variant='h3'>
-                    Cadastrados:{' '}
+                    Registros:{' '}
                     <span className='text-4xl text-primary-red'>
-                        {dataOrders.total}
+                        {!selectedEmployee ? dataOrders.total :
+                            dataOrders.orders.filter((order: OrderEntity) => order.funcionario_id === selectedEmployee).length}
                     </span>
                 </Title>
             </div>
 
-            <Box className='overflow-y-scroll scrollbar-hide border-2 border-border-gray rounded-round-default'>
-                <TableContainer>
-                    <Table size='sm'>
-                        <Thead className='text-white text-xl select-none'>
-                            <Tr>
-                                <CustomTh>Cód. Pedido</CustomTh>
-                                <CustomTh>Qtde. itens</CustomTh>
-                                <CustomTh>Data</CustomTh>
-                                <CustomTh>Total</CustomTh>
-                                <CustomTh outStyle='border-r-0'>Ações</CustomTh>
-                            </Tr>
-                        </Thead>
-
-                        <Tbody>
-                            {dataOrders.orders &&
-                                dataOrders.orders.map((order: OrderEntity) => {
+            <Content className='w-full overflow-auto'>
+                <Table className='font-semibold'>
+                    <TableHeader>
+                        <TableRow className='bg-primary-black/15 hover:bg-primary-black/15'>
+                            <TableHead className='text-primary-black uppercase'>Cód. Pedido</TableHead>
+                            <TableHead className='text-primary-black uppercase'>Qtde. itens</TableHead>
+                            <TableHead className='text-primary-black uppercase'>Forma Pgto.</TableHead>
+                            <TableHead className='text-primary-black uppercase'>Data</TableHead>
+                            <TableHead className='text-primary-black uppercase'>Total</TableHead>
+                            <TableHead className='text-primary-black uppercase'>Ações</TableHead>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        {!selectedEmployee ? dataOrders.orders &&
+                            dataOrders.orders.map((order: OrderEntity) => {
+                                return (
+                                    <TableRow
+                                        key={order.id}
+                                        className={table_row_hover}
+                                    >
+                                        <TableCell>{order.codigo === null ? order.id.slice(0, 8) : String(order.codigo).slice(0, 8)}</TableCell>
+                                        <TableCell>{order.quantidade_itens}</TableCell>
+                                        <TableCell>{String(order.forma_pagamento)}</TableCell>
+                                        <TableCell>{toFullLocaleDate(order.criado_em)}</TableCell>
+                                        <TableCell>
+                                            {Number(
+                                                order.total
+                                            ).toLocaleString('pt-br', {
+                                                style: 'currency',
+                                                currency: 'BRL',
+                                            })}
+                                        </TableCell>
+                                        <TableCell>
+                                            <Button
+                                                className='w-full hover:bg-primary-hover-red'
+                                                onClick={() => { navigate(`${order.id}`); }}
+                                            >
+                                                Ver detalhes
+                                            </Button>
+                                        </TableCell>
+                                    </TableRow>
+                                );
+                            }).reverse() : dataOrders.orders.map((order: OrderEntity) => {
+                                if (order.funcionario_id === selectedEmployee) {
                                     return (
-                                        <Tr
+                                        <TableRow
                                             key={order.id}
                                             className={table_row_hover}
                                         >
-                                            <Td>{order.id.slice(0, 8)}</Td>
-                                            <Td>{order.items.length}</Td>
-                                            <Td>
-                                                {toFullLocaleDate(order.date)}
-                                            </Td>
-                                            <Td>
+                                            <TableCell>{order.codigo === null ? order.id.slice(0, 8) : String(order.codigo).slice(0, 8)}</TableCell>
+                                            <TableCell>{order.quantidade_itens}</TableCell>
+                                            <TableCell>{String(order.forma_pagamento)}</TableCell>
+                                            <TableCell>{toFullLocaleDate(order.criado_em)}</TableCell>
+                                            <TableCell>
                                                 {Number(
                                                     order.total
                                                 ).toLocaleString('pt-br', {
                                                     style: 'currency',
                                                     currency: 'BRL',
                                                 })}
-                                            </Td>
-                                            <Td>
+                                            </TableCell>
+                                            <TableCell>
                                                 <Button
-                                                    className='w-full'
-                                                    height={8}
-                                                    borderRadius={round_default}
-                                                    backgroundColor={
-                                                        primary_red
-                                                    }
-                                                    color={primary_white}
-                                                    _hover={{
-                                                        bg: primary_hover_red,
-                                                    }}
-                                                    onClick={() =>
-                                                        navigate(`${order.id}`)
-                                                    }
+                                                    className='w-full hover:bg-primary-hover-red'
+                                                    onClick={() => { navigate(`${order.id}`); }}
                                                 >
                                                     Ver detalhes
                                                 </Button>
-                                            </Td>
-                                        </Tr>
+                                            </TableCell>
+                                        </TableRow>
                                     );
-                                })}
-                        </Tbody>
-                    </Table>
-                </TableContainer>
-            </Box>
+                                }
+                            }).reverse()}
+                    </TableBody>
+                </Table>
+            </Content>
         </PageContainer>
     );
 }

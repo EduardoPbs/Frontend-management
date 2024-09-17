@@ -3,7 +3,7 @@ export function Title({
     variant,
 }: {
     children: React.ReactNode;
-    variant?: string;
+    variant?: 'h2' | 'h3';
 }) {
     const defaultStyle = 'font-bold uppercase select-none'
 

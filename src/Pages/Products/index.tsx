@@ -1,54 +1,33 @@
 import { Title } from '../../components/Title';
-import { CustomTh } from '../../components/CustomTh';
-import { useEffect } from 'react';
+import { Content } from '@/components/Content';
+import { Actions } from '@/Pages/Products/actions';
 import { LgSpinner } from '../../components/LgSpinner';
+import { useEffect, useState } from 'react';
 import { useProduct } from '../../hooks/useProduct';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { IconButton } from '../../components/IconButton';
-import { useNavigate } from 'react-router';
+import { ProductEntity } from '../../types/product';
 import { PageContainer } from '../../components/PageContainer';
-import { PlusCircle, Settings } from 'lucide-react';
-import {
-    custom_red,
-    primary_red,
-    agreed_green,
-    round_default,
-    primary_white,
-    table_row_hover,
-    primary_hover_red,
-    agreed_hover_green,
-} from '../../constants/styles';
-import {
-    Tr,
-    Td,
-    Box,
-    Table,
-    Tbody,
-    Thead,
-    Portal,
-    Button,
-    Popover,
-    PopoverBody,
-    PopoverArrow,
-    PopoverContent,
-    TableContainer,
-    PopoverTrigger,
-} from '@chakra-ui/react';
+import { MenuIcon, PlusCircle } from 'lucide-react';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/table';
+import { PromotionEntity } from '@/types';
 
 export function Products() {
-    const {
-        allProducts,
-        loadingAll,
-        stockWarn,
-        enableProduct,
-        disableProduct,
-    } = useProduct();
-    const navigate = useNavigate();
+    const [promotions, setPromotions] = useState<PromotionEntity[]>([]);
+    const { stockWarn, getAllProducts, allProducts, loading, status, setStatus } = useProduct();
+
+    const filteredProducts: ProductEntity[] = allProducts.products.filter((product: ProductEntity) => product);
+
 
     useEffect(() => {
+        getAllProducts();
         document.title = 'Management | Produtos';
-    }, []);
 
-    if (loadingAll)
+        setPromotions(JSON.parse(sessionStorage.getItem('promotions') || ''));
+    }, [status]);
+
+    if (loading)
         return (
             <LgSpinner />
         );
@@ -60,14 +39,9 @@ export function Products() {
                 label='Novo produto'
                 className='w-fit py-4'
                 icon={PlusCircle}
-                bgColor={primary_red}
-                textColor={primary_white}
-                bgHoverColor={primary_hover_red}
             />
 
             <div className='flex items-center justify-between'>
-                <Title variant='h3'>Resumo - Produtos</Title>
-
                 <Title variant='h3'>
                     Cadastrados:{' '}
                     <span className='text-4xl text-primary-red'>
@@ -76,50 +50,73 @@ export function Products() {
                 </Title>
             </div>
 
-            <Box className='overflow-y-scroll scrollbar-hide border-2 border-border-gray rounded-md'>
-                <TableContainer>
-                    <Table size='sm'>
-                        <Thead className='text-white text-xl select-none'>
-                            <Tr>
-                                <CustomTh>Cód. Produto</CustomTh>
-                                <CustomTh>Nome</CustomTh>
-                                <CustomTh>Categoria</CustomTh>
-                                <CustomTh>Estoque</CustomTh>
-                                <CustomTh>Valor (R$)</CustomTh>
-                                <CustomTh>Status</CustomTh>
-                                <CustomTh outStyle='border-r-0'>Ações</CustomTh>
-                            </Tr>
-                        </Thead>
+            <Content className='w-full overflow-auto'>
+                <Table>
+                    <TableHeader>
+                        <TableRow className='bg-primary-black/15 hover:bg-primary-black/15'>
+                            <TableHead className='text-primary-black uppercase'>Cód. Produto</TableHead>
+                            <TableHead className='text-primary-black uppercase'>Nome</TableHead>
+                            <TableHead className='text-primary-black uppercase'>Categorias</TableHead>
+                            <TableHead className='text-primary-black uppercase'>Estoque</TableHead>
+                            <TableHead className='text-primary-black uppercase'>Valor (R$)</TableHead>
+                            <TableHead className='text-primary-black uppercase'>Status</TableHead>
+                            <TableHead className='text-primary-black uppercase'>Ações</TableHead>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        {filteredProducts.map((product: ProductEntity, index: number) => {
+                            const hasActivePromotion: boolean = 
+                                promotions.includes(promotions.filter((p: PromotionEntity) => p.produto.id === product.id)[0]) &&
+                                promotions.includes(promotions.filter((p: PromotionEntity) => p.produto.id === product.id && p.ativo)[0]);
+                            const productPromotion: PromotionEntity = promotions.filter((p: PromotionEntity) => p.produto.id === product.id)[0];
 
-                        <Tbody>
-                            {allProducts.products.map((product: any) => (
-                                <Tr
-                                    key={product.id}
-                                    className={table_row_hover}
+                            return (
+                                <TableRow
+                                    key={index}
+                                    className='border-t-2 border-primary-black/15 hover:bg-light-gray/25 font-bold'
                                 >
-                                    <Td>{product.code}</Td>
-                                    <Td>{product.name}</Td>
-                                    <Td className='uppercase'>
-                                        {product.category}
-                                    </Td>
-                                    <Td
-                                        className={`${stockWarn(
-                                            product.stock
-                                        )} font-semibold`}
-                                    >
-                                        {product.stock}
-                                    </Td>
-                                    <Td>
-                                        {Number(product.value).toLocaleString(
-                                            'pt-BR',
-                                            {
-                                                style: 'currency',
-                                                currency: 'BRL',
-                                            }
+                                    <TableCell>{product.codigo}</TableCell>
+                                    <TableCell className='flex flex-col justify-center'>
+                                        {product.nome}
+                                        <span
+                                            className={`
+                                                ${hasActivePromotion ? 'text-white bg-green-500 rounded px-3 py-0.5 w-fit' : 'hidden'}
+                                            `}
+                                        >
+                                            Em Promoção - {Number(productPromotion?.desconto)}%
+                                        </span>
+                                    </TableCell>
+                                    <TableCell className='uppercase'>
+                                        <Popover>
+                                            <PopoverTrigger>
+                                                <div className='flex items-center gap-2 py-1 px-2 font-semibold bg-primary-black/5 hover:bg-primary-black/10 text-black rounded-sm duration-100'>
+                                                    <MenuIcon /> Ver
+                                                </div>
+                                            </PopoverTrigger>
+                                            <PopoverContent className='bg-primary-white font-semibold text-primary-black w-[200px]'>
+                                                <p className='border-b-[1px] border-black text-center uppercase text-zinc-600 pb-3'>Categorias</p>
+                                                <ScrollArea>
+                                                    <div className='flex flex-col items-center max-h-[200px]'>
+                                                        {product.categorias.map((c: string) => (
+                                                            <p key={c} className='border-b-[1px] border-primary-black rounded-b-sm text-start w-full p-2 capitalize cursor-default hover:bg-primary-black/5 duration-100'>
+                                                                {c.toLowerCase().replace('_', ' ')}
+                                                            </p>
+                                                        ))}
+                                                    </div>
+                                                </ScrollArea>
+                                            </PopoverContent>
+                                        </Popover>
+                                    </TableCell>
+                                    <TableCell className={`${stockWarn(product.estoque)} font-semibold`}>
+                                        {product.estoque < 1 ? `${product.estoque}0` : product.estoque}
+                                    </TableCell>
+                                    <TableCell>
+                                        {Number(product.valorOriginal).toLocaleString(
+                                            'pt-BR', { style: 'currency', currency: 'BRL' }
                                         )}
-                                    </Td>
-                                    <Td>
-                                        {product.active ? (
+                                    </TableCell>
+                                    <TableCell>
+                                        {product.ativo ? (
                                             <span className='flex items-center gap-1 text-agreed-green'>
                                                 <div className='size-2 bg-agreed-green rounded-full' />
                                                 Online
@@ -130,98 +127,16 @@ export function Products() {
                                                 Offline
                                             </span>
                                         )}
-                                    </Td>
-                                    <Td>
-                                        <Popover closeOnBlur={false}>
-                                            <PopoverTrigger>
-                                                <Button colorScheme='amber'>
-                                                    <Settings className='text-primary-black hover:text-primary-red hover:cursor-pointer duration-150' />
-                                                </Button>
-                                            </PopoverTrigger>
-                                            <Portal>
-                                                <PopoverContent width='fit-content'>
-                                                    <PopoverArrow />
-                                                    <PopoverBody>
-                                                        <Box className='flex gap-2'>
-                                                            <Button
-                                                                borderRadius={
-                                                                    round_default
-                                                                }
-                                                                _hover={{
-                                                                    bg: primary_red,
-                                                                    color: primary_white,
-                                                                }}
-                                                                onClick={() =>
-                                                                    navigate(
-                                                                        `edit/${product.id}`
-                                                                    )
-                                                                }
-                                                            >
-                                                                Editar
-                                                            </Button>
-                                                            <Popover>
-                                                                <PopoverTrigger>
-                                                                    {product.active ? (
-                                                                        <Button
-                                                                            type='button'
-                                                                            borderRadius={
-                                                                                round_default
-                                                                            }
-                                                                            backgroundColor={
-                                                                                custom_red
-                                                                            }
-                                                                            color={
-                                                                                primary_white
-                                                                            }
-                                                                            _hover={{
-                                                                                bg: primary_hover_red,
-                                                                            }}
-                                                                            onClick={() =>
-                                                                                disableProduct(
-                                                                                    product.id
-                                                                                )
-                                                                            }
-                                                                        >
-                                                                            Desativar
-                                                                        </Button>
-                                                                    ) : (
-                                                                        <Button
-                                                                            type='button'
-                                                                            borderRadius={
-                                                                                round_default
-                                                                            }
-                                                                            backgroundColor={
-                                                                                agreed_green
-                                                                            }
-                                                                            color={
-                                                                                primary_white
-                                                                            }
-                                                                            _hover={{
-                                                                                bg: agreed_hover_green,
-                                                                            }}
-                                                                            onClick={() =>
-                                                                                enableProduct(
-                                                                                    product.id
-                                                                                )
-                                                                            }
-                                                                        >
-                                                                            Ativar
-                                                                        </Button>
-                                                                    )}
-                                                                </PopoverTrigger>
-                                                            </Popover>
-                                                        </Box>
-                                                    </PopoverBody>
-                                                </PopoverContent>
-                                            </Portal>
-                                        </Popover>
-                                    </Td>
-                                </Tr>
-                            ))}
-                        </Tbody>
-                    </Table>
-                </TableContainer>
-            </Box>
+                                    </TableCell>
+                                    <TableCell>
+                                        <Actions id={product.id} status={product.ativo} handler={setStatus} />
+                                    </TableCell>
+                                </TableRow>
+                            );
+                        })}
+                    </TableBody>
+                </Table>
+            </Content>
         </PageContainer>
     );
 }

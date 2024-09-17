@@ -1,21 +1,20 @@
 import { z } from 'zod';
 import { http } from '../service';
 import { useToast } from '@chakra-ui/react';
-import { useNavigate, useParams } from 'react-router';
-import { useCategory } from './useCategory';
 import { ProductEntity } from '../types/product';
 import { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router';
 
 interface ProductData {
     products: ProductEntity[];
     total: number;
 }
 
-type ofAtr = 'id' | 'active';
+type ofAtr = 'id' | 'ativo' | 'valorOriginal';
 
 export function useProduct() {
-    const [loadingAll, setLoadingAll] = useState<boolean>(true);
-    const [loadingActive, setLoadingActive] = useState<boolean>(true);
+    const [status, setStatus] = useState<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(true);
     const [activeProducts, setActiveProducts] = useState<ProductData>({
         products: [],
         total: 0,
@@ -27,47 +26,36 @@ export function useProduct() {
     const [newProductData, setNewProductData] = useState<
         Omit<ProductEntity, ofAtr>
     >({
-        code: 0,
-        name: '',
-        stock: 0,
-        value: 0,
-        category: '',
+        codigo: 0,
+        nome: '',
+        estoque: 0,
+        valor: 0,
+        categorias: [],
     });
 
-    const { categories } = useCategory();
     const { id } = useParams();
     const toast = useToast();
     const navigate = useNavigate();
 
-    async function getActiveProductsData(): Promise<void> {
-        try {
-            const response = await http.get<ProductEntity[]>('/products');
-            if (response.data) {
-                setActiveProducts({
-                    products: response.data,
-                    total: response.data.length,
-                });
-            }
-        } catch (error) {
-            console.error(error);
-        } finally {
-            setLoadingActive(false);
-        }
-    }
-
     async function getAllProducts(): Promise<void> {
         try {
-            const response = await http.get<ProductEntity[]>('/products/all');
+            const response = await http.get('/commodities');
             if (response.data) {
                 setAllProducts({
                     products: response.data,
                     total: response.data.length,
                 });
+
+                const activeProducts: ProductEntity[] = response.data.filter((produto: ProductEntity) => produto.ativo);
+                setActiveProducts({
+                    products: activeProducts,
+                    total: activeProducts.length
+                });
             }
         } catch (error) {
             console.error(error);
         } finally {
-            setLoadingAll(false);
+            setLoading(false);
         }
     }
 
@@ -77,12 +65,12 @@ export function useProduct() {
     ): Promise<void> {
         try {
             await http
-                .put(`/products/${id}`, data)
+                .put(`/commodities/${id}`, data)
                 .then((res) => console.log(res.data))
                 .then(() =>
                     toast({
                         title: 'Sucesso',
-                        colorScheme: 'cyan',
+                        colorScheme: 'green',
                         description: `O produto foi atualizado.`,
                         status: 'success',
                         position: 'top-right',
@@ -98,8 +86,7 @@ export function useProduct() {
 
     async function enableProduct(id: string): Promise<void> {
         try {
-            await http.patch(`/products/${id}`);
-            window.location.reload();
+            await http.patch(`/commodities/restore/${id}`);
         } catch (err) {
             console.error(err);
         }
@@ -107,8 +94,7 @@ export function useProduct() {
 
     async function disableProduct(id: string): Promise<void> {
         try {
-            await http.delete(`/products/${id}`);
-            window.location.reload();
+            await http.delete(`/commodities/${id}`);
         } catch (err) {
             console.error(err);
         }
@@ -119,12 +105,12 @@ export function useProduct() {
     ): Promise<void> {
         try {
             await http
-                .post('/products', data)
+                .post('/commodities', data)
                 .then((res) => console.log(res.data))
                 .then(() =>
                     toast({
                         title: 'Sucesso',
-                        colorScheme: 'cyan',
+                        colorScheme: 'green',
                         description: `O produto foi cadastrado.`,
                         status: 'success',
                         position: 'top-right',
@@ -133,18 +119,31 @@ export function useProduct() {
                     })
                 )
                 .then(() => navigate(-1));
-        } catch (err) {
-            console.error(err);
+        } catch (err: any) {
+            const errMessage = err.response.data.message === undefined
+                ? err.response?.data?.errors[0]?.defaultMessage
+                : 'O produto deve estar em pelo menos 1 categoria.';
+            toast({
+                title: 'Erro.',
+                colorScheme: 'red',
+                description: errMessage,
+                status: 'warning',
+                position: 'top-right',
+                isClosable: true,
+                duration: 2000,
+            });
         }
     }
 
     async function onSubmit(event: any): Promise<void> {
-        const product: Omit<ProductEntity, ofAtr> = {
-            code: event.code,
-            name: event.name,
-            stock: Number(event.stock),
-            value: Number(event.value),
-            category: event.category,
+        console.log("event: ", event.categorias);
+        const product: any = {
+            codigo: event.codigo,
+            nome: event.nome,
+            estoque: Number(event.estoque),
+            valor: Number(event.valor),
+            categorias: event.categorias,
+            ativo: false
         };
         console.log(product);
         try {
@@ -152,6 +151,7 @@ export function useProduct() {
         } catch (error: any) {
             toast({
                 title: 'Erro',
+                colorScheme: 'red',
                 description: `Falha ao cadastrar o produto: ${error.response?.data?.message}`,
                 status: 'error',
                 position: 'top-right',
@@ -170,45 +170,40 @@ export function useProduct() {
         return '';
     }
 
-    const allCategories: [string, ...string[]] = ['Categorias', ...categories];
     const ProductFormSchema = z.object({
-        code: z
+        codigo: z
             .string({
                 required_error: 'Obrigatório.',
             })
             .min(1, { message: 'Deve conter pelo menos 1 caractere.' }),
-        name: z
+        nome: z
             .string({
                 required_error: 'Obrigatório.',
             })
             .min(3, { message: 'Deve conter pelo menos 3 letras.' }),
-        stock: z
+        estoque: z
             .string({
                 required_error: 'Obrigatório.',
             })
             .min(1, { message: 'Deve conter pelo menos 1 caractere.' }),
-        value: z
+        valor: z
             .string({ required_error: 'Obrigatório.' })
             .min(1, { message: 'Deve conter pelo menos 1 caractere.' }),
-        category: z.enum(allCategories, {
-            errorMap: (_issue, _ctx) => {
-                return { message: 'Selecione uma categoria.' };
-            },
-        }),
+        categorias: z.array(z.string()),
     });
 
     useEffect(() => {
-        getActiveProductsData();
         getAllProducts();
-    }, []);
+    }, [status]);
 
     return {
+        getAllProducts,
         activeProducts,
         allProducts,
+        setAllProducts,
         newProductData,
         setNewProductData,
-        loadingActive,
-        loadingAll,
+        loading,
         stockWarn,
         enableProduct,
         disableProduct,
@@ -216,5 +211,7 @@ export function useProduct() {
         createProduct,
         ProductFormSchema,
         onSubmit,
+        setStatus,
+        status
     };
 }

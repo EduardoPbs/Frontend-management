@@ -1,71 +1,75 @@
-import { ArrowUpRightIcon, LogOut } from 'lucide-react';
-import { custom_red, primary_black, primary_red, primary_white, round_default } from '../../constants/styles';
-import {
-    Box,
-    Button,
-    Popover,
-    PopoverBody,
-    PopoverArrow,
-    PopoverContent,
-    PopoverTrigger,
-    Avatar,
-} from '@chakra-ui/react';
 import cloverF from '../../assets/cloverFlare.jpg';
 import { useLogin } from '../../hooks/useLogin';
+import { UserData } from '@/types';
+import { useEffect, useState } from 'react';
+import { Button } from "@/components/ui/button";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarImage } from '@/components/ui/avatar';
+import { useNavigate } from 'react-router';
 
 export function UserPopover() {
+    const [user, setUser] = useState<UserData>();
+    const navigate = useNavigate();
     const { logOut } = useLogin();
 
+    useEffect(() => {
+        if (sessionStorage.getItem('user') !== null) {
+            setUser(JSON.parse(sessionStorage.getItem('user') || ""));
+        }
+    }, []);
+
     return (
-        <Box className='flex items-center gap-1 select-none'>
-            <Popover>
-                <PopoverTrigger>
-                    <Avatar
-                        bg={primary_red}
-                        src={cloverF ?? ''}
-                        width={8}
-                        height={8}
-                        className='hover:cursor-pointer'
-                    />
-                </PopoverTrigger>
-                <PopoverContent width={150}>
-                    <PopoverArrow />
-                    <PopoverBody backgroundColor='#FBFBFF' borderRadius={8}>
-                        <Box className='flex flex-col justify-center gap-2'>
-                            <Button
-                                rounded={6}
-                                className='flex items-center gap-2'
-                                _hover={{
-                                    bg: primary_red,
-                                    color: primary_white,
-                                }}
-                                height={30}
-                            >
-                                Gerenciar
-                                <ArrowUpRightIcon className='size-6' />
-                            </Button>
-                            <Button
-                                height={30}
-                                rounded={round_default}
-                                color={primary_black}
-                                variant='outline'
-                                _hover={{
-                                    borderColor: custom_red,
-                                    color: custom_red,
-                                }}
-                                className='flex items-center gap-2'
-                                onClick={() => {
-                                    logOut();
-                                }}
-                            >
-                                Sair
-                                <LogOut className='size-5' />
-                            </Button>
-                        </Box>
-                    </PopoverBody>
-                </PopoverContent>
-            </Popover>
-            <a className='hover:cursor-pointer font-semibold'>Clover Flare</a>
-        </Box>
+        <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+                <div className='flex items-center gap-2 text-sm text-black font-semibold hover:cursor-pointer'>
+                    <Button variant="secondary" size="icon" className="rounded-full">
+                        <Avatar className='border-2 border-primary-red select-none'>
+                            <AvatarImage src={cloverF ?? ''} alt='Clover Flare' />
+                        </Avatar>
+                        <span className="sr-only">Toggle user menu</span>
+                    </Button>
+                    <p className='text-primary-white'>{user?.name}</p>
+                </div>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+                <DropdownMenuLabel className='cursor-pointer'>
+                    Minha Conta
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem>
+                    <Button
+                        variant='ghost'
+                        onClick={() => {
+                            navigate("/settings");
+                        }}
+                    >
+                        Configurações
+                    </Button>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                    <Button
+                        variant='ghost'
+                        onClick={() => {
+                            navigate('');
+                        }}
+                    >
+                        Suporte
+                    </Button>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild className='cursor-pointer'>
+                    <Button onClick={logOut} variant='ghost' className='w-full'>
+                        Sair
+                    </Button>
+                </DropdownMenuItem>
+            </DropdownMenuContent>
+        </DropdownMenu>
     );
 }

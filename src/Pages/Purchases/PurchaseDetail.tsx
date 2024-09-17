@@ -1,61 +1,47 @@
 import { http } from '../../service';
 import { Title } from '../../components/Title';
+import { Button } from '@/components/ui/button';
+import { useOrder } from '@/hooks/useOrder';
+import { useNavigate, useParams } from 'react-router';
 import { RowDetail } from '../../components/RowDetail';
-import { ItemEntity } from '../../types/order';
 import { IconButton } from '../../components/IconButton';
 import { CellDetail } from '../../components/CellDetail';
 import { PageContainer } from '../../components/PageContainer';
 import { toFullLocaleDate } from '../../utils/toFullLocaleDate';
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router';
+import { ItemOrderCreate, OrderEntity } from '../../types/order';
 import { ArrowLeftCircle, ArrowRightCircle } from 'lucide-react';
-import {
-    primary_red,
-    primary_white,
-    primary_hover_red,
-    light_gray,
-} from '../../constants/styles';
-import {
-    Box,
-    Card,
-    Button,
-    Tooltip,
-    CardBody,
-    CardHeader,
-} from '@chakra-ui/react';
+import { Box, Card, Tooltip, CardBody, CardHeader, useToast } from '@chakra-ui/react';
 
 export function PurchaseDetail() {
-    const [purchaseData, setPurchaseData] = useState<any>();
+    const { getOrderById, orderItems, currentEmployee } = useOrder();
+    const [purchaseData, setPurchaseData] = useState<OrderEntity>();
     const { id } = useParams();
     const navigate = useNavigate();
-
-    async function getPurchase(id: string | undefined) {
-        try {
-            const response = await http.get(`/purchase/${id}`);
-            setPurchaseData(response.data);
-            console.log(response.data);
-        } catch (error) {
-            console.error(error);
-        }
-    }
+    const toast = useToast();
 
     async function handleStatus(status: string, id: string) {
-        if (status === 'PENDENTE') {
-            await http.patch(`purchase/finish/${id}`);
-        } else {
-            await http.patch(`purchase/pending/${id}`);
-        }
-
-        location.reload();
+        console.table(status);
+        await http.put(`/transactions/finalize/${id}`)
+            .then((response) => {
+                toast({
+                    title: 'Sucesso!',
+                    description: response.data,
+                    status: 'success',
+                    position: 'top-right',
+                    duration: 1500,
+                    isClosable: true,
+                });
+            });
     }
 
     const rowStyle = 'flex-row items-center w-fit gap-2';
 
     useEffect(() => {
         if (id !== undefined) {
-            getPurchase(id);
+            getOrderById(id, setPurchaseData);
         }
-    }, []);
+    }, [purchaseData]);
 
     return (
         <PageContainer title={`Compra - ${id?.slice(0, 8)}`}>
@@ -64,36 +50,34 @@ export function PurchaseDetail() {
                 label='Voltar'
                 className='w-fit'
                 icon={ArrowLeftCircle}
-                bgColor={primary_red}
-                textColor={primary_white}
-                bgHoverColor={primary_hover_red}
             />
             <Box className='flex border-4 border-border-gray rounded-round-default'>
-                <Card className='w-full h-[550px] ' background={light_gray}>
+                <Card className='w-full h-[550px]'
+                >
                     <CardHeader className='flex flex-col justify-center text-2xl font-semibold text-primary-black'>
                         <Box className='flex items-center justify-between w-full bg-zinc-100/15 rounded-round-default px-1'>
                             <Title>Detalhes</Title>
                             <Button
-                                height={35}
-                                colorScheme='red'
+                                className={`hover:bg-primary-hover-red ${purchaseData?.status === 'FINALIZADO' && 'hidden'}`}
                                 onClick={() => {
-                                    handleStatus(
-                                        purchaseData?.status,
-                                        purchaseData?.id
-                                    );
+                                    if (purchaseData) {
+                                        handleStatus(
+                                            purchaseData.status,
+                                            purchaseData.id
+                                        );
+                                    }
                                 }}
                             >
                                 {purchaseData?.status === 'PENDENTE'
-                                    ? 'Alterar para FINALIZADO'
-                                    : 'Alterar para PENDENTE'}
+                                    && 'Alterar para FINALIZADO'}
                             </Button>
                         </Box>
                         <Box className='flex items-center justify-between'>
                             <CellDetail
                                 name='Data'
                                 content={
-                                    purchaseData?.date
-                                        ? toFullLocaleDate(purchaseData.date)
+                                    purchaseData?.criado_em
+                                        ? toFullLocaleDate(purchaseData?.criado_em)
                                         : '--'
                                 }
                                 className={rowStyle}
@@ -101,7 +85,7 @@ export function PurchaseDetail() {
                             />
                             <CellDetail
                                 name='Qtde. itens'
-                                content={purchaseData?.items?.length || ''}
+                                content={purchaseData?.quantidade_itens || 0}
                                 className={rowStyle}
                                 style='text-2xl text-primary-black'
                             />
@@ -127,36 +111,41 @@ export function PurchaseDetail() {
                                 style='text-3xl'
                             />
                         </Box>
+                        <div>
+                            <p className='font-bold'>
+                                Funcionário: {' '}
+                                <span className='uppercase text-primary-hover-red'>
+                                    {currentEmployee?.nome}
+                                </span>
+                            </p>
+                        </div>
                     </CardHeader>
 
                     <CardBody className='flex flex-col gap-2 m-2 rounded-round-default border-2 border-border-gray overflow-hidden overflow-y-scroll scrollbar-hide'>
                         <Box className='flex flex-col gap-2 '>
-                            {purchaseData?.items.map(
-                                (item: ItemEntity, index: number) => {
+                            {orderItems.map(
+                                (item: ItemOrderCreate, index: number) => {
                                     return (
                                         <RowDetail key={index}>
                                             <CellDetail
                                                 name='Produto'
-                                                content={item.product.name}
+                                                content={item.produto_nome}
                                             />
                                             <CellDetail
                                                 name='Valor/unidade'
-                                                content={Number(
-                                                    item.product.value
-                                                ).toLocaleString('pt-BR', {
-                                                    style: 'currency',
-                                                    currency: 'BRL',
-                                                })}
+                                                content={Number(item.valor_unitario)
+                                                    .toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
+                                                }
                                             />
                                             <CellDetail
                                                 name='Quantidade'
-                                                content={item.quantity}
+                                                content={item.quantidade}
                                             />
                                             <CellDetail
                                                 name='Total'
                                                 content={Number(
-                                                    item.quantity *
-                                                        item.product.value
+                                                    item.quantidade *
+                                                    item.valor_unitario
                                                 ).toLocaleString('pt-BR', {
                                                     style: 'currency',
                                                     currency: 'BRL',
@@ -165,11 +154,7 @@ export function PurchaseDetail() {
                                             <Tooltip label='Detalhes do produto'>
                                                 <ArrowRightCircle
                                                     className='size-8 hover:cursor-pointer hover:text-custom-red duration-150'
-                                                    onClick={() =>
-                                                        navigate(
-                                                            `/products/${item.product.id}`
-                                                        )
-                                                    }
+                                                    onClick={() => navigate('/products')}
                                                 />
                                             </Tooltip>
                                         </RowDetail>

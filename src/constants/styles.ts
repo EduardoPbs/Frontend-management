@@ -13,4 +13,9 @@ export const border_gray: string = '#71717A80';
 export const round_default: string = '6px';
 
 export const table_row_hover: string =
-    'font-semibold hover:bg-light-gray/60 duration-150';
+    'border-t-2 border-primary-black/15 hover:bg-light-gray/35 font-bold';
+
+
+// export const primary_red: string = '#F59E0B';
+// export const custom_red: string = '#FFAE21';
+// export const primary_hover_red: string = '#D19123';

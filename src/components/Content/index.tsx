@@ -10,7 +10,7 @@ export function Content({
     return (
         <div
             className={twMerge(
-                'flex flex-col gap-3 px-4 py-4 border-2 rounded-[4px] w-fit',
+                'flex flex-col gap-3 p-4 border-2 rounded-[4px] w-fit',
                 className
             )}
         >

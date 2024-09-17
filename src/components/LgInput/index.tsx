@@ -9,7 +9,9 @@ type LgInputProps = Partial<HTMLInputElement> & {
     control?: any;
     placeholder?: string;
     type?: string;
+    inputRadius?: number;
     autoComplete?: string;
+    disabled?: boolean;
 };
 
 export const LgInput: React.FC<LgInputProps> = ({
@@ -19,7 +21,9 @@ export const LgInput: React.FC<LgInputProps> = ({
     control,
     placeholder,
     type = 'text',
+    inputRadius = 4,
     autoComplete = '',
+    disabled = false
 }: any) => {
     return (
         <Controller
@@ -31,10 +35,12 @@ export const LgInput: React.FC<LgInputProps> = ({
                     <Input
                         id={name}
                         {...field}
+                        disabled={disabled}
                         type={type}
                         autoComplete={autoComplete}
                         focusBorderColor={primary_red}
                         placeholder={placeholder}
+                        borderRadius={inputRadius}
                     />
                     {errors && (
                         <p className='text-red-500'>{String(errors.message)}</p>

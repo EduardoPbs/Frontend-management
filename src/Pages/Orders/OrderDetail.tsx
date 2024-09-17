@@ -1,48 +1,32 @@
-import { http } from '../../service';
+import { useOrder } from '../../hooks/useOrder';
 import { RowDetail } from '../../components/RowDetail';
 import { LgSpinner } from '../../components/LgSpinner';
 import { CellDetail } from '../../components/CellDetail';
 import { IconButton } from '../../components/IconButton';
+import { ItemOrderCreate, OrderEntity } from '../../types/order';
 import { PageContainer } from '../../components/PageContainer';
 import { toFullLocaleDate } from '../../utils/toFullLocaleDate';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
-import { ItemEntity, OrderEntity } from '../../types/order';
 import { ArrowLeftCircle, ArrowRightCircle } from 'lucide-react';
-import {
-    light_gray,
-    primary_red,
-    primary_white,
-    primary_hover_red,
-} from '../../constants/styles';
 import { Box, Card, Tooltip, CardBody, CardHeader } from '@chakra-ui/react';
+import { Content } from '@/components/Content';
 
 export function OrderDetail() {
-    const [isLoading, setIsLoading] = useState<boolean>(true);
     const [orderData, setOrderData] = useState<OrderEntity>();
+    const { getOrderById, isLoadingUnique, orderItems, currentEmployee } = useOrder();
     const { id } = useParams();
     const navigate = useNavigate();
-
-    async function getOrderById(id: string) {
-        try {
-            const response = await http.get(`/orders/${id}`);
-            setOrderData(response.data);
-        } catch (err) {
-            console.error(err);
-        } finally {
-            setIsLoading(false);
-        }
-    }
 
     const rowStyle = 'flex-row items-center w-fit gap-2';
 
     useEffect(() => {
         if (id !== undefined) {
-            getOrderById(id);
+            getOrderById(id, setOrderData);
         }
     }, []);
 
-    if (isLoading) return <LgSpinner />;
+    if (isLoadingUnique) return <LgSpinner />;
 
     return (
         <PageContainer title={`Venda - ${id?.slice(0, 8)}`}>
@@ -51,20 +35,17 @@ export function OrderDetail() {
                 label='Voltar'
                 className='w-fit'
                 icon={ArrowLeftCircle}
-                bgColor={primary_red}
-                textColor={primary_white}
-                bgHoverColor={primary_hover_red}
             />
 
-            <Box className='flex border-4 border-border-gray rounded-round-default'>
-                <Card className='w-full h-[500px]' background={light_gray}>
+            <Content className='w-full overflow-auto'>
+                <Card className='w-full h-[500px]'>
                     <CardHeader className='flex flex-col justify-center text-2xl font-semibold text-primary-black'>
-                        <Box className='flex items-center justify-between w-full bg-zinc-100/15 rounded-round-default p-1'>
+                        <div className='flex items-center justify-between w-full bg-zinc-100/15 rounded-round-default p-1'>
                             <CellDetail
                                 name='Data'
                                 content={
-                                    orderData?.date
-                                        ? toFullLocaleDate(orderData.date)
+                                    orderData?.criado_em
+                                        ? toFullLocaleDate(orderData.criado_em)
                                         : '--'
                                 }
                                 className={rowStyle}
@@ -72,7 +53,7 @@ export function OrderDetail() {
                             />
                             <CellDetail
                                 name='Qtde. itens'
-                                content={orderData?.items?.length || ''}
+                                content={orderData?.quantidade_itens || 0}
                                 className={rowStyle}
                                 style='text-3xl text-primary-black'
                             />
@@ -87,22 +68,18 @@ export function OrderDetail() {
                                 className={rowStyle}
                                 style='text-3xl'
                             />
-                        </Box>
+                        </div>
 
                         <Box className='flex items-center justify-between w-full bg-zinc-100/15 rounded-round-default p-1'>
                             <CellDetail
                                 name='Vendido por'
-                                content={orderData?.employee.name || ''}
+                                content={currentEmployee?.nome}
                                 className={rowStyle}
                                 style='text-2xl'
                             />
                             <CellDetail
                                 name='Cód. Vendedor'
-                                content={
-                                    orderData?.employee.id
-                                        .slice(0, 8)
-                                        .toUpperCase() || ''
-                                }
+                                content={orderData?.funcionario_id.slice(0, 8).toUpperCase() || ''}
                                 className={rowStyle}
                                 style='text-2xl'
                             />
@@ -110,19 +87,19 @@ export function OrderDetail() {
                     </CardHeader>
 
                     <CardBody className='flex flex-col gap-2 m-2 text-white bg-primary-white/15 rounded-md border-2 border-border-gray overflow-hidden overflow-y-scroll scrollbar-hide'>
-                        <Box className='flex flex-col gap-2'>
-                            {orderData?.items.map(
-                                (item: ItemEntity, index: number) => {
+                        <Content className='flex flex-col gap-2 border-none'>
+                            {orderItems.map(
+                                (item: ItemOrderCreate, index: number) => {
                                     return (
                                         <RowDetail key={index}>
                                             <CellDetail
                                                 name='Produto'
-                                                content={item.product.name}
+                                                content={item.produto_nome}
                                             />
                                             <CellDetail
                                                 name='Valor/unidade'
                                                 content={Number(
-                                                    item.product.value
+                                                    item.valor_unitario
                                                 ).toLocaleString('pt-BR', {
                                                     style: 'currency',
                                                     currency: 'BRL',
@@ -130,13 +107,13 @@ export function OrderDetail() {
                                             />
                                             <CellDetail
                                                 name='Quantidade'
-                                                content={item.quantity}
+                                                content={item.quantidade}
                                             />
                                             <CellDetail
                                                 name='Total'
                                                 content={Number(
-                                                    item.quantity *
-                                                        item.product.value
+                                                    item.quantidade *
+                                                    item.valor_unitario
                                                 ).toLocaleString('pt-BR', {
                                                     style: 'currency',
                                                     currency: 'BRL',
@@ -147,7 +124,7 @@ export function OrderDetail() {
                                                     className='size-8 hover:cursor-pointer hover:text-custom-red duration-150'
                                                     onClick={() =>
                                                         navigate(
-                                                            `/products/${item.product.id}`
+                                                            '/products'
                                                         )
                                                     }
                                                 />
@@ -156,10 +133,10 @@ export function OrderDetail() {
                                     );
                                 }
                             )}
-                        </Box>
+                        </Content>
                     </CardBody>
                 </Card>
-            </Box>
+            </Content>
         </PageContainer>
     );
 }

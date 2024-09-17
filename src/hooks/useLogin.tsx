@@ -13,7 +13,7 @@ export function useLogin() {
     async function onSubmit(event: UserLogin) {
         setLoading(true);
         const credentials: UserLogin = {
-            login: event.login,
+            email: event.email,
             password: event.password,
         };
         try {
@@ -21,14 +21,24 @@ export function useLogin() {
                 .post('/auth/login', credentials)
                 .then((res) => {
                     const JwtToken = res.data.token;
+                    // JSON.parse(Buffer.from(JwtToken.split('.')[1], 'base64').toString());
+                    const tokenPayload = JSON.parse(atob(JwtToken.split('.')[1]));
+                    const user = {
+                        id: tokenPayload.funcionarioId,
+                        name: tokenPayload.username,
+                        email: tokenPayload.sub,
+                        adm: tokenPayload.adm,
+                        exp: tokenPayload.exp
+                    };
                     sessionStorage.setItem('token', JwtToken);
+                    sessionStorage.setItem('user', JSON.stringify(user));
                 })
                 .then(() => navigate('/'));
         } catch (error) {
             console.error(error);
             toast({
                 title: 'Falha ao realizar login.',
-                description: 'Email ou senha incorretos!',
+                description: 'Algo deu errado!',
                 position: 'top-right',
                 status: 'error',
                 isClosable: true,
@@ -40,6 +50,11 @@ export function useLogin() {
 
     function logOut() {
         sessionStorage.removeItem('token');
+        sessionStorage.removeItem('user');
+        sessionStorage.removeItem('orders');
+        sessionStorage.removeItem('promotions');
+        sessionStorage.removeItem('purchases');
+        sessionStorage.removeItem('cash_status');
         navigate('/login');
     }
 

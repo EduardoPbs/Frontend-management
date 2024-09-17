@@ -1,13 +1,20 @@
 export type EmployeeEntity = {
     id: string;
-    name: string;
+    nome: string;
     cpf: string;
-    address: DataAddress;
+    endereco: Endereco;
+    usuario: User
 };
 
-type DataAddress = {
-    street: string;
-    district: string;
+type Endereco = {
+    rua: string;
+    bairro: string;
     number: string;
-    complement: string;
+    complemento: string;
 };
+
+type User = {
+    email: string;
+    password: string;
+    is_admin?: boolean;
+}
