@@ -7,7 +7,7 @@ import { IconButton } from '../../components/IconButton';
 import { useEmployee } from '@/hooks/useEmployee';
 import { PageContainer } from '../../components/PageContainer';
 import { ProductEntity } from '../../types/product';
-import { EmployeeEntity } from '@/types';
+import { EmployeeEntity, UserData } from '@/types';
 import { RowProductsOrder } from './RowProductsOrder';
 import { ItemOrderCreate } from '../../types/order';
 import { useEffect, useState } from 'react';
@@ -33,11 +33,16 @@ export function OrderForm() {
     const { paymentTypes } = UsePaymentType();
     const { dataEmployees } = useEmployee();
     const [searchInput, setSearchInput] = useState<string>('');
-    const [selectedEmployee, setSelectedEmployee] = useState<{ id: string, nome: string; }>({ id: '', nome: '' });
     const [paymentType, setPaymentType] = useState<string>('');
     const navigate = useNavigate();
     const { id } = useParams();
     const toast = useToast();
+
+    const currentUser: UserData = JSON.parse(sessionStorage.getItem('user') || "");
+    const [selectedEmployee, setSelectedEmployee] = useState<{ id: string, nome: string; }>({
+        id: currentUser.id,
+        nome: currentUser.name
+    });
 
     const filterItems: ProductEntity[] = activeProducts.products.filter((product: ProductEntity) => {
         return product.nome.toLowerCase().match(searchInput.toLowerCase());
@@ -67,13 +72,13 @@ export function OrderForm() {
 
                     <Select
                         onValueChange={(event) => {
-                            console.log(event);
                             const employeeData: { id: string; nome: string; } = JSON.parse(event);
                             setSelectedEmployee({
                                 id: employeeData.id,
                                 nome: employeeData.nome
                             });
                         }}
+                        value={JSON.stringify(selectedEmployee)}
                     >
                         <SelectTrigger className='w-[180px] font-semibold'>
                             <SelectValue placeholder="Funcionário" />
