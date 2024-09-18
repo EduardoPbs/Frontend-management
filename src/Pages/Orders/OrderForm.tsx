@@ -34,6 +34,8 @@ export function OrderForm() {
     const { dataEmployees } = useEmployee();
     const [searchInput, setSearchInput] = useState<string>('');
     const [paymentType, setPaymentType] = useState<string>('');
+    const [moneyValue, setMoneyValue] = useState<number>(0);
+    const [moneyBack, setMoneyBack] = useState<number>(0);
     const navigate = useNavigate();
     const { id } = useParams();
     const toast = useToast();
@@ -47,6 +49,13 @@ export function OrderForm() {
     const filterItems: ProductEntity[] = activeProducts.products.filter((product: ProductEntity) => {
         return product.nome.toLowerCase().match(searchInput.toLowerCase());
     });
+
+    const total: number = dataCreateOrder?.data_items
+        .reduce((acc, currVal) => currVal.quantidade * currVal.valor_unitario + acc, 0);
+
+    function calculateMoneyBack(value: number, total: number): void {
+        return setMoneyBack(value - total);
+    }
 
     const rowStyle = 'flex-row items-center w-fit gap-2';
 
@@ -97,7 +106,6 @@ export function OrderForm() {
 
                     <Select
                         onValueChange={(event) => {
-                            console.log(event);
                             setPaymentType(event);
                         }}
                     >
@@ -125,22 +133,63 @@ export function OrderForm() {
                     <AlertDialogContent>
                         <AlertDialogHeader>
                             <div className='flex flex-col items-start w-full justify-center text-xl font-semibold border-b-2 pb-4'>
-                                <div className='flex items-center w-full justify-between'>
-                                    <h2>
-                                        Funcionário: {' '}
-                                        <span className='text-nowrap uppercase text-primary-red'>
-                                            {selectedEmployee.nome || 'Não selecionado'}
-                                        </span>
-                                    </h2>
-                                    <h2>
-                                        Forma Pgto.: {' '}
-                                        <span className='text-nowrap uppercase text-primary-red'>
-                                            {paymentType.replace('_', ' ') || 'Não selecionado'}
-                                        </span>
-                                    </h2>
-                                    <AlertDialogCancel><X /></AlertDialogCancel>
+                                <div className='flex flex-col gap-2 w-full'>
+                                    <div className='flex items-center justify-between'>
+                                        <h2>
+                                            Funcionário: {' '}
+                                            <span className='text-nowrap uppercase text-primary-red'>
+                                                {selectedEmployee.nome || 'Não selecionado'}
+                                            </span>
+                                        </h2>
+                                        <h2>
+                                            Forma Pgto.: {' '}
+                                            <span className='text-nowrap uppercase text-primary-red'>
+                                                {paymentType.replace('_', ' ') || 'Não selecionado'}
+                                            </span>
+                                        </h2>
+                                        <AlertDialogCancel
+                                            className='w-fit'
+                                            onClick={() => {
+                                                setMoneyValue(0);
+                                                setMoneyBack(0);
+                                            }}
+                                        >
+                                            <X />
+                                        </AlertDialogCancel>
+                                    </div>
+
+                                    {paymentType === 'DINHEIRO' &&
+                                        <div className='flex flex-col justify-center gap-2'>
+                                            <div className='flex items-center gap-2'>
+                                                <Input
+                                                    width={250}
+                                                    borderColor={primary_hover_red}
+                                                    focusBorderColor={primary_red}
+                                                    type='number'
+                                                    placeholder='Valor em dinheiro'
+                                                    className='my-2'
+                                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                                                        setMoneyValue(Number(e.target.value))
+                                                    }
+                                                />
+                                                <Button
+                                                    className='capitalize hover:bg-primary-hover-red'
+                                                    onClick={() => calculateMoneyBack(moneyValue, total)}
+                                                >
+                                                    Calcular troco
+                                                </Button>
+                                            </div>
+
+                                            <p className='capitalize'>
+                                                Troco: {''}
+                                                <span className='text-2xl text-primary-hover-red'>
+                                                    {moneyBack.toLocaleString('pt-BR', { currency: 'BRL', style: 'currency' })}
+                                                </span>
+                                            </p>
+                                        </div>
+                                    }
                                 </div>
-                                <h3 className=''>Resumo:</h3>
+                                <h3>Resumo:</h3>
                             </div>
                         </AlertDialogHeader>
                         <ScrollArea>
@@ -221,6 +270,8 @@ export function OrderForm() {
                                             return;
                                         }
                                         createOrder(selectedEmployee.id, paymentType, dataCreateOrder.data_items);
+                                        setMoneyBack(0);
+                                        setMoneyValue(0);
                                         navigate('/');
                                     }}
                                 >
