@@ -4,12 +4,12 @@ import { LgSpinner } from '../../components/LgSpinner';
 import { useProduct } from '../../hooks/useProduct';
 import { OrderTable } from '../../components/TableOrder';
 import { useNavigate } from 'react-router';
-import { ProductTable } from '../../components/TableProducts';
 import { ProductEntity } from '@/types';
 import { PageContainer } from '../../components/PageContainer';
 import { useCashRegister } from '@/hooks/useCashRegister';
 import { AlertCircle, ArrowRightCircle } from 'lucide-react';
 import { usePromotion } from '@/hooks/usePromotion';
+import { OrderChart } from '@/Pages/Home/chart';
 
 export function Home() {
     const { loading, allProducts } = useProduct();
@@ -23,21 +23,17 @@ export function Home() {
         <PageContainer title='Home'>
             <Content className='w-full border-border-gray rounded-round-default bg-light-gray/30 shadow-sm'>
                 <Title variant='h2'>
-                    Estatísticas Recentes {''}
+                    Estatísticas {''}
                     <span className='text-lg opacity-50 capitalize'>| Últimas vendas feitas / Estoque de produtos</span>
                 </Title>
-                <div className='grid grid-rows-2 grid-flow-col gap-4 min-h-[540px] h-[540px] font-semibold'>
-                    <Content className='row-span-3 w-full h-full border-primary-black/20 rounded-round-default shadow-md'>
+                <div className='grid grid-rows-2 grid-cols-2 grid-flow-col gap-4 min-h-[540px] h-[540px] font-semibold'>
+                    <Content className='row-span-1 w-full h-full border-primary-black/20 rounded-round-default shadow-md'>
                         <OrderTable />
                     </Content>
 
-                    <Content className={`${allProducts.products.length === 0 ? 'row-span-3' : 'row-span-2'} col-span-2 w-full border-primary-black/20 rounded-round-default shadow-md`}>
-                        <ProductTable />
-                    </Content>
-
-                    <Content className={`${allProducts.products.length === 0 ? 'hidden' : ''} col-span-2 row-span-1 w-full border-primary-black/20 rounded-round-default shadow-md`}>
-                        <div className='flex items-center gap-2 bg-light-gray/30 shadow-sm'>
-                            <Content className='w-full border-border-gray'>
+                    <Content className={`${allProducts.products.length === 0 ? 'hidden' : ''} col-span-1 row-span-1 w-full border-primary-black/20 rounded-round-default shadow-md`}>
+                        <div className='flex items-center gap-2 h-full bg-light-gray/30 shadow-sm'>
+                            <Content className='w-full border-border-gray h-full'>
                                 <Title variant='h3'>
                                     Notificações{' '}
                                     <span className='text-sm opacity-50 capitalize'>| Produtos com baixo estoque:{" "}
@@ -46,7 +42,7 @@ export function Home() {
                                         .filter((p: ProductEntity) => p.estoque <= 10).length}</span>
                                 </Title>
 
-                                <div className='flex flex-col gap-2 max-h-[100px] overflow-hidden overflow-y-scroll rounded-round-default'>
+                                <div className='flex flex-col gap-2 max-h-[150px] overflow-hidden overflow-y-scroll rounded-round-default'>
                                     {allProducts.products && allProducts?.products
                                         .filter((p: ProductEntity) => p.estoque <= 10)
                                         .map((prod: ProductEntity, index: number) => (
@@ -91,6 +87,9 @@ export function Home() {
                                 </div>
                             </Content>
                         </div>
+                    </Content>
+                    <Content className={`${allProducts.products.length === 0 ? 'row-span-3' : 'row-span-2'} col-span-1 row-span-2 w-full border-primary-black/20 rounded-round-default shadow-md`}>
+                        <OrderChart />
                     </Content>
                 </div>
             </Content >
