@@ -65,16 +65,6 @@ export function OrderForm() {
                         icon={ArrowLeftCircle}
                     />
 
-                    <Input
-                        width={250}
-                        borderColor={primary_hover_red}
-                        focusBorderColor={primary_red}
-                        placeholder='Pesquisar produto...'
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                            setSearchInput(e.target.value)
-                        }
-                    />
-
                     <Select
                         onValueChange={(event) => {
                             console.log(event);
@@ -241,12 +231,23 @@ export function OrderForm() {
                 <Card className='w-full h-[500px]'>
                     <CardHeader className='flex flex-col justify-center text-2xl font-semibold text-primary-black'>
                         <Box className='flex items-center justify-between w-full h-[55px] bg-zinc-100/15 rounded-round-default px-1'>
-                            <CellDetail
-                                name='Itens'
-                                content={dataCreateOrder?.data_items.reduce((acc, currVal) => currVal.quantidade + acc, 0) || 0}
-                                className={rowStyle}
-                                style='text-2xl'
-                            />
+                            <div className='flex flex-col justify-center'>
+                                <CellDetail
+                                    name='Itens'
+                                    content={dataCreateOrder?.data_items.reduce((acc, currVal) => currVal.quantidade + acc, 0) || 0}
+                                    className={rowStyle}
+                                    style='text-2xl'
+                                />
+                                <Input
+                                    width={250}
+                                    borderColor={primary_hover_red}
+                                    focusBorderColor={primary_red}
+                                    placeholder='Pesquisar por produto...'
+                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                                        setSearchInput(e.target.value)
+                                    }
+                                />
+                            </div>
                             <CellDetail
                                 name='Total'
                                 content={dataCreateOrder?.data_items
@@ -269,9 +270,9 @@ export function OrderForm() {
                             </Button>
                         </Box>
                     </CardHeader>
-                        <CardBody className='flex flex-col gap-2 m-2 text-primary-black rounded-md border-2 border-border-gray overflow-hidden overflow-y-scroll scrollbar-hide'>
-                            {/* <Box className='flex flex-col gap-2'> */}
-                            <Box className='grid grid-cols-2 gap-2'>
+                    <CardBody className='grid grid-cols-2 overflow-hidden'>
+                        <Box className='flex flex-col gap-2 col-span-1 p-2 text-primary-black rounded-md border-2 border-border-gray overflow-hidden'>
+                            <ScrollArea>
                                 {filterItems ? filterItems.map((product: ProductEntity, index: number) => (
                                     <RowProductsOrder
                                         key={index}
@@ -295,8 +296,43 @@ export function OrderForm() {
                                         setSelectedProducts={setDataCreateOrder}
                                     />
                                 ))}
-                            </Box>
-                        </CardBody>
+                            </ScrollArea>
+                        </Box>
+                        <Box className='flex flex-col justify-start gap-2 overflow-hidden bg-light-gray/10 rounded-md border-2 border-border-gray p-2 col-span-1 mx-2'>
+                            <ScrollArea className=''>
+                                {dataCreateOrder?.data_items.length < 1 ?
+                                    <span className='flex justify-center w-full font-semibold'>
+                                        Produtos selecionados aparecerão aqui.
+                                    </span> :
+                                    dataCreateOrder?.data_items.map(
+                                        (item, index: number) => (
+                                            <span
+                                                key={index}
+                                                className='flex flex-col items-start gap-3 mb-1 justify-center py-4 bg-primary-white w-full min-h-[65px] font-semibold px-4 text-primary-black rounded-sm hover:bg-zinc-200 hover:shadow-md hover:scale-[101%] duration-150 hover:cursor-default border-red-400 border-l-4'
+                                            >
+                                                <span className='text-lg font-semibold w-full border-b-2 border-primary-black uppercase'>
+                                                    {item.quantidade}
+                                                    <span className='text-md lowercase'>x{' '}</span>
+                                                    {item?.produto_nome}
+                                                </span>
+                                                <span className='flex items-center justify-between gap-2 w-full'>
+                                                    <span className='text-xl'>
+                                                        R$ {' '}
+                                                        {item.valor_unitario.toFixed(2).replace('.', ',')}
+                                                    </span>
+                                                    <span className='flex items-center justify-between gap-2 text-2xl max-w-[160px] bg-fuchsia-300/10'>
+                                                        <span>= </span>
+                                                        {Number(item.quantidade * item.valor_unitario)
+                                                            .toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+                                                    </span>
+                                                </span>
+                                            </span>
+                                        )
+                                    ) || ''
+                                }
+                            </ScrollArea>
+                        </Box>
+                    </CardBody>
                 </Card>
             </Box>
         </PageContainer >
