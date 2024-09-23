@@ -8,7 +8,7 @@ import { toFullLocaleDate } from '../../utils/toFullLocaleDate';
 import React, { useEffect, useState } from 'react';
 import { Caixa, Movimentacao, useCashRegister } from '../../hooks/useCashRegister';
 import { custom_red, primary_hover_red, primary_red } from '@/constants/styles';
-import { ClipboardCheck, ClipboardList, History, ArchiveRestore, X } from 'lucide-react';
+import { ClipboardCheck, ClipboardList, History, X } from 'lucide-react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import {
     AlertDialog,
@@ -44,12 +44,6 @@ export function CashRegister() {
     return (
         <PageContainer title='Caixa'>
             <div className='flex items-center gap-2 select-none'>
-                <IconButton
-                    to='movements'
-                    label='Movimentações'
-                    className='w-fit'
-                    icon={ArchiveRestore}
-                />
                 <AlertDialog>
                     <AlertDialogTrigger asChild disabled={currentCaixa?.fechamento !== null}>
                         <Button className='w-[200px] capitalize flex items-center justify-start gap-2 hover:bg-primary-hover-red'>
