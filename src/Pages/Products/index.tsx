@@ -8,7 +8,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { IconButton } from '../../components/IconButton';
 import { ProductEntity } from '../../types/product';
 import { PageContainer } from '../../components/PageContainer';
-import { MenuIcon, PlusCircle } from 'lucide-react';
+import { ArrowLeftCircle, MenuIcon, PlusCircle } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/table';
 import { PromotionEntity } from '@/types';
@@ -34,13 +34,20 @@ export function Products() {
 
     return (
         <PageContainer title='Produtos'>
-            <IconButton
-                to='new'
-                label='Novo produto'
-                className='w-fit py-4'
-                icon={PlusCircle}
-            />
-
+            <div className='flex items-center gap-2 select-none'>
+                <IconButton
+                    to={-1}
+                    label='Voltar'
+                    className='w-fit'
+                    icon={ArrowLeftCircle}
+                />
+                <IconButton
+                    to='new'
+                    label='Novo produto'
+                    className='w-fit py-4'
+                    icon={PlusCircle}
+                />
+            </div>
             <div className='flex items-center justify-between'>
                 <Title variant='h3'>
                     Cadastrados:{' '}
@@ -65,7 +72,7 @@ export function Products() {
                     </TableHeader>
                     <TableBody>
                         {filteredProducts.map((product: ProductEntity, index: number) => {
-                            const hasActivePromotion: boolean = 
+                            const hasActivePromotion: boolean =
                                 promotions.includes(promotions.filter((p: PromotionEntity) => p.produto.id === product.id)[0]) &&
                                 promotions.includes(promotions.filter((p: PromotionEntity) => p.produto.id === product.id && p.ativo)[0]);
                             const productPromotion: PromotionEntity = promotions.filter((p: PromotionEntity) => p.produto.id === product.id)[0];

@@ -21,11 +21,14 @@ export function Header({ title }: HeaderProps) {
                 <a onClick={() => navigate("/")} className="text-primary-white hover:text-warning-red transition-colors cursor-pointer">
                     Início
                 </a>
-                <a onClick={() => navigate("/products")} className="text-primary-white hover:text-warning-red transition-colors cursor-pointer">
+                {/* <a onClick={() => navigate("/products")} className="text-primary-white hover:text-warning-red transition-colors cursor-pointer">
                     Produtos
-                </a>
-                <a onClick={() => navigate("/purchases")} className="text-primary-white hover:text-warning-red transition-colors cursor-pointer">
+                </a> */}
+                {/* <a onClick={() => navigate("/purchases")} className="text-primary-white hover:text-warning-red transition-colors cursor-pointer">
                     Compras
+                </a> */}
+                <a onClick={() => navigate("/stock")} className="text-primary-white hover:text-warning-red transition-colors cursor-pointer">
+                    Estoque
                 </a>
                 <a onClick={() => navigate("/orders")} className="text-primary-white hover:text-warning-red transition-colors cursor-pointer">
                     Vendas
@@ -60,11 +63,14 @@ export function Header({ title }: HeaderProps) {
                         <a onClick={() => navigate("/")} className="text-primary-black hover:text-warning-red transition-colors cursor-pointer">
                             Início
                         </a>
-                        <a onClick={() => navigate("/products")} className="text-primary-black hover:text-warning-red transition-colors cursor-pointer">
+                        {/* <a onClick={() => navigate("/products")} className="text-primary-black hover:text-warning-red transition-colors cursor-pointer">
                             Produtos
-                        </a>
-                        <a onClick={() => navigate("/purchases")} className="text-primary-black hover:text-warning-red transition-colors cursor-pointer">
+                        </a> */}
+                        {/* <a onClick={() => navigate("/purchases")} className="text-primary-black hover:text-warning-red transition-colors cursor-pointer">
                             Compras
+                        </a> */}
+                        <a onClick={() => navigate("/stock")} className="text-primary-black hover:text-warning-red transition-colors cursor-pointer">
+                            Estoque
                         </a>
                         <a onClick={() => navigate("/orders")} className="text-primary-black hover:text-warning-red transition-colors cursor-pointer">
                             Vendas

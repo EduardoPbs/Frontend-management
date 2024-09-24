@@ -32,7 +32,7 @@ export function EmployeeDetail() {
     }, []);
 
     const salesRealized: OrderEntity[] = employeeTransactions.filter((transaction: OrderEntity) => transaction.tipo === "VENDA");
-    const procurementsRealized: OrderEntity[] = employeeTransactions.filter((transaction: OrderEntity) => transaction.tipo === "COMPRA");
+    // const procurementsRealized: OrderEntity[] = employeeTransactions.filter((transaction: OrderEntity) => transaction.tipo === "COMPRA");
 
     return (
         <PageContainer title={`Funcionário - ${id?.slice(0, 8)}`}>
@@ -54,7 +54,7 @@ export function EmployeeDetail() {
                             <div className="grid gap-4 mb-4 sm:grid-cols-2 sm:gap-6 sm:mb-5">
                                 <div className="w-full">
                                     <p className="block text-sm font-medium text-gray-900 dark:text-white">
-                                        Name:
+                                        Nome:
                                     </p>
                                     <span className='text-primary-red text-lg font-semibold'>{employeeData?.nome}</span>
                                 </div>
@@ -103,12 +103,12 @@ export function EmployeeDetail() {
                                     </p>
                                     <span className='text-primary-red text-lg font-semibold'>{salesRealized.length}</span>
                                 </div>
-                                <div>
+                                {/* <div>
                                     <p className="block text-sm font-medium text-gray-900 dark:text-white">
                                         Compras realizadas:
                                     </p>
                                     <span className='text-primary-red text-lg font-semibold'>{procurementsRealized.length}</span>
-                                </div>
+                                </div> */}
                             </div>
                             <div className="flex items-center space-x-4">
                                 {!(Number(id) === 0) && user.id === employeeData?.id &&

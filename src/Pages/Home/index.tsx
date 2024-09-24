@@ -10,6 +10,7 @@ import { useCashRegister } from '@/hooks/useCashRegister';
 import { AlertCircle, ArrowRightCircle } from 'lucide-react';
 import { usePromotion } from '@/hooks/usePromotion';
 import { OrderChart } from '@/Pages/Home/chart';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 export function Home() {
     const { loading, allProducts } = useProduct();
@@ -42,49 +43,51 @@ export function Home() {
                                         .filter((p: ProductEntity) => p.estoque <= 10).length}</span>
                                 </Title>
 
-                                <div className='flex flex-col gap-2 max-h-[150px] overflow-hidden overflow-y-scroll rounded-round-default'>
-                                    {allProducts.products && allProducts?.products
-                                        .filter((p: ProductEntity) => p.estoque <= 10)
-                                        .map((prod: ProductEntity, index: number) => (
-                                            <p
-                                                key={index}
-                                                className='flex items-center justify-between gap-4 border-2 border-gray-400/60 rounded-round-default px-4 py-2 font-semibold hover:border-primary-hover-red hover:bg-primary-white/50 hover:cursor-default hover:shadow-md duration-150'
-                                            >
-                                                <span className='flex items-center gap-2'>
-                                                    <AlertCircle className='text-warning-red' />
-                                                    <span className='w-[200px]'>{prod.nome}</span>
-                                                </span>
-                                                <span>
-                                                    Estoque:{' '}
-                                                    <span
-                                                        className={
-                                                            prod.estoque > 5
-                                                                ? 'text-custom-red'
+                                <ScrollArea className='max-h-[150px]'>
+                                    <div className='flex flex-col gap-2 overflow-hidden rounded-round-default'>
+                                        {allProducts.products && allProducts?.products
+                                            .filter((p: ProductEntity) => p.estoque <= 10)
+                                            .map((prod: ProductEntity, index: number) => (
+                                                <p
+                                                    key={index}
+                                                    className='flex items-center justify-between gap-4 border-2 border-gray-400/60 rounded-round-default px-4 py-2 font-semibold hover:border-primary-hover-red hover:bg-primary-white/50 hover:cursor-default hover:shadow-md duration-150'
+                                                >
+                                                    <span className='flex items-center gap-2'>
+                                                        <AlertCircle className='text-warning-red' />
+                                                        <span className='w-[200px]'>{prod.nome}</span>
+                                                    </span>
+                                                    <span>
+                                                        Estoque:{' '}
+                                                        <span
+                                                            className={
+                                                                prod.estoque > 5
+                                                                    ? 'text-custom-red'
+                                                                    : 'text-primary-hover-red'
+                                                            }
+                                                        >
+                                                            {prod.estoque}
+                                                        </span>
+                                                    </span>
+                                                    <span>
+                                                        Status:{' '}
+                                                        <span
+                                                            className={prod.ativo
+                                                                ? 'text-agreed-green'
                                                                 : 'text-primary-hover-red'
-                                                        }
-                                                    >
-                                                        {prod.estoque}
+                                                            }
+                                                        >
+                                                            {prod.ativo ? 'Online' : 'Offline'}
+                                                        </span>
                                                     </span>
-                                                </span>
-                                                <span>
-                                                    Status:{' '}
-                                                    <span
-                                                        className={prod.ativo
-                                                            ? 'text-agreed-green'
-                                                            : 'text-primary-hover-red'
-                                                        }
-                                                    >
-                                                        {prod.ativo ? 'Online' : 'Offline'}
-                                                    </span>
-                                                </span>
 
-                                                <ArrowRightCircle
-                                                    className='hover:cursor-pointer'
-                                                    onClick={() => { navigate('/products'); }}
-                                                />
-                                            </p>
-                                        ))}
-                                </div>
+                                                    <ArrowRightCircle
+                                                        className='hover:cursor-pointer'
+                                                        onClick={() => { navigate('/products'); }}
+                                                    />
+                                                </p>
+                                            ))}
+                                    </div>
+                                </ScrollArea>
                             </Content>
                         </div>
                     </Content>
