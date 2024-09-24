@@ -16,7 +16,7 @@ export function Movements() {
 
     return (
         <PageContainer title='Movimentações'>
-            <div className='flex items-center gap-8 select-none'>
+            <div className='flex items-center gap-2 select-none'>
                 <IconButton
                     to={-1}
                     label='Voltar'

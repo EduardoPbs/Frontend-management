@@ -20,7 +20,7 @@ export function CashHistory() {
 
     return (
         <PageContainer title='Histórico de Caixas'>
-            <div className='flex items-center gap-8 select-none'>
+            <div className='flex items-center gap-2 select-none'>
                 <IconButton
                     to={-1}
                     label='Voltar'
