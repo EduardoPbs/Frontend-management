@@ -8,7 +8,7 @@ import { useProduct } from "@/hooks/useProduct";
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { ProductEntity } from "@/types";
 import { PageContainer } from "@/components/PageContainer";
-import { ArrowLeftCircle, Trash2, X } from "lucide-react";
+import { ArrowLeftCircle, Trash2 } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTrigger } from "@/components/ui/alert-dialog";

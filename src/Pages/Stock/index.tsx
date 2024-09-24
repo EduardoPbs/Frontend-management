@@ -32,7 +32,6 @@ export function Stock() {
                     className='w-fit py-4'
                     icon={Package}
                 />
-
                 <IconButton
                     to={'output'}
                     label='Registrar Saída'
