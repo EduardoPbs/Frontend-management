@@ -175,7 +175,7 @@ export function Orders() {
                                     >
                                         <TableCell>{order.codigo === null ? order.id.slice(0, 8) : String(order.codigo).slice(0, 8)}</TableCell>
                                         <TableCell>{order.quantidade_itens}</TableCell>
-                                        <TableCell>{String(order.forma_pagamento)}</TableCell>
+                                        <TableCell>{String(order.forma_pagamento.replace('_', ' '))}</TableCell>
                                         <TableCell>{toFullLocaleDate(order.criado_em)}</TableCell>
                                         <TableCell>
                                             {Number(

@@ -22,7 +22,7 @@ export function OrderTable() {
     if (isLoading)
         return (
             <div className='flex justify-center'>
-                <Spinner size='xl' color='yellow.500' />
+                <Spinner size='xl' color='red.500' />
             </div>
         );
 

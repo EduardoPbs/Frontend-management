@@ -17,8 +17,8 @@ export function useEmployee() {
             .min(3, { message: 'Deve conter pelo menos 3 caracteres.' }),
         cpf: z
             .string({ required_error: 'Obrigatório.' })
-            .min(14, { message: 'Deve conter 14 caracteres.' })
-            .max(14, { message: 'Deve conter 14 caracteres.' }),
+            .min(11, { message: 'Deve conter 11 caracteres.' })
+            .max(11, { message: 'Deve conter 11 caracteres.' }),
         rua: z
             .string({ required_error: 'Obrigatório.' })
             .min(3, { message: 'Deve conter pelo menos 3 caracteres.' }),

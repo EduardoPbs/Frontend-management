@@ -49,6 +49,7 @@ export function ProductForm() {
             nome: newProductData.nome || '',
             estoque: newProductData.estoque || '',
             valor: newProductData.valor || '',
+            valorCompra: newProductData.valorCompra || '',
             categorias: newProductData.categorias || selectedCategories,
         },
     });
@@ -71,13 +72,14 @@ export function ProductForm() {
     async function dataProductToUpdate(id: string | undefined) {
         try {
             const response = await http.get(`/commodities/${id}`);
-            console.log(response.data);
+            // console.log(response.data);
             setSelectedCategories(response.data.categorias);
             setNewProductData({
                 codigo: response.data.codigo,
                 nome: response.data.nome,
                 estoque: response.data.estoque,
                 valor: response.data.valor,
+                valorCompra: response.data.valorCompra,
                 categorias: response.data.categorias,
             });
 
@@ -86,6 +88,7 @@ export function ProductForm() {
                 nome: response.data.nome,
                 estoque: String(response.data.estoque),
                 valor: String(response.data.valor),
+                valorCompra: String(response.data.valorCompra),
                 categorias: selectedCategories,
             });
         } catch (error) {
@@ -144,7 +147,6 @@ export function ProductForm() {
                                         autoComplete='disabled'
                                     />
                                 </div>
-
                                 <div className='flex items-center w-full gap-4'>
                                     <LgInput
                                         disabled={!user.adm}
@@ -162,6 +164,19 @@ export function ProductForm() {
                                         name='valor'
                                         placeholder='1.25'
                                         errors={errors.valor}
+                                        control={control}
+                                        autoComplete='disabled'
+                                    />
+                                </div>
+                                <div className='flex items-center w-full gap-4'>
+                                    <LgInput
+                                        className="w-1/2"
+                                        disabled={!user.adm}
+                                        label='Valor Compra'
+                                        type='number'
+                                        name='valorCompra'
+                                        placeholder='0.75'
+                                        errors={errors.valorCompra}
                                         control={control}
                                         autoComplete='disabled'
                                     />

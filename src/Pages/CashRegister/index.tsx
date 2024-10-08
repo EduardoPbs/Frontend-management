@@ -213,7 +213,7 @@ export function CashRegister() {
                                         <TableCell>
                                             {toFullLocaleDate(movimentacao.criado_em)}
                                         </TableCell>
-                                        <TableCell>{movimentacao.tipo_transacao || '--'}</TableCell>
+                                        <TableCell>{movimentacao.tipo_transacao.replace('_', ' ') || '--'}</TableCell>
                                         <TableCell>
                                             {Number(movimentacao.valor).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
                                         </TableCell>

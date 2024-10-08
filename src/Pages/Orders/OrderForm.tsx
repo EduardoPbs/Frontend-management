@@ -1,31 +1,30 @@
+import { z } from 'zod';
+import { http } from '@/service';
+import { Title } from '@/components/Title';
 import { Button } from '@/components/ui/button';
+import { LgInput } from '@/components/LgInput';
+import { useForm } from 'react-hook-form';
 import { useOrder } from '../../hooks/useOrder';
 import { CellDetail } from '../../components/CellDetail';
 import { useProduct } from '../../hooks/useProduct';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { IconButton } from '../../components/IconButton';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useEmployee } from '@/hooks/useEmployee';
 import { PageContainer } from '../../components/PageContainer';
 import { ProductEntity } from '../../types/product';
-import { EmployeeEntity, UserData } from '@/types';
-import { RowProductsOrder } from './RowProductsOrder';
-import { ItemOrderCreate } from '../../types/order';
-import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router';
-import { ArchiveRestore, ArrowLeftCircle, X } from 'lucide-react';
-import { primary_red, primary_hover_red } from '../../constants/styles';
-import { Box, Card, Input, CardBody, CardHeader, useToast } from '@chakra-ui/react';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import {
-    AlertDialog,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogCancel,
-    AlertDialogTrigger,
-    AlertDialogContent,
-    AlertDialogDescription,
-} from '@/components/ui/alert-dialog';
 import { UsePaymentType } from '@/hooks/usePaymentType';
+import { ItemOrderCreate } from '../../types/order';
+import { RowProductsOrder } from './RowProductsOrder';
+import { useEffect, useRef, useState } from 'react';
+import { useNavigate, useParams } from 'react-router';
+import { Button as ChakraButton } from '@chakra-ui/react';
+import { ArchiveRestore, ArrowLeftCircle, X } from 'lucide-react';
+import { EmployeeEntity, UserData, UserLogin } from '@/types';
+import { Box, Card, Input, CardBody, CardHeader, useToast } from '@chakra-ui/react';
+import { primary_red, primary_hover_red, primary_black, primary_white } from '../../constants/styles';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { AlertDialog, AlertDialogFooter, AlertDialogHeader, AlertDialogCancel, AlertDialogTrigger, AlertDialogContent, AlertDialogAction, AlertDialogDescription } from '@/components/ui/alert-dialog';
 
 export function OrderForm() {
     const { activeProducts } = useProduct();
@@ -36,6 +35,7 @@ export function OrderForm() {
     const [paymentType, setPaymentType] = useState<string>('');
     const [moneyValue, setMoneyValue] = useState<number>(0);
     const [moneyBack, setMoneyBack] = useState<number>(0);
+    const [isAuth, setIsAuth] = useState<boolean>();
     const navigate = useNavigate();
     const { id } = useParams();
     const toast = useToast();
@@ -53,9 +53,16 @@ export function OrderForm() {
     const total: number = dataCreateOrder?.data_items
         .reduce((acc, currVal) => currVal.quantidade * currVal.valor_unitario + acc, 0);
 
+
     function calculateMoneyBack(value: number, total: number): void {
         return setMoneyBack(value - total);
     }
+
+    const filteredProducts = dataCreateOrder.data_items.filter((item: ItemOrderCreate) => {
+        if (filterItems.filter((product: ProductEntity) => product.id === item.produto_id && (product.estoque <= 1 || item.quantidade >= product.estoque)).length > 0) {
+            return item;
+        }
+    });
 
     const rowStyle = 'flex-row items-center w-fit gap-2';
 
@@ -67,6 +74,8 @@ export function OrderForm() {
             });
         }
     }, [searchInput]);
+
+    useEffect(() => { }, [isAuth]);
 
     return (
         <PageContainer title='Nova Venda'>
@@ -243,40 +252,44 @@ export function OrderForm() {
                                             })}
                                     </span>
                                 </p>
-                                <Button
-                                    className='hover:bg-primary-hover-red'
-                                    onClick={() => {
-                                        if (selectedEmployee.id === undefined || selectedEmployee.id === '') {
-                                            toast({
-                                                title: 'Aviso!',
-                                                colorScheme: 'red',
-                                                description: 'Você deve escolher um funcionário.',
-                                                position: 'top-right',
-                                                status: 'warning',
-                                                isClosable: true,
-                                            });
-                                            return;
-                                        }
+                                {filteredProducts.length > 0 && !isAuth
+                                    ? <VerifyLastProduct setIsAuth={setIsAuth} />
+                                    : <Button
+                                        className='hover:bg-primary-hover-red'
+                                        onClick={() => {
+                                            if (selectedEmployee.id === undefined || selectedEmployee.id === '') {
+                                                toast({
+                                                    title: 'Aviso!',
+                                                    colorScheme: 'red',
+                                                    description: 'Você deve escolher um funcionário.',
+                                                    position: 'top-right',
+                                                    status: 'warning',
+                                                    isClosable: true,
+                                                });
+                                                return;
+                                            }
 
-                                        if (paymentType === undefined || paymentType === '') {
-                                            toast({
-                                                title: 'Aviso!',
-                                                colorScheme: 'red',
-                                                description: 'Você deve escolher uma forma de pagamento.',
-                                                position: 'top-right',
-                                                status: 'warning',
-                                                isClosable: true,
-                                            });
-                                            return;
-                                        }
-                                        createOrder(selectedEmployee.id, paymentType, dataCreateOrder.data_items);
-                                        setMoneyBack(0);
-                                        setMoneyValue(0);
-                                        navigate('/');
-                                    }}
-                                >
-                                    Cadastrar
-                                </Button>
+                                            if (paymentType === undefined || paymentType === '') {
+                                                toast({
+                                                    title: 'Aviso!',
+                                                    colorScheme: 'red',
+                                                    description: 'Você deve escolher uma forma de pagamento.',
+                                                    position: 'top-right',
+                                                    status: 'warning',
+                                                    isClosable: true,
+                                                });
+                                                return;
+                                            }
+                                            createOrder(selectedEmployee.id, paymentType, dataCreateOrder.data_items);
+                                            setMoneyBack(0);
+                                            setMoneyValue(0);
+                                            navigate('/');
+                                            sessionStorage.removeItem('authenticable');
+                                        }}
+                                    >
+                                        Cadastrar
+                                    </Button>
+                                }
                             </div>
                         </AlertDialogFooter>
                     </AlertDialogContent>
@@ -367,7 +380,7 @@ export function OrderForm() {
                                                 className='flex flex-col items-start gap-3 mb-1 justify-center py-4 bg-primary-white w-full min-h-[65px] font-semibold px-4 text-primary-black rounded-sm hover:bg-zinc-200 hover:shadow-md hover:scale-[101%] duration-150 hover:cursor-default border-red-400 border-l-4'
                                             >
                                                 <span className='text-lg font-semibold w-full border-b-2 border-primary-black uppercase'>
-                                                    {item.quantidade}
+                                                    <span className="text-2xl font-bold">{item.quantidade}</span>
                                                     <span className='text-md lowercase'>x{' '}</span>
                                                     {item?.produto_nome}
                                                 </span>
@@ -392,5 +405,144 @@ export function OrderForm() {
                 </Card>
             </Box>
         </PageContainer >
+    );
+}
+
+function VerifyLastProduct({ setIsAuth }: { setIsAuth: (state: boolean) => void; }) {
+    const [loading, setLoading] = useState<boolean>(false);
+
+    const closeButtonRef = useRef(null);
+
+    const loginFormSchema = z.object({
+        email: z.string().email({ message: 'Email inválido!' }),
+        password: z.string().min(1, { message: 'Senha obrigatória.' }),
+    });
+
+    const {
+        control,
+        handleSubmit,
+        formState: { errors },
+    } = useForm({
+        resolver: zodResolver(loginFormSchema),
+        defaultValues: {
+            email: 'eduardo@hotmail.com',
+            password: '123',
+        },
+    });
+
+    const toast = useToast();
+
+    async function onSubmit(event: UserLogin) {
+        setLoading(true);
+        const credentials: UserLogin = {
+            email: event.email,
+            password: event.password,
+        };
+
+        try {
+            await http
+                .post('/auth/login', credentials)
+                .then((res) => {
+                    const JwtToken = res.data.token;
+                    const tokenPayload = JSON.parse(atob(JwtToken.split('.')[1]));
+
+                    setIsAuth(Boolean(tokenPayload.adm));
+                    if (tokenPayload.adm) {
+                        toast({
+                            title: 'Autenticado!',
+                            position: 'top-right',
+                            status: 'success',
+                            isClosable: true,
+                        });
+                    } else {
+                        toast({
+                            title: 'Falha ao realizar autenticação!',
+                            description: 'O usuário informado não é um administrador.',
+                            position: 'top-right',
+                            status: 'error',
+                            isClosable: true,
+                        });
+                    }
+                });
+        } catch (error) {
+            console.error(error);
+            toast({
+                title: 'Falha ao realizar autenticação!',
+                description: 'Erro ao verificar login do administrador.',
+                position: 'top-right',
+                status: 'error',
+                isClosable: true,
+            });
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    return (
+        <AlertDialog>
+            <AlertDialogTrigger asChild>
+                <Button className='capitalize flex items-center justify-start gap-2 hover:bg-primary-hover-red'>
+                    Solicitar Administrador
+                </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+                <AlertDialogHeader>
+                    <div className='flex items-center justify-between'>
+                        <Title variant='h3'>Últimos produtos em estoque</Title>
+                        <AlertDialogCancel><X /></AlertDialogCancel>
+                    </div>
+                    <p>Alguns produtos selecionados são os útlimos em estoque.<br />
+                        Informe o login de um Administrador para prosseguir.
+
+                    </p>
+                </AlertDialogHeader>
+                <AlertDialogDescription asChild className='max-h-[300px]'>
+                    <form
+                        className="border-2 py-4 px-6 rounded-md  mx-auto grid w-[400px] gap-3"
+                        onSubmit={handleSubmit(onSubmit)}
+                    >
+                        <div className="grid gap-2 text-start">
+                            <h1 className="text-2xl font-bold">Autenticação</h1>
+                        </div>
+                        <LgInput
+                            label='Email Administrador'
+                            type='email'
+                            name='email'
+                            placeholder='administrador@email.com'
+                            errors={errors.email}
+                            control={control}
+                            autoComplete='disabled'
+                        />
+                        <LgInput
+                            label='Senha'
+                            type='password'
+                            name='password'
+                            placeholder='******'
+                            errors={errors.password}
+                            control={control}
+                            autoComplete='disabled'
+                        />
+                        <AlertDialogCancel asChild>
+                            <ChakraButton
+                                rounded={`6`}
+                                _hover={{
+                                    bg: primary_hover_red,
+                                    color: 'white'
+                                }}
+                                color={primary_white}
+                                backgroundColor={primary_black}
+                                isLoading={loading}
+                                loadingText='Carregando...'
+                                borderRadius={4}
+                                type='submit'
+                            >
+                                Autenticar
+                            </ChakraButton>
+                        </AlertDialogCancel>
+                    </form>
+                </AlertDialogDescription>
+                <AlertDialogAction className='hidden' ref={closeButtonRef} />
+            </AlertDialogContent>
+        </AlertDialog>
     );
 }

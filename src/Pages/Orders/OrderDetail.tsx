@@ -19,6 +19,8 @@ export function OrderDetail() {
     const navigate = useNavigate();
 
     const rowStyle = 'flex-row items-center w-fit gap-2';
+    
+    const isStock = location.pathname.includes('stock');
 
     useEffect(() => {
         if (id !== undefined) {
@@ -29,7 +31,7 @@ export function OrderDetail() {
     if (isLoadingUnique) return <LgSpinner />;
 
     return (
-        <PageContainer title={`Venda - ${id?.slice(0, 8)}`}>
+        <PageContainer title={id?.slice(0, 8)}>
             <IconButton
                 to={-1}
                 label='Voltar'
@@ -83,6 +85,12 @@ export function OrderDetail() {
                                 className={rowStyle}
                                 style='text-2xl'
                             />
+                            <CellDetail
+                                name='Tipo Transação'
+                                content={orderData?.tipo.replace('_', ' ')}
+                                className={`${rowStyle} capitalize`}
+                                style='text-2xl'
+                            />
                         </Box>
                     </CardHeader>
 
@@ -91,13 +99,13 @@ export function OrderDetail() {
                             {orderItems.map(
                                 (item: ItemOrderCreate, index: number) => {
                                     return (
-                                        <RowDetail key={index}>
+                                        <RowDetail key={index} quantity={100}>
                                             <CellDetail
                                                 name='Produto'
                                                 content={item.produto_nome}
                                             />
                                             <CellDetail
-                                                name='Valor/unidade'
+                                                name={isStock ? 'Valor/compra' : 'Valor/unidade'}
                                                 content={Number(
                                                     item.valor_unitario
                                                 ).toLocaleString('pt-BR', {
@@ -119,7 +127,7 @@ export function OrderDetail() {
                                                     currency: 'BRL',
                                                 })}
                                             />
-                                            <Tooltip label='Detalhes do produto'>
+                                            <Tooltip label='Ir para produtos'>
                                                 <ArrowRightCircle
                                                     className='size-8 hover:cursor-pointer hover:text-custom-red duration-150'
                                                     onClick={() =>

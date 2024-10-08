@@ -53,6 +53,7 @@ function AppRoutes() {
                     <Route path='/stock' element={<Stock />} />
                     <Route path='/stock/entrance' element={<StockForm />} />
                     <Route path='/stock/output' element={<StockForm />} />
+                    <Route path='/stock/:id' element={<OrderDetail />} />
 
                     <Route path='/cash-register' element={<CashRegister />} />
                     <Route path='/cash-register/history' element={<CashHistory />} />
