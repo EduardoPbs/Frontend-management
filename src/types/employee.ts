@@ -9,7 +9,7 @@ export type EmployeeEntity = {
 type Endereco = {
     rua: string;
     bairro: string;
-    number: string;
+    numero: string;
     complemento: string;
 };
 

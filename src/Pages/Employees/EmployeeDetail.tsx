@@ -82,7 +82,7 @@ export function EmployeeDetail() {
                                     <p className="block text-sm font-medium text-gray-900 dark:text-white">
                                         Número:
                                     </p>
-                                    <span className='text-primary-red text-lg font-semibold'>{employeeData?.endereco.number || "S/N°"}</span>
+                                    <span className='text-primary-red text-lg font-semibold'>{employeeData?.endereco.numero || "S/N°"}</span>
                                 </div>
                                 <div>
                                     <p className="block text-sm font-medium text-gray-900 dark:text-white">

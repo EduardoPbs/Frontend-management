@@ -16,12 +16,14 @@ import { EmployeeEntity, OrderEntity, ProductEntity } from "@/types";
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import { AlertCircle, ArrowRightCircle, Package, PackageMinus, PackagePlus } from "lucide-react";
+import { months } from "@/utils/months";
+
 
 export function Stock() {
     const [selectedEmployee, setSelectedEmployee] = useState<string>();
-    // const [monthSelected, setMonthSelected] = useState<number>(0);
+    const [monthSelected, setMonthSelected] = useState<number>(0);
 
-    const { dataStock } = useStock();
+    const { dataStock, setDataStock, getStockByMonth } = useStock();
     const { dataEmployees } = useEmployee();
     const { allProducts } = useProduct();
     const navigate = useNavigate();
@@ -70,6 +72,30 @@ export function Stock() {
                             return (
                                 <SelectItem key={index} value={JSON.stringify({ id: employee.id, nome: employee.nome })}>
                                     {employee.nome}
+                                </SelectItem>
+                            );
+                        })}
+                    </SelectContent>
+                </Select>
+
+                <Select
+                    onValueChange={(event: any) => {
+                        const month = JSON.parse(event).id;
+                        setMonthSelected(month);
+                        getStockByMonth(month, setDataStock);
+                    }}
+                >
+                    <SelectTrigger className='w-[180px] font-semibold'>
+                        <SelectValue placeholder="Mês" />
+                    </SelectTrigger>
+                    <SelectContent className='max-h-[300px] font-semibold'>
+                        <SelectItem value={JSON.stringify({ id: 0, month: 'none' })}>
+                            Tudo
+                        </SelectItem>
+                        {months.map((month: { id: number; month: string; }, index: number) => {
+                            return (
+                                <SelectItem key={index} value={JSON.stringify(month)} className='capitalize'>
+                                    {month.month}
                                 </SelectItem>
                             );
                         })}

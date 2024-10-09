@@ -46,6 +46,25 @@ export function useStock() {
         }
     }
 
+    async function getStockByMonth(month: number, setStockData: (data: StockData) => void) {
+        if (month === 0) {
+            getEntrances();
+            return;
+        }
+        try {
+            const response = await http.get<OrderEntity[]>(`/transactions/month/${month}`);
+            const stockEntranceFiltered = response.data.filter((order: OrderEntity) => order.tipo === "ENTRADA_PRODUTO");
+            const stockPulloutFiltered = response.data.filter((order: OrderEntity) => order.tipo === "RETIRADA_PRODUTO");
+            setStockData({
+                entrances: stockEntranceFiltered,
+                pullouts: stockPulloutFiltered,
+                total: stockEntranceFiltered.length + stockPulloutFiltered.length
+            });
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
     async function createEntrance(employeeId: string, itens: ProductStockCreateType[]): Promise<void | string> {
         console.log(employeeId);
         console.log(itens);
@@ -84,15 +103,12 @@ export function useStock() {
     }
 
     async function createPullout(employeeId: string, itens: ProductStockCreateType[]): Promise<void | string> {
-        //nao ta funcionando;
         try {
             await http.post('/transactions/stock/pullout', {
                 itens: itens,
                 funcionario_id: employeeId
             }).then((response) => {
                 console.log(response.data);
-                // const entranceId: string = response.data.slice(32, 68);
-                // http.put(`/transactions/finalize/${entranceId}`);
                 toast({
                     title: 'Sucesso!',
                     colorScheme: 'green',
@@ -127,6 +143,8 @@ export function useStock() {
     return {
         createEntrance,
         createPullout,
-        dataStock
+        dataStock,
+        setDataStock,
+        getStockByMonth
     };
 }
