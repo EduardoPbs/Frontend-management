@@ -21,6 +21,8 @@ import { months } from "@/utils/months";
 
 export function Stock() {
     const [selectedEmployee, setSelectedEmployee] = useState<string>();
+
+    // @ts-ignore
     const [monthSelected, setMonthSelected] = useState<number>(0);
 
     const { dataStock, setDataStock, getStockByMonth } = useStock();
@@ -102,15 +104,65 @@ export function Stock() {
                     </SelectContent>
                 </Select>
             </div>
+            <div className='flex items-center justify-between'>
+                <Title variant='h3'>
+                    Entradas:{' '}
+                    <span className='text-4xl text-sky-700'>
+                        {!selectedEmployee ? dataStock?.entrances.length :
+                            dataStock?.entrances.filter((entrance: OrderEntity) => entrance.funcionario_id === selectedEmployee).length}
+                    </span>
+                    {" | "}
+                    <span className='text-4xl text-emerald-400'>
+                        {!selectedEmployee ? dataStock?.entrances.reduce((acc: number, entrance: OrderEntity) => acc += entrance.total, 0)
+                            .toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) :
+                            dataStock?.entrances.filter((entrance: OrderEntity) => entrance.funcionario_id === selectedEmployee)
+                                .reduce((acc: number, currVal: OrderEntity) => acc += currVal.total, 0)
+                                .toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
+                        }
+                    </span>
+                </Title>
+                <Title variant='h3'>
+                    Saídas:{' '}
+                    <span className='text-4xl text-sky-700'>
+                        {!selectedEmployee ? dataStock?.pullouts.length :
+                            dataStock?.pullouts.filter((pullout: OrderEntity) => pullout.funcionario_id === selectedEmployee).length}
+                    </span>
+                    {" | "}
+                    <span className='text-4xl text-emerald-400'>
+                        {!selectedEmployee ? dataStock?.pullouts.reduce((acc: number, entrance: OrderEntity) => acc += entrance.total, 0)
+                            .toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) :
+                            dataStock?.pullouts.filter((pullout: OrderEntity) => pullout.funcionario_id === selectedEmployee)
+                                .reduce((acc: number, currVal: OrderEntity) => acc += currVal.total, 0)
+                                .toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
+                        }
+                    </span>
+                </Title>
+                <Title variant='h3'>
+                    Registros:{' '}
+                    <span className='text-4xl text-sky-700'>
+                        {!selectedEmployee ? filteredStockData?.length :
+                            filteredStockData?.filter((transaction: OrderEntity) => transaction.funcionario_id === selectedEmployee).length}
+                    </span>
+                    {" | "}
+                    <span className='text-4xl text-emerald-400'>
+                        {!selectedEmployee ? filteredStockData?.reduce((acc: number, entrance: OrderEntity) => acc += entrance.total, 0)
+                            .toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) :
+                            filteredStockData?.filter((pullout: OrderEntity) => pullout.funcionario_id === selectedEmployee)
+                                .reduce((acc: number, currVal: OrderEntity) => acc += currVal.total, 0)
+                                .toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
+                        }
+                    </span>
+                </Title>
+            </div>
             <Content className={allProducts?.products
-                .filter((p: ProductEntity) => p.estoque <= 10).length < 1 ? 'hidden' : 'w-full border-border-gray h-full'}>
+                .filter((p: ProductEntity) => p.estoque <= 10).length < 1 ? 'hidden' : 'w-full border-border-gray'}>
                 <Title variant='h3'>
                     Produtos com baixo estoque: {' '}
                     <span className='text-2xl text-primary-red'>{allProducts?.products
                         .filter((p: ProductEntity) => p.estoque <= 10).length}</span>
                 </Title>
 
-                <ScrollArea className='h-[150px]'>
+                <ScrollArea className='h-[120px]'>
                     <div className='flex flex-col gap-2 overflow-hidden rounded-round-default'>
                         {allProducts.products && allProducts?.products
                             .filter((p: ProductEntity) => p.estoque <= 10)

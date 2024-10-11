@@ -75,7 +75,7 @@ export function OrderChart() {
             <CardHeader>
                 <CardTitle>Vendas mensais ($)</CardTitle>
                 <CardDescription>
-                    Mostrando quantidade de vendas dos útlimos 6 meses
+                    Valor de renda nos útlimos 6 meses
                 </CardDescription>
             </CardHeader>
             <CardContent>

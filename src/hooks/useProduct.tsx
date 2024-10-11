@@ -121,13 +121,11 @@ export function useProduct() {
                 )
                 .then(() => navigate(-1));
         } catch (err: any) {
-            const errMessage = err.response.data.message === undefined
-                ? err.response?.data?.errors[0]?.defaultMessage
-                : 'O produto deve estar em pelo menos 1 categoria.';
+            
             toast({
                 title: 'Erro.',
                 colorScheme: 'red',
-                description: errMessage,
+                description: err.response?.data?.errors[0]?.defaultMessage,
                 status: 'warning',
                 position: 'top-right',
                 isClosable: true,
@@ -143,7 +141,7 @@ export function useProduct() {
             nome: event.nome,
             estoque: Number(event.estoque),
             valor: Number(event.valor),
-            valorCompra: Number(event.valorCompra),
+            valor_compra: Number(event.valorCompra),
             categorias: event.categorias,
             ativo: false
         };

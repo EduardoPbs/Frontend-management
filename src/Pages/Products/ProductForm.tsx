@@ -96,6 +96,8 @@ export function ProductForm() {
         }
     }
 
+    const isNewProduct: boolean = location.pathname.includes("/new");
+
     useEffect(() => {
         if (id !== undefined) {
             dataProductToUpdate(id);
@@ -149,7 +151,7 @@ export function ProductForm() {
                                 </div>
                                 <div className='flex items-center w-full gap-4'>
                                     <LgInput
-                                        disabled={!user.adm}
+                                        disabled={!user.adm && !isNewProduct}
                                         label='Estoque'
                                         name='estoque'
                                         placeholder='5'
@@ -158,7 +160,7 @@ export function ProductForm() {
                                         autoComplete='disabled'
                                     />
                                     <LgInput
-                                        disabled={!user.adm}
+                                        disabled={!user.adm && !isNewProduct}
                                         label='Valor'
                                         type='number'
                                         name='valor'
@@ -171,7 +173,7 @@ export function ProductForm() {
                                 <div className='flex items-center w-full gap-4'>
                                     <LgInput
                                         className="w-1/2"
-                                        disabled={!user.adm}
+                                        disabled={!user.adm && !isNewProduct}
                                         label='Valor Compra'
                                         type='number'
                                         name='valorCompra'
