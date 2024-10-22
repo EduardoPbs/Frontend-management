@@ -31,14 +31,13 @@ export function Orders() {
 
     useEffect(() => {
         document.title = 'Management | Vendas';
-        console.log('orders', dataOrders);
     }, []);
 
     if (isLoading) return <LgSpinner />;
 
     return (
         <PageContainer title='Vendas'>
-            <div className='flex items-center gap-8'>
+            <div className='flex items-center gap-2'>
                 <IconButton
                     label='Nova venda'
                     className={`w-fit ${!cash_status ? 'opacity-50 hover:bg-primary-black cursor-no-drop' : ''}`}
@@ -176,7 +175,7 @@ export function Orders() {
                                     >
                                         <TableCell>{order.codigo === null ? order.id.slice(0, 8) : String(order.codigo).slice(0, 8)}</TableCell>
                                         <TableCell>{order.quantidade_itens}</TableCell>
-                                        <TableCell>{String(order.forma_pagamento)}</TableCell>
+                                        <TableCell>{String(order.forma_pagamento.replace('_', ' '))}</TableCell>
                                         <TableCell>{toFullLocaleDate(order.criado_em)}</TableCell>
                                         <TableCell>
                                             {Number(

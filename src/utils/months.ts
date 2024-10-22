@@ -12,3 +12,32 @@ export const months: { id: number; month: string }[] = [
     { id: 11, month: 'Novembro' },
     { id: 12, month: 'Dezembro' },
 ];
+
+const curr = new Date();
+const monthNames: string[] = [
+    'Janeiro',
+    'Fevereiro',
+    'Março',
+    'Abril',
+    'Maio',
+    'Junho',
+    'Julho',
+    'Agosto',
+    'Setembro',
+    'Outubro',
+    'Novembro',
+    'Dezembro',
+];
+
+const dynamicMonths: { id: number; month: string; monthNumber: number }[] = [];
+for (let i = 0; i < 12; i++) {
+    const monthDate = new Date(curr);
+    monthDate.setMonth(i);
+    dynamicMonths.push({
+        id: i,
+        month: monthNames[i],
+        monthNumber: monthDate.getMonth(),
+    });
+}
+
+export { dynamicMonths };

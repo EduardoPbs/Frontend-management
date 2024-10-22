@@ -19,7 +19,7 @@ export function EmployeeForm() {
         endereco: {
             rua: '',
             bairro: '',
-            number: '',
+            numero: '',
             complemento: '',
         },
         usuario: {
@@ -41,7 +41,7 @@ export function EmployeeForm() {
             nome: employeeData.nome || '',
             cpf: employeeData.cpf || '',
             rua: employeeData.endereco?.rua || '',
-            number: employeeData.endereco?.number || '',
+            numero: employeeData.endereco?.numero || '',
             bairro: employeeData.endereco?.bairro || '',
             complemento: employeeData.endereco?.complemento || '',
             email: employeeData.usuario?.email || '',
@@ -133,9 +133,9 @@ export function EmployeeForm() {
                                             Número:
                                         </p>
                                         <LgInput
-                                            name='number'
+                                            name='numero'
                                             placeholder='123'
-                                            errors={errors.number}
+                                            errors={errors.numero}
                                             control={control}
                                             autoComplete='disabled'
                                         />

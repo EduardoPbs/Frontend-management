@@ -17,15 +17,15 @@ export function useEmployee() {
             .min(3, { message: 'Deve conter pelo menos 3 caracteres.' }),
         cpf: z
             .string({ required_error: 'Obrigatório.' })
-            .min(14, { message: 'Deve conter 14 caracteres.' })
-            .max(14, { message: 'Deve conter 14 caracteres.' }),
+            .min(11, { message: 'Deve conter 11 caracteres.' })
+            .max(11, { message: 'Deve conter 11 caracteres.' }),
         rua: z
             .string({ required_error: 'Obrigatório.' })
             .min(3, { message: 'Deve conter pelo menos 3 caracteres.' }),
         bairro: z
             .string({ required_error: 'Obrigatório.' })
             .min(3, { message: 'Deve conter pelo menos 3 caracteres.' }),
-        number: z.string().optional(),
+        numero: z.string().optional(),
         complemento: z.string().optional(),
         email: z
             .string({ required_error: 'Obrigatório.' })
@@ -71,7 +71,7 @@ export function useEmployee() {
                 endereco: {
                     rua: response.data.endereco.rua,
                     bairro: response.data.endereco.bairro,
-                    number: response.data.endereco.number,
+                    numero: response.data.endereco.numero,
                     complemento: response.data.endereco.complemento,
                 },
                 usuario: {
@@ -86,7 +86,7 @@ export function useEmployee() {
                 cpf: response.data.cpf,
                 rua: response.data.endereco.rua,
                 bairro: response.data.endereco.bairro,
-                number: response.data.endereco.number,
+                numero: response.data.endereco.numero,
                 complemento: response.data.endereco.complemento,
                 email: response.data.usuario.email,
                 password: response.data.usuario.password,
@@ -103,7 +103,7 @@ export function useEmployee() {
             endereco: {
                 rua: data.endereco?.rua,
                 bairro: data.endereco?.bairro,
-                numero: data.endereco?.number,
+                numero: data.endereco?.numero,
                 complemento: data.endereco?.complemento,
             },
             usuario: {
@@ -154,7 +154,7 @@ export function useEmployee() {
             endereco: {
                 rua: data.endereco?.rua,
                 bairro: data.endereco?.bairro,
-                numero: data.endereco?.number,
+                numero: data.endereco?.numero,
                 complemento: data.endereco?.complemento,
             },
             usuario: {
@@ -197,7 +197,7 @@ export function useEmployee() {
             endereco: {
                 rua: event.rua,
                 bairro: event.bairro,
-                number: event.number,
+                numero: event.numero,
                 complemento: event.complemento,
             },
             usuario: {

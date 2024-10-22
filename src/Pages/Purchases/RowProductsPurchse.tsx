@@ -69,7 +69,7 @@ export function RowProductsPurchase({
     }
 
     return (
-        <RowDetail>
+        <RowDetail quantity={100}>
             <CellDetail name='Código' content={code} />
             <CellDetail name='Produto' content={name} />
             <CellDetail name='No estoque' content={quantity} />

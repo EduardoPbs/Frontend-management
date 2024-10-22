@@ -26,6 +26,7 @@ export function Actions({ id, status, handler }: { id: string; status: boolean; 
                             onClick={() => {
                                 disableProduct(id);
                                 handler((state: any) => !state);
+                                location.reload();
                             }}
                         >
                             Desativar
@@ -38,6 +39,7 @@ export function Actions({ id, status, handler }: { id: string; status: boolean; 
                             onClick={() => {
                                 enableProduct(id);
                                 handler((state: any) => !state);
+                                location.reload();
                             }}
                         >
                             Ativar

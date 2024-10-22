@@ -1,15 +1,14 @@
 import { months } from "@/utils/months";
-import { useEffect, useState } from "react";
 import { Content } from '@/components/Content';
 import { IconButton } from "@/components/IconButton";
 import { PageContainer } from "@/components/PageContainer";
-import { ArrowLeftCircle } from "lucide-react";
 import { table_row_hover } from "@/constants/styles";
 import { toFullLocaleDate } from "@/utils/toFullLocaleDate";
+import { useEffect, useState } from "react";
 import { Caixa, useCashRegister } from "@/hooks/useCashRegister";
+import { ArchiveRestore, ArrowLeftCircle } from "lucide-react";
 import { Table, TableRow, TableBody, TableHead, TableHeader, TableCell } from '@/components/ui/table';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Button } from "@/components/ui/button";
 
 export function CashHistory() {
     const [monthSelected, setMonthSelected] = useState<number>(0);
@@ -21,12 +20,18 @@ export function CashHistory() {
 
     return (
         <PageContainer title='Histórico de Caixas'>
-            <div className='flex items-center gap-8 select-none'>
+            <div className='flex items-center gap-2 select-none'>
                 <IconButton
                     to={-1}
                     label='Voltar'
                     className='w-fit'
                     icon={ArrowLeftCircle}
+                />
+                <IconButton
+                    to='/cash-register/movements'
+                    label='Movimentações'
+                    className='w-fit'
+                    icon={ArchiveRestore}
                 />
                 <Select
                     onValueChange={(event: any) => {
@@ -90,7 +95,6 @@ export function CashHistory() {
                             <TableHead className='text-primary-black uppercase'>Diferença</TableHead>
                             <TableHead className='text-primary-black uppercase'>Data Abertura</TableHead>
                             <TableHead className='text-primary-black uppercase'>Data Fechamento</TableHead>
-                            <TableHead className='text-primary-black uppercase'>Ações</TableHead>
                         </TableRow>
                     </TableHeader>
 
@@ -114,11 +118,6 @@ export function CashHistory() {
                                     </TableCell>
                                     <TableCell>{toFullLocaleDate(caixa.abertura)}</TableCell>
                                     <TableCell>{toFullLocaleDate(caixa.fechamento)}</TableCell>
-                                    <TableCell>
-                                        <Button className="hover:bg-primary-hover-red w-full">
-                                            Detalhes
-                                        </Button>
-                                    </TableCell>
                                 </TableRow>
                             );
                         }).reverse()}

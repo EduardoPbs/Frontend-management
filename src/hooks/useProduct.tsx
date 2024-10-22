@@ -30,6 +30,7 @@ export function useProduct() {
         nome: '',
         estoque: 0,
         valor: 0,
+        valorCompra: 0,
         categorias: [],
     });
 
@@ -120,13 +121,11 @@ export function useProduct() {
                 )
                 .then(() => navigate(-1));
         } catch (err: any) {
-            const errMessage = err.response.data.message === undefined
-                ? err.response?.data?.errors[0]?.defaultMessage
-                : 'O produto deve estar em pelo menos 1 categoria.';
+            
             toast({
                 title: 'Erro.',
                 colorScheme: 'red',
-                description: errMessage,
+                description: err.response?.data?.errors[0]?.defaultMessage,
                 status: 'warning',
                 position: 'top-right',
                 isClosable: true,
@@ -136,12 +135,13 @@ export function useProduct() {
     }
 
     async function onSubmit(event: any): Promise<void> {
-        console.log("event: ", event.categorias);
+        // console.log("event: ", event.categorias);
         const product: any = {
             codigo: event.codigo,
             nome: event.nome,
             estoque: Number(event.estoque),
             valor: Number(event.valor),
+            valor_compra: Number(event.valorCompra),
             categorias: event.categorias,
             ativo: false
         };
@@ -187,6 +187,9 @@ export function useProduct() {
             })
             .min(1, { message: 'Deve conter pelo menos 1 caractere.' }),
         valor: z
+            .string({ required_error: 'Obrigatório.' })
+            .min(1, { message: 'Deve conter pelo menos 1 caractere.' }),
+        valorCompra: z
             .string({ required_error: 'Obrigatório.' })
             .min(1, { message: 'Deve conter pelo menos 1 caractere.' }),
         categorias: z.array(z.string()),

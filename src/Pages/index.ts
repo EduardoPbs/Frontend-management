@@ -1,7 +1,10 @@
 import { Home } from './Home';
 import { Login } from './Login';
+import { Stock } from '@/Pages/Stock';
 import { Orders } from './Orders';
+import { Settings } from '@/Pages/Settings';
 import { Products } from './Products';
+import { StockForm } from '@/Pages/Stock/StockForm';
 import { Purchases } from './Purchases';
 import { Movements } from './CashRegister/movements';
 import { Employees } from './Employees';
@@ -21,9 +24,12 @@ import { PromotionDetail } from '@/Pages/Promotions/PromotionDetail';
 export {
     Home,
     Login,
+    Stock,
     Orders,
+    Settings,
     Products,
     Purchases,
+    StockForm,
     Movements,
     Employees,
     OrderForm,

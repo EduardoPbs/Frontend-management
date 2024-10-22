@@ -159,6 +159,7 @@ export function useOrder() {
             const orderFounded: OrderEntity = order.data;
             await getEmployeeById(orderFounded.funcionario_id, setCurrentEmployee);
 
+            console.log('order items: ', items.data)
             setDataOrder(orderFounded);
             setOrderItems(items.data);
         } catch (err) {

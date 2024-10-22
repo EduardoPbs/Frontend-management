@@ -3,25 +3,27 @@ import { Routes, Route, BrowserRouter, Navigate } from 'react-router-dom';
 import {
     Home,
     Login,
+    Stock,
     Orders,
     Products,
-    Purchases,
+    Settings,
+    // Purchases,
     Movements,
+    StockForm,
     OrderForm,
     Employees,
     Promotions,
     OrderDetail,
     CashHistory,
     ProductForm,
-    PurchaseForm,
+    // PurchaseForm,
     CashRegister,
     EmployeeForm,
     PromotionForm,
     EmployeeDetail,
-    PurchaseDetail,
+    // PurchaseDetail,
     PromotionDetail,
 } from './Pages';
-import { Settings } from '@/Pages/Settings';
 
 function AppRoutes() {
     return (
@@ -45,9 +47,13 @@ function AppRoutes() {
                     <Route path='/employees/edit/:id' element={<EmployeeForm />} />
                     <Route path='/employees/:id' element={<EmployeeDetail />} />
 
-                    <Route path='/purchases' element={<Purchases />} />
+                    {/* <Route path='/purchases' element={<Purchases />} />
                     <Route path='/purchases/new' element={<PurchaseForm />} />
-                    <Route path='/purchases/:id' element={<PurchaseDetail />} />
+                    <Route path='/purchases/:id' element={<PurchaseDetail />} /> */}
+                    <Route path='/stock' element={<Stock />} />
+                    <Route path='/stock/entrance' element={<StockForm />} />
+                    <Route path='/stock/output' element={<StockForm />} />
+                    <Route path='/stock/:id' element={<OrderDetail />} />
 
                     <Route path='/cash-register' element={<CashRegister />} />
                     <Route path='/cash-register/history' element={<CashHistory />} />

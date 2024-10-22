@@ -16,7 +16,7 @@ export function Movements() {
 
     return (
         <PageContainer title='Movimentações'>
-            <div className='flex items-center gap-8 select-none'>
+            <div className='flex items-center gap-2 select-none'>
                 <IconButton
                     to={-1}
                     label='Voltar'
@@ -105,7 +105,7 @@ export function Movements() {
                             return (
                                 <TableRow key={index} className='font-bold'>
                                     <TableCell>{toFullLocaleDate(movement.criado_em)}</TableCell>
-                                    <TableCell>{movement.tipo_transacao || '--'}</TableCell>{/* Está vindo 'null' para não alterar os dados já cadastrados */}
+                                    <TableCell>{movement.tipo_transacao.replace('_', ' ') || '--'}</TableCell>{/* Está vindo 'null' para não alterar os dados já cadastrados */}
                                     <TableCell>{movement.valor.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</TableCell>
                                 </TableRow>
                             );

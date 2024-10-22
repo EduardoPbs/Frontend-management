@@ -20,7 +20,7 @@ export function CellDetail({
         >
             {name}:{' '}
             <span
-                className={twMerge('font-bold text-primary-red text-xl', style)}
+                className={twMerge('font-bold text-primary-red text-[15px]', style)}
             >
                 {content}
             </span>

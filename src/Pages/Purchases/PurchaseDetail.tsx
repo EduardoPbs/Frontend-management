@@ -126,7 +126,7 @@ export function PurchaseDetail() {
                             {orderItems.map(
                                 (item: ItemOrderCreate, index: number) => {
                                     return (
-                                        <RowDetail key={index}>
+                                        <RowDetail key={index} quantity={100}>
                                             <CellDetail
                                                 name='Produto'
                                                 content={item.produto_nome}
@@ -151,7 +151,7 @@ export function PurchaseDetail() {
                                                     currency: 'BRL',
                                                 })}
                                             />
-                                            <Tooltip label='Detalhes do produto'>
+                                            <Tooltip label='Ir para produtos'>
                                                 <ArrowRightCircle
                                                     className='size-8 hover:cursor-pointer hover:text-custom-red duration-150'
                                                     onClick={() => navigate('/products')}
