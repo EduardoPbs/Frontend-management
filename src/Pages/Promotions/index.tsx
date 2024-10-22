@@ -1,6 +1,6 @@
 import { IconButton } from "@/components/IconButton";
 import { PageContainer } from "@/components/PageContainer";
-import { BadgePlus, Settings2 } from "lucide-react";
+import { BadgePlus } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PromotionActive, PromotionAll, PromotionFinish } from "@/Pages/Promotions/tabs";
 import { useEffect } from "react";
