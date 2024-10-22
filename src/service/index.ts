@@ -8,7 +8,6 @@ export const http = axios.create({
         Accept: 'application/json',
         Content: 'application/json',
         'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
     },
 });
 
@@ -28,7 +27,12 @@ http.interceptors.response.use(
     },
     function (err: AxiosError) {
         console.error(err);
-        if (err.response?.status === 403 || err.response?.status === 500) {
+        const token = sessionStorage.getItem('token');
+        if (!location.href.endsWith('/login') && !token) {
+            window.location.href = '/login';
+        }
+
+        if (err.response?.status === 403) {
             window.location.href = '/login';
             sessionStorage.removeItem('token');
         }

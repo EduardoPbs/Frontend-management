@@ -3,11 +3,13 @@ export function Title({
     variant,
 }: {
     children: React.ReactNode;
-    variant?: string;
+    variant?: 'h2' | 'h3';
 }) {
+    const defaultStyle = 'font-bold uppercase select-none'
+
     if (variant === 'h2') {
         return (
-            <h2 className='text-2xl font-bold uppercase select-none'>
+            <h2 className={`text-2xl ${defaultStyle}`}>
                 {children}
             </h2>
         );
@@ -15,12 +17,12 @@ export function Title({
 
     if (variant === 'h3') {
         return (
-            <h3 className='text-xl font-bold uppercase select-none'>
+            <h3 className={`text-xl ${defaultStyle}`}>
                 {children}
             </h3>
         );
     }
     return (
-        <h1 className='text-4xl font-bold uppercase select-none'>{children}</h1>
+        <h1 className={`text-4xl ${defaultStyle}`}>{children}</h1>
     );
 }

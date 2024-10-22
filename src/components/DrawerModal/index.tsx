@@ -1,115 +1,124 @@
-import { useRef } from 'react';
+import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
+import { IconButton } from '../IconButton';
 import { useNavigate } from 'react-router';
 import {
-    Button,
     Drawer,
-    Divider,
-    DrawerBody,
+    DrawerContent,
     DrawerFooter,
     DrawerHeader,
-    DrawerOverlay,
-    DrawerContent,
-    useDisclosure,
-    DrawerCloseButton,
-} from '@chakra-ui/react';
+    DrawerTrigger
+} from '@/components/ui/drawer';
 import {
     Menu,
     Users,
-    Inbox,
+    Store,
+    LogOut,
     Package,
+    Settings,
+    Package2,
     HomeIcon,
-    Settings2,
+    ShoppingBag,
     PercentCircle,
 } from 'lucide-react';
+import logo from '../../assets/cloverFlare.jpg';
 
 export function DrawerModal() {
-    const { isOpen, onOpen, onClose } = useDisclosure();
     const navigate = useNavigate();
-    const btnRef = useRef();
 
     return (
-        <>
-            <Button ref={btnRef} colorScheme='orange' onClick={onOpen}>
-                <Menu />
-            </Button>
+        <Drawer direction='left'>
+            <DrawerTrigger>
+                <Menu className='text-primary-red hover:text-primary-hover-red size-[29px] rounded-[4px] hover:cursor-pointer duration-150' />
+            </DrawerTrigger>
+            <DrawerContent className='max-w-[300px] h-screen rounded-none px-4 bg-primary-black text-white border-none'>
+                <DrawerHeader className='px-0'>
+                    <div className='flex items-center gap-2'>
+                        <img
+                            src={logo}
+                            className='size-14 rounded-2xl bg-no-repeat'
+                            alt='Clover Flare'
+                        />
+                        <p>Menu</p>
+                    </div>
+                </DrawerHeader>
+                <div className='flex flex-col justify-center gap-2 mb-2'>
+                    <IconButton
+                        className='bg-primary-white text-black hover:text-white'
+                        to='/'
+                        label='Início'
+                        icon={HomeIcon}
+                    />
+                </div>
 
-            <Drawer
-                isOpen={isOpen}
-                placement='left'
-                onClose={onClose}
-                finalFocusRef={btnRef}
-            >
-                <DrawerOverlay />
+                <div className='flex flex-col justify-center gap-1'>
+                    <span className='uppercase font-semibold text-lg'>
+                        Sistema
+                    </span>
+                    <Separator />
+                    <div className='flex flex-col justify-center gap-2'>
+                        <IconButton
+                            className='bg-primary-white text-black hover:text-white'
+                            icon={Package}
+                            label='Produtos'
+                            to='/products'
+                        />
+                        <IconButton
+                            className='bg-primary-white text-black hover:text-white'
+                            icon={ShoppingBag}
+                            label='Vendas'
+                            to='/orders'
+                        />
+                        <IconButton
+                            className='bg-primary-white text-black hover:text-white'
+                            icon={Users}
+                            label='Funcionários'
+                            to='/employees'
+                        />
+                        <IconButton
+                            className='bg-primary-white text-black hover:text-white'
+                            icon={Package2}
+                            label='Compras'
+                            to='/purchases'
+                        />
+                        <IconButton
+                            className='bg-primary-white text-black hover:text-white'
+                            icon={PercentCircle}
+                            label='Promoções'
+                            to='/promotions'
+                        />
+                        <IconButton
+                            className='bg-primary-white text-black hover:text-white'
+                            icon={Store}
+                            label='Caixa'
+                            to='/cash-register'
+                        />
+                    </div>
+                </div>
+                <DrawerFooter className='px-0'>
+                    <div className='flex items-center gap-2 w-full'>
+                        <Button
 
-                <DrawerContent color='white' bg='gray.900'>
-                    <DrawerCloseButton />
-
-                    <DrawerHeader>Painel</DrawerHeader>
-
-                    <Divider />
-
-                    <DrawerBody className='flex flex-col gap-4 my-4'>
-                        <div className='flex flex-col justify-center gap-2'>
-                            <Button
-                                colorScheme='yellow'
-                                className='w-full gap-3'
-                                onClick={() => navigate('/')}
-                            >
-                                <HomeIcon />
-                                <span>Início</span>
-                            </Button>
-                        </div>
-
-                        <div className='flex flex-col justify-center gap-2'>
-                            <span className='uppercase font-semibold text-lg'>
-                                Sistema
-                            </span>
-                            <Divider />
-                            <div className='flex flex-col justify-center gap-4'>
-                                <Button
-                                    colorScheme='yellow'
-                                    className='w-full gap-3'
-                                    onClick={() => navigate('/products')}
-                                >
-                                    <Package />
-                                    <span>Produtos</span>
-                                </Button>
-
-                                <Button
-                                    colorScheme='yellow'
-                                    className='w-full gap-3'
-                                >
-                                    <Inbox />
-                                    <span>Pedidos</span>
-                                </Button>
-
-                                <Button
-                                    colorScheme='yellow'
-                                    className='w-full gap-3'
-                                >
-                                    <Users />
-                                    <span>Funcionários</span>
-                                </Button>
-
-                                <Button
-                                    colorScheme='yellow'
-                                    className='w-full gap-3'
-                                >
-                                    <PercentCircle />
-                                    <span>Promo</span>
-                                </Button>
-                            </div>
-                        </div>
-                    </DrawerBody>
-
-                    <DrawerFooter>
-                        <Button colorScheme='yellow' className='w-full gap-3'>
-                            <Settings2 />
-                            <span>Configurações</span>
+                            className='w-full gap-3 bg-primary-white text-black hover:text-white hover:bg-primary-hover-red'
+                            onClick={() => {
+                                navigate('#');
+                            }}
+                        >
+                            <Settings />
                         </Button>
-                    </DrawerFooter>
-                </DrawerContent>
-            </Drawer>
-        </>
+                        <Button
+                            className='w-full gap-3 bg-primary-white text-black hover:text-white hover:bg-primary-hover-red'
+                            onClick={() => {
+                                sessionStorage.removeItem('token');
+                                navigate('/login');
+                            }}
+                        >
+                            <LogOut className='size-6' />
+                            Sair
+                        </Button>
+                    </div>
+                </DrawerFooter>
+            </DrawerContent>
+        </Drawer>
     );
 }

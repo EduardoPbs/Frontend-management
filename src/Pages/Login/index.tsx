@@ -1,119 +1,89 @@
 import { z } from 'zod';
-import { http } from '../../service';
+import { Button } from '@chakra-ui/react';
 import { LgInput } from '../../components/LgInput';
 import { useForm } from 'react-hook-form';
-import { useState } from 'react';
-import { useNavigate } from 'react-router';
+import { useLogin } from '../../hooks/useLogin';
+import { useEffect } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { PageContainer } from '../../components/PageContainer';
-import {
-    Box,
-    Button,
-    Card,
-    CardBody,
-    CardHeader,
-    Heading,
-    useToast,
-} from '@chakra-ui/react';
+import { primary_black, primary_hover_red, primary_white } from '@/constants/styles';
+import LogicLogo from '../../assets/logic_flare_dark.png';
 
 export function Login() {
-    const [loading, setLoading] = useState<boolean>(false);
-    const [user, setUser] = useState({
-        login: 'depois@gmail.com',
-        password: '123',
-    });
-
-    const navigate = useNavigate();
-    const toast = useToast();
+    const { loading, onSubmit } = useLogin();
 
     const loginFormSchema = z.object({
-        login: z.string().email(),
-        password: z.string(),
+        email: z.string().email({ message: 'Email inválido!' }),
+        password: z.string().min(1, { message: 'Senha obrigatória.' }),
     });
 
     const {
-        formState: { errors },
         control,
         handleSubmit,
+        formState: { errors },
     } = useForm({
         resolver: zodResolver(loginFormSchema),
         defaultValues: {
-            login: user.login || '',
-            password: user.password || '',
+            email: 'eduardo@hotmail.com',
+            password: '123',
         },
     });
 
-    async function onSubmit(event: any) {
-        setLoading(true);
-        const credentials = {
-            login: event.login,
-            password: event.password,
-        };
-        try {
-            await http
-                .post('/auth/login', credentials)
-                .then((res) => {
-                    const JwtToken = res.data.token;
-                    sessionStorage.setItem('token', JwtToken);
-                })
-                .then(() => navigate('/'));
-        } catch (error) {
-            console.error(error);
-            toast({
-                title: 'Falha ao realizar login.',
-                description: 'Email ou senha incorreto!',
-                status: 'error',
-                isClosable: true,
-            });
-        } finally {
-            setLoading(false);
-        }
-    }
+    useEffect(() => {
+        document.title = 'Management | Login';
+    }, []);
 
     return (
-        <PageContainer>
-            <Box className='flex items-center w-full h-full justify-center'>
-                <Box className='w-[500px]'>
-                    <Card>
-                        <CardHeader>
-                            <Heading size='md'>Entrar</Heading>
-                        </CardHeader>
-                        <CardBody>
-                            <form
-                                onSubmit={handleSubmit(onSubmit)}
-                                className='flex flex-col gap-4 w-full'
-                            >
-                                <LgInput
-                                    label='Usuário'
-                                    type='email'
-                                    name='login'
-                                    placeholder='example@email.com'
-                                    errors={errors.login}
-                                    control={control}
-                                    autoComplete='disabled'
-                                />
-                                <LgInput
-                                    label='Senha'
-                                    type='password'
-                                    name='password'
-                                    placeholder='******'
-                                    errors={errors.password}
-                                    control={control}
-                                    autoComplete='disabled'
-                                />
-                                <Button
-                                    isLoading={loading}
-                                    loadingText='Carregando...'
-                                    colorScheme='yellow'
-                                    type='submit'
-                                >
-                                    Entrar
-                                </Button>
-                            </form>
-                        </CardBody>
-                    </Card>
-                </Box>
-            </Box>
-        </PageContainer>
+        <section className="w-full lg:grid lg:min-h-[600px] lg:grid-cols-2 xl:min-h-full">
+            <div className="hidden min-h-screen bg-[#000000] lg:block">
+                <div className="flex items-center justify-center w-full h-full">
+                    <img
+                        className='select-none w-[400px]'
+                        src={LogicLogo}
+                        draggable={false}
+                        alt="Logic Flare Since 2023"
+                    />
+                </div>
+            </div>
+
+            <div className="flex items-start justify-center py-52">
+                <form className="border-2 py-4 px-6 rounded-md  mx-auto grid w-[400px] gap-3" onSubmit={handleSubmit(onSubmit)}>
+                    <div className="grid gap-2 text-center">
+                        <h1 className="text-3xl font-bold">LogIn</h1>
+                    </div>
+                    <LgInput
+                        label='Usuário'
+                        type='email'
+                        name='email'
+                        placeholder='example@email.com'
+                        errors={errors.email}
+                        control={control}
+                        autoComplete='disabled'
+                    />
+                    <LgInput
+                        label='Senha'
+                        type='password'
+                        name='password'
+                        placeholder='******'
+                        errors={errors.password}
+                        control={control}
+                        autoComplete='disabled'
+                    />
+                    <Button
+                        rounded={6}
+                        _hover={{
+                            bg: primary_hover_red,
+                        }}
+                        color={primary_white}
+                        backgroundColor={primary_black}
+                        isLoading={loading}
+                        loadingText='Carregando...'
+                        borderRadius={4}
+                        type='submit'
+                    >
+                        Entrar
+                    </Button>
+                </form>
+            </div >
+        </section >
     );
 }
