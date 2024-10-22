@@ -1,7 +1,6 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
 
 export const http = axios.create({
-    // baseURL: 'http://localhost:8080/',
     baseURL: 'http://3.135.213.89:8080/',
     withCredentials: false,
     headers: {
