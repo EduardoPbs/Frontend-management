@@ -93,7 +93,7 @@ export function OrderForm() {
                         <AlertDialogTrigger asChild disabled={dataCreateOrder.data_items.length < 1}>
                             <Button className='capitalize flex items-center gap-2 hover:bg-primary-hover-red'>
                                 <FileText />
-                                Gerar PDF
+                                Orçamento PDF
                             </Button>
                         </AlertDialogTrigger>
                         <AlertDialogContent>
