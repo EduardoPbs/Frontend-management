@@ -16,11 +16,12 @@ import { ProductEntity } from '../../types/product';
 import { UsePaymentType } from '@/hooks/usePaymentType';
 import { ItemOrderCreate } from '../../types/order';
 import { RowProductsOrder } from './RowProductsOrder';
-import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import { Button as ChakraButton } from '@chakra-ui/react';
-import { ArchiveRestore, ArrowLeftCircle, X } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
 import { EmployeeEntity, UserData, UserLogin } from '@/types';
+import { ArchiveRestore, ArrowLeftCircle, FileText, StretchHorizontal, StretchVertical, X } from 'lucide-react';
+import { generateBudgeTable, generateBudgetTableLandscape } from '@/utils/budget';
 import { Box, Card, Input, CardBody, CardHeader, useToast } from '@chakra-ui/react';
 import { primary_red, primary_hover_red, primary_black, primary_white } from '../../constants/styles';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -87,6 +88,49 @@ export function OrderForm() {
                         className='w-fit'
                         icon={ArrowLeftCircle}
                     />
+
+                    <AlertDialog>
+                        <AlertDialogTrigger asChild disabled={dataCreateOrder.data_items.length < 1}>
+                            <Button className='capitalize flex items-center gap-2 hover:bg-primary-hover-red'>
+                                <FileText />
+                                Gerar PDF
+                            </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                            <AlertDialogHeader>
+                                <AlertDialogCancel className='w-fit self-end'>
+                                    <X className='hover:text-primary-red duration-200' />
+                                </AlertDialogCancel>
+                                <p className='text-black text-2xl font-medium text-center mb-3'>Formato do PDF:</p>
+                            </AlertDialogHeader>
+                            <ScrollArea>
+                                <AlertDialogDescription className='max-h-[350px]'>
+
+                                    <div className='flex items-center justify-center gap-12 my-2 transition-all'>
+                                        <div
+                                            className='flex items-center justify-center gap-1 text-black ring-2 ring-primary-black/50 rounded w-[125px] h-[50px] hover:scale-[101%] duration-150 hover:ring-primary-red bg-slate-500/10 hover:bg-slate-600/15 select-none cursor-pointer'
+                                            onClick={() => generateBudgetTableLandscape(dataCreateOrder)}
+                                        >
+                                            <StretchHorizontal className="stroke-[1.2px]" />
+                                            <span className="text-[16px] font-medium">Paisagem</span>
+                                        </div>
+
+                                        <div
+                                            className='flex items-center justify-center gap-1 text-black ring-2 ring-primary-black/50 rounded w-[125px] h-[50px] hover:scale-[101%] duration-150 hover:ring-primary-red bg-slate-500/10 hover:bg-slate-600/15 select-none cursor-pointer'
+                                            onClick={() => generateBudgeTable(dataCreateOrder)}
+                                        >
+                                            <StretchVertical className="text-black stroke-[1.2px]" />
+                                            <span className="text-[16px] font-medium">Retrato</span>
+                                        </div>
+                                    </div>
+
+                                </AlertDialogDescription>
+                            </ScrollArea>
+                            <AlertDialogFooter>
+
+                            </AlertDialogFooter>
+                        </AlertDialogContent>
+                    </AlertDialog>
 
                     <Select
                         onValueChange={(event) => {
