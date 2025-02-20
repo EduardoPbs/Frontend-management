@@ -90,7 +90,7 @@ export function Movements() {
                     }}
                 >
                     <SelectTrigger className='w-[180px] font-semibold'>
-                        <SelectValue placeholder="Dia" />
+                        <SelectValue placeholder="Tipo" />
                     </SelectTrigger>
                     <SelectContent className='max-h-[250px] font-semibold'>
                         <SelectItem value={JSON.stringify(0)}>

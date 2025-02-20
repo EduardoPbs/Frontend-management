@@ -42,6 +42,10 @@ export function Header({ title }: HeaderProps) {
                 <a onClick={() => navigate("/promotions")} className="text-primary-white hover:text-warning-red transition-colors cursor-pointer">
                     Promoções
                 </a>
+                <span className="w-[8px] border-r-2 h-[30px] border-main-white" />
+                <a onClick={() => navigate("/reports")} className="text-primary-white hover:text-warning-red transition-colors cursor-pointer">
+                    Relatórios
+                </a>
             </nav>
             <Sheet>
                 <SheetTrigger asChild>
@@ -83,6 +87,9 @@ export function Header({ title }: HeaderProps) {
                         </a>
                         <a onClick={() => navigate("/promotions")} className="text-primary-black hover:text-warning-red transition-colors cursor-pointer">
                             Promoções
+                        </a>
+                        <a onClick={() => navigate("/reports")} className="text-primary-black hover:text-warning-red transition-colors cursor-pointer">
+                            Relatórios
                         </a>
                     </nav>
                 </SheetContent>
