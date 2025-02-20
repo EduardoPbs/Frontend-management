@@ -23,8 +23,8 @@ export function Login() {
     } = useForm({
         resolver: zodResolver(loginFormSchema),
         defaultValues: {
-            email: 'eduardo@hotmail.com',
-            password: '123',
+            email: 'root@root.com',
+            password: 'root',
         },
     });
 

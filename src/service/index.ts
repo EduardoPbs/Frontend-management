@@ -31,7 +31,7 @@ http.interceptors.response.use(
             window.location.href = '/login';
         }
 
-        if (err.response?.status === 403) {
+        if (err.response?.status === 403 && !location.href.endsWith('/orders/new')) {
             window.location.href = '/login';
             sessionStorage.removeItem('token');
         }

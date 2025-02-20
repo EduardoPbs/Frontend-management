@@ -19,14 +19,18 @@ import { useEffect, useState } from "react";
 import { OrderEntity } from "@/types";
 
 export function OrderChart() {
-    const [chartDataMonth, setChartDataMonth] = useState([
-        { month: dynamicMonths[weekDays[0].month - 5].month, income: 0 },
-        { month: dynamicMonths[weekDays[0].month - 4].month, income: 0 },
-        { month: dynamicMonths[weekDays[0].month - 3].month, income: 0 },
-        { month: dynamicMonths[weekDays[0].month - 2].month, income: 0 },
-        { month: dynamicMonths[weekDays[0].month - 1].month, income: 0 },
-        { month: dynamicMonths[weekDays[0].month].month, income: 0 },
-    ]);
+    const currentMonthIndex = weekDays[0].month - 1; // Índice do mês atual (1 a 12)
+
+    const getPreviousMonths = (currentMonthIndex: number, numMonths: number) => {
+        const months = [];
+        for (let i = 0; i < numMonths; i++) {
+            const index = (currentMonthIndex - i + 12) % 12; // Cálculo para índice circular
+            months.unshift({ month: dynamicMonths[index].month, income: 0 });
+        }
+        return months;
+    };
+
+    const [chartDataMonth, setChartDataMonth] = useState(getPreviousMonths(currentMonthIndex, 6));
 
     const chartConfig = {
         income: {
@@ -34,21 +38,18 @@ export function OrderChart() {
             color: "#f00",
         },
     } satisfies ChartConfig;
+
     async function getOrdersByMonth() {
         try {
             const promises = chartDataMonth.map(async (_, i) => {
                 const count = 5 - i;
-                const res = await http.get(`/transactions/month/${dynamicMonths[weekDays[0].month - count].monthNumber + 1}`);
+                const monthIndex = (weekDays[0].month - count + 12) % 12; // Ajuste do índice circular
+                const res = await http.get(`/transactions/month/${dynamicMonths[monthIndex].monthNumber + 1}`);
                 const orders: OrderEntity[] = res.data;
                 const ordersFiltered: OrderEntity[] = orders.filter((order: OrderEntity) => order.tipo === "VENDA");
-
-                var total: number;
-                if (ordersFiltered[count] === undefined) {
-                    total = 0;
-                }
-
-                total = ordersFiltered.reduce((acc: number, currVal: OrderEntity) => acc += currVal.total, 0);
-
+    
+                let total = ordersFiltered.reduce((acc: number, currVal: OrderEntity) => acc + currVal.total, 0);
+    
                 return { index: i, total };
             });
 
