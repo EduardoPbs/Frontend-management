@@ -18,28 +18,28 @@ export function Header({ title }: HeaderProps) {
                     <Package2 className="size-8" />
                     <h2>{title}</h2>
                 </div>
-                <a onClick={() => navigate("/")} className="text-primary-white hover:text-warning-red transition-colors cursor-pointer">
+                <a onClick={() => navigate("/")} className="text-primary-white hover:text-primary-hover-red transition-colors cursor-pointer">
                     Início
                 </a>
-                {/* <a onClick={() => navigate("/products")} className="text-primary-white hover:text-warning-red transition-colors cursor-pointer">
+                {/* <a onClick={() => navigate("/products")} className="text-primary-white hover:text-primary-hover-red transition-colors cursor-pointer">
                     Produtos
                 </a> */}
-                {/* <a onClick={() => navigate("/purchases")} className="text-primary-white hover:text-warning-red transition-colors cursor-pointer">
+                {/* <a onClick={() => navigate("/purchases")} className="text-primary-white hover:text-primary-hover-red transition-colors cursor-pointer">
                     Compras
                 </a> */}
-                <a onClick={() => navigate("/stock")} className="text-primary-white hover:text-warning-red transition-colors cursor-pointer">
+                <a onClick={() => navigate("/stock")} className="text-primary-white hover:text-primary-hover-red transition-colors cursor-pointer">
                     Estoque
                 </a>
-                <a onClick={() => navigate("/orders")} className="text-primary-white hover:text-warning-red transition-colors cursor-pointer">
+                <a onClick={() => navigate("/orders")} className="text-primary-white hover:text-primary-hover-red transition-colors cursor-pointer">
                     Vendas
                 </a>
-                <a onClick={() => navigate("/employees")} className="text-primary-white hover:text-warning-red transition-colors cursor-pointer">
+                <a onClick={() => navigate("/employees")} className="text-primary-white hover:text-primary-hover-red transition-colors cursor-pointer">
                     Funcionários
                 </a>
-                <a onClick={() => navigate("/cash-register")} className="text-primary-white hover:text-warning-red transition-colors cursor-pointer">
+                <a onClick={() => navigate("/cash-register")} className="text-primary-white hover:text-primary-hover-red transition-colors cursor-pointer">
                     Caixa
                 </a>
-                <a onClick={() => navigate("/promotions")} className="text-primary-white hover:text-warning-red transition-colors cursor-pointer">
+                <a onClick={() => navigate("/promotions")} className="text-primary-white hover:text-primary-hover-red transition-colors cursor-pointer">
                     Promoções
                 </a>
             </nav>
@@ -60,28 +60,28 @@ export function Header({ title }: HeaderProps) {
                             <Package2 className="size-8" />
                             <h2>{title}</h2>
                         </div>
-                        <a onClick={() => navigate("/")} className="text-primary-black hover:text-warning-red transition-colors cursor-pointer">
+                        <a onClick={() => navigate("/")} className="text-primary-black hover:text-primary-hover-red transition-colors cursor-pointer">
                             Início
                         </a>
-                        {/* <a onClick={() => navigate("/products")} className="text-primary-black hover:text-warning-red transition-colors cursor-pointer">
+                        {/* <a onClick={() => navigate("/products")} className="text-primary-black hover:text-primary-hover-red transition-colors cursor-pointer">
                             Produtos
                         </a> */}
-                        {/* <a onClick={() => navigate("/purchases")} className="text-primary-black hover:text-warning-red transition-colors cursor-pointer">
+                        {/* <a onClick={() => navigate("/purchases")} className="text-primary-black hover:text-primary-hover-red transition-colors cursor-pointer">
                             Compras
                         </a> */}
-                        <a onClick={() => navigate("/stock")} className="text-primary-black hover:text-warning-red transition-colors cursor-pointer">
+                        <a onClick={() => navigate("/stock")} className="text-primary-black hover:text-primary-hover-red transition-colors cursor-pointer">
                             Estoque
                         </a>
-                        <a onClick={() => navigate("/orders")} className="text-primary-black hover:text-warning-red transition-colors cursor-pointer">
+                        <a onClick={() => navigate("/orders")} className="text-primary-black hover:text-primary-hover-red transition-colors cursor-pointer">
                             Vendas
                         </a>
-                        <a onClick={() => navigate("/employees")} className="text-primary-black hover:text-warning-red transition-colors cursor-pointer">
+                        <a onClick={() => navigate("/employees")} className="text-primary-black hover:text-primary-hover-red transition-colors cursor-pointer">
                             Funcionários
                         </a>
-                        <a onClick={() => navigate("/cash-register")} className="text-primary-black hover:text-warning-red transition-colors cursor-pointer">
+                        <a onClick={() => navigate("/cash-register")} className="text-primary-black hover:text-primary-hover-red transition-colors cursor-pointer">
                             Caixa
                         </a>
-                        <a onClick={() => navigate("/promotions")} className="text-primary-black hover:text-warning-red transition-colors cursor-pointer">
+                        <a onClick={() => navigate("/promotions")} className="text-primary-black hover:text-primary-hover-red transition-colors cursor-pointer">
                             Promoções
                         </a>
                     </nav>
