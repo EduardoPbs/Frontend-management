@@ -1,6 +1,7 @@
+import LFLogo from '@/assets/LogicFlare_nobg.png';
 import { jsPDF } from 'jspdf';
 import { ItemOrderCreate, OrderCreate } from '@/types';
-import LFLogo from '@/assets/LogicFlare_nobg.png';
+import { horizontalLine, _horLine, verticalLine, drawColoredBox } from '@/utils/pdf';
 
 function initializer(data: OrderCreate, orientation: "portrait" | "landscape"): { doc: jsPDF; items: ItemOrderCreate[];} {
     const doc: jsPDF = new jsPDF({
@@ -13,23 +14,6 @@ function initializer(data: OrderCreate, orientation: "portrait" | "landscape"): 
 }
 
 let y_axys: number = 32;
-
-function drawColoredBox(doc: jsPDF, x: number, y: number, width: number, height: number, color: [number, number, number]) { 
-    doc.setFillColor(color[0], color[1], color[2]); 
-    doc.rect(x, y, width, height, 'DF');
-};
-
-function horizontalLine(doc: jsPDF, y_axys: number): jsPDF {
-    return doc.line(10, y_axys, 200, y_axys, "FD");
-}
-
-function _horLine(doc: jsPDF, y_axys: number, width: number): jsPDF {
-    return doc.line(5, y_axys, width, y_axys, "FD");
-}
-
-function verticalLine(doc: jsPDF, x: number, yStart: number, yEnd: number): jsPDF { 
-    return doc.line(x, yStart, x, yEnd); 
-}
 
 function generateBudgeTable(data: OrderCreate) {
     if (data.data_items.length < 1) {

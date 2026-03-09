@@ -2,6 +2,7 @@ import { Home } from './Home';
 import { Login } from './Login';
 import { Stock } from '@/Pages/Stock';
 import { Orders } from './Orders';
+import { Reports } from '@/Pages/Reports';
 import { Settings } from '@/Pages/Settings';
 import { Products } from './Products';
 import { StockForm } from '@/Pages/Stock/StockForm';
@@ -26,6 +27,7 @@ export {
     Login,
     Stock,
     Orders,
+    Reports,
     Settings,
     Products,
     Purchases,

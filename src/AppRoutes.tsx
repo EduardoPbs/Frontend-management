@@ -5,9 +5,9 @@ import {
     Login,
     Stock,
     Orders,
+    Reports,
     Products,
     Settings,
-    // Purchases,
     Movements,
     StockForm,
     OrderForm,
@@ -16,12 +16,10 @@ import {
     OrderDetail,
     CashHistory,
     ProductForm,
-    // PurchaseForm,
     CashRegister,
     EmployeeForm,
     PromotionForm,
     EmployeeDetail,
-    // PurchaseDetail,
     PromotionDetail,
 } from './Pages';
 
@@ -63,6 +61,8 @@ function AppRoutes() {
                     <Route path='/promotions/:id' element={<PromotionDetail />} />
 
                     <Route path='/cash-register/movements' element={<Movements />} />
+
+                    <Route path='/reports' element={<Reports />}/>
 
                     <Route path='/settings' element={<Settings />}/>
                 </Routes>

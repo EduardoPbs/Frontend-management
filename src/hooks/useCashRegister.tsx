@@ -177,6 +177,24 @@ export function useCashRegister() {
         }
     }
 
+    async function getMovementsByType(type: string, setMovements: (data: Movimentacao[]) => void) {
+        if (type === "0") {
+            try {
+                const response = await http.get<Movimentacao[]>('/cashier/movements/all');
+                setMovements(response.data);
+            } catch (error) {
+                console.error(error);
+            }
+        } else {
+            try {
+                const response = await http.get<Movimentacao[]>(`/cashier/movements/${type}`);
+                setMovements(response.data);
+            } catch (error) {
+                console.error(error);
+            }
+        }
+    }
+
     useEffect(() => {
         getCashierData();
     }, []);
@@ -194,6 +212,7 @@ export function useCashRegister() {
         setAllMovements,
         setHistoryCashier,
         getCashierByDate,
-        getMovementsByDate
+        getMovementsByDate,
+        getMovementsByType
     };
 }

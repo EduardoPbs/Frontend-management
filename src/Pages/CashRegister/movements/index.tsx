@@ -12,7 +12,16 @@ import { Title } from "@/components/Title";
 
 export function Movements() {
     const [monthSelected, setMonthSelected] = useState<number>(0);
-    const { setAllMovements, getMovementsByDate, getMovementsByMonth, allMovements } = useCashRegister();
+    const [typeSelected, setTypeSelected] = useState<string>("0");
+    const { setAllMovements, getMovementsByDate, getMovementsByMonth, getMovementsByType, allMovements } = useCashRegister();
+
+    const transaction_types: string[] = [
+        'COMPRA',
+        'VENDA',
+        'RETIRADA',
+        'RETIRADA_PRODUTO',
+        'ENTRADA_PRODUTO'
+    ];
 
     return (
         <PageContainer title='Movimentações'>
@@ -72,6 +81,30 @@ export function Movements() {
                         </div>
                     </SelectContent>
                 </Select>
+
+                <Select
+                    onValueChange={(event: any) => {
+                        const type: string = String(event);
+                        setTypeSelected(type);
+                        getMovementsByType(type, setAllMovements);
+                    }}
+                >
+                    <SelectTrigger className='w-[180px] font-semibold'>
+                        <SelectValue placeholder="Tipo" />
+                    </SelectTrigger>
+                    <SelectContent className='max-h-[250px] font-semibold'>
+                        <SelectItem value={JSON.stringify(0)}>
+                            Tudo
+                        </SelectItem>
+                        {transaction_types.map((type: string) => {
+                            return (
+                                <SelectItem key={type} value={type} className='capitalize'>
+                                    {type.replace("_", " ")}
+                                </SelectItem>
+                            );
+                        })}
+                    </SelectContent>
+                </Select>
             </div>
 
             <div className='flex items-center justify-between'>
@@ -81,6 +114,30 @@ export function Movements() {
                         {allMovements.length}
                     </span>
                 </Title>
+
+                {typeSelected === "0" &&
+                    <>
+                        <Title variant='h3'>
+                            Vendas:{' '}
+                            <span className='text-4xl text-primary-red'>
+                                {allMovements.filter((m: Movimentacao) => m.tipo_transacao === "VENDA").length}
+                            </span>
+                        </Title>
+
+                        <Title variant='h3'>
+                            Entradas/Prod.:{' '}
+                            <span className='text-4xl text-primary-red'>
+                                {allMovements.filter((m: Movimentacao) => m.tipo_transacao === "ENTRADA_PRODUTO").length}
+                            </span>
+                        </Title>
+
+                        <Title variant='h3'>
+                            Retiradas/Prod.:{' '}
+                            <span className='text-4xl text-primary-red'>
+                                {allMovements.filter((m: Movimentacao) => m.tipo_transacao === "RETIRADA_PRODUTO").length}
+                            </span>
+                        </Title>
+                    </>}
 
                 <Title variant='h3'>
                     Valor total:{' '}
